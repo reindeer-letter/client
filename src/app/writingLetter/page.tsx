@@ -1,17 +1,19 @@
 "use client";
 
+import Header from "@/components/header";
 import "../globals.css";
 import Image from "next/image";
 
 const Page = () => {
   return (
     <div className="flex h-screen flex-col bg-grey-900 text-white">
+      <Header />
       <header className="flex items-center justify-between px-4 py-6">
         <button aria-label="뒤로가기" className="text-white">
           <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
         </button>
         <h1 className="font-dongle text-lg">편지작성</h1>
-        <button aria-label="닫기" className="text-white">
+        <button aria-label="닫기" className="pr-2 text-white">
           <Image src="/exit.png" alt="닫기" width={18} height={18} />
         </button>
       </header>
@@ -57,7 +59,7 @@ const Page = () => {
         <div className="w-full flex-1">
           <textarea
             placeholder="내용을 입력하세요"
-            className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-Title01-R text-base text-black placeholder-gray-500 focus:outline-none"
+            className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-Title01-M text-base text-black placeholder-gray-500 focus:outline-none"
           />
         </div>
 
