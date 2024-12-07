@@ -72,7 +72,7 @@ const LoginPage = () => {
                   message: "유효한 이메일 주소를 입력하세요",
                 },
               })}
-              className={`h-12 w-full rounded-lg border px-4 placeholder-gray-400 focus:border-white focus:outline-none ${
+              className={`h-12 w-full rounded-lg border px-4 placeholder-gray-400 focus:border-white focus:bg-grey-800 focus:outline-none ${
                 errors.email
                   ? "border-red-500 bg-transparent text-red-500"
                   : "border-gray-400 bg-transparent text-white"
@@ -91,7 +91,7 @@ const LoginPage = () => {
               type="password"
               placeholder="비밀번호 입력"
               {...register("password", { required: "비밀번호를 입력해주세요" })}
-              className={`h-12 w-full rounded-lg border px-4 placeholder-gray-400 focus:border-white focus:outline-none ${
+              className={`h-12 w-full rounded-lg border px-4 placeholder-gray-400 focus:border-white focus:bg-grey-800 focus:outline-none ${
                 errors.password
                   ? "border-red-500 bg-transparent text-red-500"
                   : "border-gray-400 bg-transparent text-white"
@@ -113,7 +113,7 @@ const LoginPage = () => {
           </button>
         </div>
 
-        <div className="mt-4 space-x-4 text-center text-sm text-[#D9D9D9]">
+        <div className="mt-4 space-x-4 text-center text-sm text-grey-300">
           <a href="#" className="hover:text-white">
             아이디 찾기
           </a>
@@ -130,11 +130,11 @@ const LoginPage = () => {
 
       <div className="absolute bottom-10 w-full px-6">
         <div className="mx-auto mb-5 flex w-full max-w-[600px] items-center sm:max-w-sm">
-          <div className="flex-1 border-t border-gray-400" />
-          <p className="mx-4 whitespace-nowrap text-sm text-gray-400">
+          <div className="flex-1 border-t border-grey-300" />
+          <p className="mx-4 whitespace-nowrap text-sm text-grey-300">
             간편하게 시작하기
           </p>
-          <div className="flex-1 border-t border-gray-400" />
+          <div className="flex-1 border-t border-grey-300" />
         </div>
 
         <div className="flex items-center justify-center space-x-4">
