@@ -23,6 +23,7 @@
   },
   "plugins": ["prettier"],
   "rules": {
+    "react/jsx-no-useless-fragment": "off",
     "no-shadow": "off",
     "arrow-body-style": "off",
     "import/extensions": "off",
