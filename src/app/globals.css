@@ -5,6 +5,26 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --grey-50: #f5f5f5;
+  --grey-100: #ebebeb;
+  --grey-200: #e6e6e6;
+  --grey-300: #d9d9d9;
+  --grey-400: #cccccc;
+  --grey-500: #b8b8b8;
+  --grey-700: #666666;
+  --grey-600: #999999;
+  --grey-800: #292929;
+  --grey-900: #1a1a1a;
+  --primary-50: #ffdbc7;
+  --primary-100: #ffb9ac;
+  --primary-200: #e5948a;
+  --primary-300: #c04764;
+  --primary-400: #ac544a;
+  --primary-500: #933730;
+  --primary-600: #872e2b;
+  --primary-700: #762222;
+  --primary-800: #66131c;
+  --primary-900: #540114;
 }
 
 @media (prefers-color-scheme: dark) {
