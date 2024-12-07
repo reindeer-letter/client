@@ -11,13 +11,13 @@ const Page = () => {
   return (
     <div className="flex h-screen flex-col bg-grey-900 text-white">
       <Header />
-      <header className="flex items-center justify-between px-4 py-3">
+      <header className="flex items-center justify-between px-4 py-6">
         <button aria-label="뒤로가기" className="text-white">
           <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
         </button>
         <h1 className="text-lg font-semibold">편지 유형 선택</h1>
         <button aria-label="닫기" className="pr-2 text-white">
-          <Image src="/exit.png" alt="닫기" width={20} height={20} />
+          <Image src="/exit.png" alt="닫기" width={18} height={18} />
         </button>
       </header>
       <main className="flex flex-1 flex-col items-center justify-center space-y-5">
