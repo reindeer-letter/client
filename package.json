@@ -10,9 +10,12 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
     "next": "15.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.0",
+    "zod": "^3.23.8",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
