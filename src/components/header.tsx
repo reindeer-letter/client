@@ -1,6 +1,6 @@
 "use client";
 
-import cn from "@/utils/cn";
+import cn from "@/lib/cn";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ export default function Header({ className }: HeaderProps) {
     >
       <Link href="/" className="relative h-[22px] w-[67px]">
         <Image
-          src="/logo.png"
+          src="/images/logo.png"
           alt="logo"
           fill
           priority
@@ -28,7 +28,7 @@ export default function Header({ className }: HeaderProps) {
       </Link>
       <Link href="/myPage" className="relative h-8 w-8">
         <Image
-          src="/profile_default.png"
+          src="/icons/profile_default.png"
           alt="profile"
           fill
           priority
