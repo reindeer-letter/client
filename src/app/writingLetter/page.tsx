@@ -8,6 +8,7 @@ import Image from "next/image";
 import PopUp from "@/components/popUp";
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
+import Button from "@/components/button";
 import useOverlay from "../../hooks/useoverlay";
 import CalendarModal from "./components/CalendarModal";
 import ActionBar from "./components/ActionBar";
@@ -159,7 +160,7 @@ const Page = () => {
         <div className="mb-2 flex w-full justify-start">
           <button
             onClick={() => setIsCalendarOpen(true)}
-            className="flex space-x-2 rounded-md px-4 py-2 text-black"
+            className="flex space-x-2 rounded-md px-4 text-black"
           >
             <Image
               src="/writingletter/calendar.png"
@@ -168,22 +169,22 @@ const Page = () => {
               height={24}
               className="h-auto w-auto"
             />
-            <span>{selectedDate || todayFormatted}</span>
+            <span className="pt-2">{selectedDate || todayFormatted}</span>
           </button>
         </div>
 
-        <div className="w-full">
-          <button
-            type="button"
-            className="mb-5 w-full rounded-md bg-primary-700 py-4 font-semibold text-white"
+        <div className="w-full px-2 py-4">
+          <Button
+            buttonType="Primary"
             onClick={handleOpenPopUp}
+            className="w-full text-black"
           >
             {daysDifference !== null
               ? daysDifference === 0
                 ? "오늘 편지 보내기"
                 : `${daysDifference}일 뒤 편지 보내기`
               : "오늘 편지 보내기"}
-          </button>
+          </Button>
         </div>
       </main>
 
