@@ -17,6 +17,9 @@ export default function Page() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
+    watch,
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
   });
@@ -28,6 +31,44 @@ export default function Page() {
   const checkPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const emailValue = watch("email");
+  const nicknameValue = watch("nickname");
+
+  const checkEmail = async () => {
+    try {
+      const response = await axios.get(`${API_URL}auth/check-email`, {
+        params: {
+          email: emailValue,
+        },
+      });
+      if (response.status === 200) {
+        alert("사용 가능한 이메일입니다.");
+        clearErrors("email");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        setError("email", { message: "이미 사용 중인 이메일입니다." });
+    }
+  };
+
+  const checkNickname = async () => {
+    try {
+      const response = await axios.get(`${API_URL}auth/check-nickname`, {
+        params: {
+          nickname: nicknameValue,
+        },
+      });
+      if (response.status === 200) {
+        alert("사용 가능한 별명입니다.");
+
+        clearErrors("nickname");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        setError("nickname", { message: "이미 사용 중인 별명입니다." });
+    }
+  };
   const [isSubmit, setIsSubmit] = useState(false);
 
   const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
@@ -35,7 +76,7 @@ export default function Page() {
     setIsSubmit(true);
 
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, data, {
+      const response = await axios.post(`${API_URL}auth/register`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -65,7 +106,7 @@ export default function Page() {
       <div className="flex flex-1 flex-col justify-between p-6">
         {/* 페이지 타이틀 */}
         <header className="relative mb-8 flex items-center justify-center">
-          <button className="absolute left-0">
+          <button className="absolute left-0" onClick={() => router.push("/")}>
             <Image
               src="/signUp/backArrow.svg"
               alt="뒤로가기"
@@ -82,7 +123,7 @@ export default function Page() {
           className="flex flex-1 flex-col justify-between"
         >
           <div className="flex-1 space-y-8 overflow-auto">
-            {/* 아이디 */}
+            {/* 이메일 */}
             <div>
               <label htmlFor="email" className="mb-2 block text-Body02-R">
                 이메일을 입력하세요
@@ -97,6 +138,7 @@ export default function Page() {
                 <button
                   className="rounded-md border border-grey-700 px-3 py-2"
                   type="button"
+                  onClick={checkEmail}
                 >
                   중복확인
                 </button>
@@ -153,6 +195,7 @@ export default function Page() {
                 <button
                   className="rounded-md border border-grey-700 px-3 py-2"
                   type="button"
+                  onClick={checkNickname}
                 >
                   중복확인
                 </button>
