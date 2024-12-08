@@ -21,6 +21,8 @@ export default function Page() {
     resolver: zodResolver(signUpSchema),
   });
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const checkPassword = () => {
@@ -33,15 +35,11 @@ export default function Page() {
     setIsSubmit(true);
 
     try {
-      const response = await axios.post(
-        "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/auth/register",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await axios.post(`${API_URL}/auth/register`, data, {
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
       if (response.status === 201) {
         alert("회원가입이 성공적으로 완료되었습니다!");
         router.push("/login");
