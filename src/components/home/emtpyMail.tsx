@@ -51,7 +51,7 @@ export default function EmptyMail() {
               <section className="mx-auto grid w-full min-w-[375px] max-w-[600px] grid-cols-2">
                 <section />
                 <section className="relative flex items-center justify-center">
-                  <div className="relative bottom-[126px] right-10 mx-auto flex items-center justify-center whitespace-nowrap rounded border border-[#474747] border-grey-500 bg-grey-800 px-5 py-2 text-center text-Body02-SB text-white">
+                  <div className="relative bottom-[126px] right-10 mx-auto flex items-center justify-center whitespace-nowrap rounded border border-[#474747] bg-grey-800 px-5 py-2 text-center text-Body02-SB text-white">
                     <span className="flex-shrink-0">
                       내 편지함을 만들고 친구들에게 편지를 받아보세요!{" "}
                     </span>{" "}
@@ -66,6 +66,7 @@ export default function EmptyMail() {
                         width={20}
                         height={20}
                         sizes="20px"
+                        priority
                       />
                     </button>
                   </div>

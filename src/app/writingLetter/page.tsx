@@ -60,6 +60,7 @@ const Page = () => {
   const category = searchParams.get("type");
   const nickname = searchParams.get("nickname");
   const receiverId = searchParams.get("receiverId");
+  const receiverNickName = searchParams.get("receiverNickName");
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
@@ -106,7 +107,7 @@ const Page = () => {
 
       if (response.status === 201) {
         overlay.unmount();
-        router.push(`/writingComplete?nickname=${nickname}`);
+        router.push(`/writingComplete?nickname=${receiverNickName}`);
       }
     } catch (error) {
       if (axios.isAxiosError(error))

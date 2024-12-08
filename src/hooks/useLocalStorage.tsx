@@ -9,7 +9,12 @@ export default function useLocalStorage(key: string) {
   });
 
   const setLocalStorage = useCallback(
-    (value: string) => {
+    (value: string | null) => {
+      if (value === null) {
+        window.localStorage.removeItem(key);
+        setValue(null);
+        return;
+      }
       window.localStorage.setItem(key, value);
       setValue(value);
     },

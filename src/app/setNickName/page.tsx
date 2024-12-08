@@ -12,6 +12,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const receiverId = searchParams.get("receiverId");
+  const receiverNickName = searchParams.get("receiverNickName");
   const [nickname, setNickname] = useState("");
 
   const handleNext = () => {
@@ -23,7 +24,7 @@ const Page = () => {
     router.push(
       `/writingLetter?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
         nickname,
-      )}`,
+      )}&receiverNickName=${receiverNickName}`,
     );
   };
   return (
