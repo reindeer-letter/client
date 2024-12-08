@@ -7,11 +7,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import instance from "@/api/instance";
+import useOverlay from "@/hooks/useoverlay";
+import PopUp from "@/components/popUp";
 import { loginSchema, LoginFormInputs } from "../../utils/loginSchema";
 import InputField from "./components/InputField";
 
 const LoginPage = () => {
   const router = useRouter();
+  const overlay = useOverlay();
   const {
     register,
     handleSubmit,
@@ -37,21 +40,28 @@ const LoginPage = () => {
 
       if (response.status === 201) {
         const result = response.data;
-        console.log("로그인 성공:", result);
         setId(result.user.id);
         setToken(result.access_token);
-        console.log("userId", result.user.id);
         router.push("/home");
-      } else {
-        console.error("로그인 실패:", response.statusText);
-        alert("이메일 또는 비밀번호를 확인해주세요.");
-      }
+      } else alert("이메일 또는 비밀번호를 확인해주세요.");
     } catch (error) {
-      console.error("오류 발생:", error);
+      console.error("로그인 요청 중 오류:", error);
       alert("로그인 요청 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }
+  };
+  const handleSimpleStartClick = () => {
+    overlay.mount(
+      <PopUp
+        button="확인"
+        title="준비 중 입니다."
+        description="현재 기능은 준비 중입니다."
+        onConfirm={() => overlay.unmount()}
+        onCancel={() => overlay.unmount()}
+        unmount={overlay.unmount}
+      />,
+    );
   };
 
   return (
@@ -127,14 +137,20 @@ const LoginPage = () => {
         </div>
 
         <div className="flex items-center justify-center space-x-4">
-          <Image src="/login/kakao.png" width={50} height={50} alt="카카오" />
-          <Image src="/login/naver.png" width={50} height={50} alt="네이버" />
-          <Image
-            src="/login/facebook.png"
-            width={50}
-            height={50}
-            alt="페이스북"
-          />
+          <button onClick={handleSimpleStartClick}>
+            <Image src="/login/kakao.png" width={50} height={50} alt="카카오" />
+          </button>
+          <button onClick={handleSimpleStartClick}>
+            <Image src="/login/naver.png" width={50} height={50} alt="네이버" />
+          </button>
+          <button onClick={handleSimpleStartClick}>
+            <Image
+              src="/login/facebook.png"
+              width={50}
+              height={50}
+              alt="페이스북"
+            />
+          </button>
         </div>
       </div>
     </div>
