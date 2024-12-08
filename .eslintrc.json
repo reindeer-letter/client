@@ -23,19 +23,11 @@
   },
   "plugins": ["prettier"],
   "rules": {
-    "no-console": "off", // console 사용 허용
-    "no-alert": "off", // alert 사용 허용
-    "jsx-a11y/anchor-is-valid": "off", // a 태그의 href 경고 무시
-    "react/jsx-props-no-spreading": "off", // props spreading 허용
-    "no-nested-ternary": "off",
-
-    "no-use-before-define": "off",
     "react/jsx-no-useless-fragment": "off",
     "no-shadow": "off",
     "arrow-body-style": "off",
     "import/extensions": "off",
     "curly": ["error", "multi"],
-    "react/display-name": "off",
     "react/button-has-type": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": "off",
@@ -60,14 +52,6 @@
     "implicit-arrow-linebreak": "off", // let it handle by prettier
     "react/require-default-props": "off", // let it handle by TypeScript
     "nonblock-statement-body-position": "off", // let it handle by prettier
-    "react/jsx-one-expression-per-line": "off", // let it handle by prettier
-    "jsx-a11y/label-has-associated-control": [
-      "error",
-      {
-        "required": {
-          "some": ["nesting", "id"]
-        }
-      }
-    ]
+    "react/jsx-one-expression-per-line": "off" // let it handle by prettier
   }
 }

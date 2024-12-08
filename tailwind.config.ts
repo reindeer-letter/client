@@ -8,9 +8,6 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        handwriting: ["'Nanum Pen Script'", "cursive"],
-      },
       fontSize: {
         Head: [
           "24px",
