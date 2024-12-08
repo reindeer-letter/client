@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const ActionBar: React.FC = () => {
+const ActionBar = () => {
   return (
     <div className="flex items-center space-x-4">
       <button aria-label="음악">

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import { loginSchema, LoginFormInputs } from "../../utils/loginSchema";
 import InputField from "./components/InputField";
 
@@ -25,19 +26,18 @@ const LoginPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/auth/login",
+        data,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
         },
       );
 
-      if (response.ok) {
-        const result = await response.json();
+      if (response.status === 200) {
+        const result = response.data;
         console.log("로그인 성공:", result);
         localStorage.setItem("userId", result.user.id);
         console.log("userId", result.user.id);

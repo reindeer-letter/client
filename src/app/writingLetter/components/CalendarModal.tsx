@@ -10,12 +10,12 @@ interface CalendarModalProps {
   selectedDate?: string;
 }
 
-const CalendarModal: React.FC<CalendarModalProps> = ({
+const CalendarModal = ({
   isOpen,
   onClose,
   onDateSelect,
   selectedDate: initialSelectedDate,
-}) => {
+}: CalendarModalProps) => {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());

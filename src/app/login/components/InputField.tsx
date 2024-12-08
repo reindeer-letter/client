@@ -8,12 +8,7 @@ interface InputFieldProps {
   error?: FieldError;
 }
 
-const InputField: React.FC<InputFieldProps> = ({
-  type,
-  placeholder,
-  register,
-  error,
-}) => {
+function InputField({ type, placeholder, register, error }: InputFieldProps) {
   return (
     <div>
       <input
@@ -29,6 +24,6 @@ const InputField: React.FC<InputFieldProps> = ({
       {error && <p className="mt-1 text-sm text-red-500">{error.message}</p>}
     </div>
   );
-};
+}
 
 export default InputField;
