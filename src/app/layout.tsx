@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "순록의 편지 - 오늘의 기억을 선물하는 편지",
     description: "미래의 나에게, 오늘의 기억을 선물하는 편지",
-    url: "https://example.com",
+    url: "https://www.reindeer-letter.site",
     type: "website",
     images: [
       {
-        url: "/images/Tumbnail for kakaotalk.png",
+        url: "/images/Thumbnail for kakaotalk.png",
         alt: "순록의 편지",
       },
     ],
