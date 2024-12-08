@@ -15,7 +15,7 @@ function InputField({ type, placeholder, register, error }: InputFieldProps) {
         type={type}
         placeholder={placeholder}
         {...register}
-        className={`h-12 w-full rounded-lg border px-4 placeholder-gray-400 focus:border-white focus:bg-grey-800 focus:outline-none ${
+        className={`h-12 w-full rounded-lg border px-4 placeholder-grey-600 focus:border-white focus:bg-grey-800 focus:outline-none ${
           error
             ? "border-red-500 bg-transparent text-red-500"
             : "border-gray-400 bg-transparent text-white"
