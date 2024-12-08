@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} h-svh bg-black text-white antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} h-svh antialiased`}
       >
         <OverlayProvider>
           <div className="mx-auto h-screen w-full min-w-[375px] max-w-[600px]">
