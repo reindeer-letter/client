@@ -10,6 +10,7 @@ export default {
     extend: {
       fontFamily: {
         handwriting: ["'Nanum Pen Script'", "cursive"],
+        pretendard: ["var(--font-pretendard)"],
       },
       fontSize: {
         Head: [
