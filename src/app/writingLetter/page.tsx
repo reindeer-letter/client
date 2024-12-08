@@ -72,6 +72,10 @@ const Page = () => {
       alert("날짜를 선택해주세요.");
       return;
     }
+    if (!title.trim()) {
+      alert("제목을 입력해주세요.");
+      return;
+    }
 
     if (!nickname) {
       alert("닉네임이 없습니다. 다시 시도해주세요.");
