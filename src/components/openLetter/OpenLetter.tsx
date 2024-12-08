@@ -48,7 +48,6 @@ export default function OpenLetter() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setLetter(response.data);
-        console.log(response.data);
       } catch (err) {
       } finally {
         setLoading(false);
@@ -80,21 +79,16 @@ export default function OpenLetter() {
           </div>
           <hr className="border-b-1 w-full border-black" />
           <div className="w-full">
-            <input
-              type="text"
-              className="w-full max-w-md border-none bg-transparent p-2 px-4 font-handwriting text-3xl text-black placeholder-gray-500 focus:outline-none"
-              value={letter?.title}
-              readOnly
-            />
+            <div className="w-full max-w-md border-none bg-transparent p-2 px-4 font-handwriting text-3xl text-black placeholder-gray-500 focus:outline-none">
+              {letter?.title}
+            </div>
           </div>
         </header>
 
         <div className="w-full flex-1">
-          <textarea
-            className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-gray-500 focus:outline-none"
-            value={letter?.description}
-            readOnly
-          />
+          <div className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-gray-500 focus:outline-none">
+            {letter?.description}
+          </div>
         </div>
 
         <div className="flex w-full justify-center">
