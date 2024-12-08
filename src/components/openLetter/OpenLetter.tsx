@@ -1,14 +1,15 @@
 /* eslint-disable */
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "next/navigation";
 import ActionBar from "@/app/writingLetter/components/ActionBar";
 import Link from "next/link";
 import Image from "next/image";
+import instance from "@/api/instance";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 export default function OpenLetter() {
-  const [letter, setLetter] = useState(null);
+  const [letter, setLetter] = useState<Letter | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -38,24 +39,23 @@ export default function OpenLetter() {
     };
   }
   const { id } = useParams();
-  const initialLetterState = {
-    title: "가나다",
-    description: "라마바사",
-  };
+  const [token] = useLocalStorage("token");
+
   useEffect(() => {
     const fetchLetter = async () => {
       try {
-        const response = await axios.get(
-          `https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/letters/${id}`,
-        );
+        const response = await instance.get<Letter>(`/letters/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setLetter(response.data);
+        console.log(response.data);
       } catch (err) {
       } finally {
         setLoading(false);
       }
     };
 
-    // fetchLetter();
+    fetchLetter();
   }, [id]);
   return (
     <div className="bg-custom-background flex h-screen flex-col bg-grey-900 text-white">
@@ -76,14 +76,14 @@ export default function OpenLetter() {
             <ActionBar />
           </div>
           <div className="flex w-full justify-end border-none bg-transparent p-2 px-4 font-handwriting text-sm text-black">
-            <div>from: 너만의 방공호</div>
+            <div>from: {letter?.senderNickName}</div>
           </div>
           <hr className="border-b-1 w-full border-black" />
           <div className="w-full">
             <input
               type="text"
               className="w-full max-w-md border-none bg-transparent p-2 px-4 font-handwriting text-3xl text-black placeholder-gray-500 focus:outline-none"
-              value={initialLetterState.title}
+              value={letter?.title}
               readOnly
             />
           </div>
@@ -92,9 +92,19 @@ export default function OpenLetter() {
         <div className="w-full flex-1">
           <textarea
             className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-gray-500 focus:outline-none"
-            value={initialLetterState.description}
+            value={letter?.description}
             readOnly
           />
+        </div>
+
+        <div className="flex w-full justify-center">
+          {letter?.imageUrl && (
+            <img
+              src={letter.imageUrl}
+              alt="Letter Image"
+              className="h-auto max-w-full"
+            />
+          )}
         </div>
       </main>
     </div>
