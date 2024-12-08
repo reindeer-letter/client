@@ -6,6 +6,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormData, signUpSchema } from "@/utils/signUpSchema";
 import Header from "@/components/header";
+import Button from "@/components/button";
+import axios from "axios";
 
 export default function Page() {
   const {
@@ -21,8 +23,36 @@ export default function Page() {
   const checkPassword = () => {
     setShowPassword(!showPassword);
   };
+  const [isSubmit, setIsSubmit] = useState(false);
 
-  const onSubmit: SubmitHandler<SignUpFormData> = () => {};
+  const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
+    if (isSubmit) return;
+    setIsSubmit(true);
+
+    try {
+      const response = await axios.post(
+        "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/auth/register",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (response.status === 201)
+        alert("회원가입이 성공적으로 완료되었습니다!");
+      else alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        alert(
+          error.response?.data?.message ||
+            "오류가 발생했습니다. 다시 시도해주세요.",
+        );
+      else alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsSubmit(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-black text-white">
@@ -49,17 +79,17 @@ export default function Page() {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-1 flex-col justify-between"
         >
-          <div className="flex-1 space-y-10 overflow-auto">
+          <div className="flex-1 space-y-8 overflow-auto">
             {/* 아이디 */}
             <div>
-              <label htmlFor="userId" className="mb-2 block text-Body01-R">
-                아이디를 입력하세요
+              <label htmlFor="email" className="mb-2 block text-Body02-R">
+                이메일을 입력하세요
               </label>
               <div className="flex gap-2">
                 <input
-                  id="userId"
+                  id="email"
                   type="text"
-                  {...register("userId")}
+                  {...register("email")}
                   className="flex-1 rounded bg-grey-800 p-2 text-white"
                 />
                 <button
@@ -69,12 +99,12 @@ export default function Page() {
                   중복확인
                 </button>
               </div>
-              <p className="h-5 py-1 text-red-500">{errors.userId?.message}</p>
+              <p className="h-5 py-1 text-red-500">{errors.email?.message}</p>
             </div>
 
             {/* 비밀번호 */}
             <div>
-              <label htmlFor="password" className="mb-2 block text-Body01-R">
+              <label htmlFor="password" className="mb-2 block text-Body02-R">
                 비밀번호를 입력하세요
               </label>
               <div className="relative">
@@ -108,7 +138,7 @@ export default function Page() {
 
             {/* 별명 */}
             <div>
-              <label htmlFor="nickname" className="mb-2 block text-Body01-R">
+              <label htmlFor="nickname" className="mb-2 block text-Body02-R">
                 별명을 입력하세요
               </label>
               <div className="flex gap-2">
@@ -161,13 +191,10 @@ export default function Page() {
           </div>
 
           {/* 완료 버튼 */}
-          <div className="mt-8">
-            <button
-              type="submit"
-              className="w-full rounded-md bg-white py-4 font-semibold text-black"
-            >
+          <div className="flex justify-center bg-black pb-8">
+            <Button type="submit" buttonType="abled" className="text-black">
               완료
-            </button>
+            </Button>
           </div>
         </form>
       </div>
