@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/header";
 import "../globals.css";
 import Image from "next/image";
@@ -52,6 +53,10 @@ const Page = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
+  const searchParams = useSearchParams();
+  const category = searchParams.get("type");
+  const nickname = searchParams.get("nickname");
+
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
   };
@@ -75,14 +80,16 @@ const Page = () => {
       const scheduledAt = Math.floor(scheduledDate.getTime() / 1000);
 
       console.log(scheduledAt);
+      console.log(nickname);
       const response = await axios.post(
         "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/letters",
         {
+          senderNickName: nickname,
           title,
           description,
           imageUrl: "https://example.com/image.jpg",
           bgmUrl: "https://example.com/music.mp3",
-          category: "TEXT",
+          category,
           receiverId: 1,
           isOpen: false,
           scheduledAt,
