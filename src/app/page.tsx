@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-black to-grey-800 text-white">
+    <div className="flex min-h-screen flex-col -bg--background text-white">
       <div className="flex flex-1 flex-col items-center justify-center space-y-6 text-center *:text-Body01-M">
         {/* 상단 제목 */}
         <div className="flex flex-col items-center space-y-2">

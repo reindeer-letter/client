@@ -64,8 +64,8 @@ const Page = () => {
           <Image
             src={
               selected === "TEXT"
-                ? "/writingText_ON.png"
-                : "/writingText_OFF.png"
+                ? "/letterType/writingText_ON.png"
+                : "/letterType/writingText_OFF.png"
             }
             alt="글로 남기기 아이콘"
             width={77}
@@ -83,7 +83,11 @@ const Page = () => {
           aria-label="목소리로 남기기"
         >
           <Image
-            src={selected === "VOICE" ? "/voice_ON.png" : "/voice_OFF.png"}
+            src={
+              selected === "VOICE"
+                ? "/letterType/voice_ON.png"
+                : "/letterType/voice_OFF.png"
+            }
             alt="목소리로 남기기 아이콘"
             width={77}
             height={45}

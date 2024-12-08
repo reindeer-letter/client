@@ -3,5 +3,5 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return <section className="bg-grey-900 px-4">{children}</section>;
 }

@@ -5,7 +5,7 @@ import { useContext, useMemo, ReactNode, useId } from "react";
  * @author 퍼그
  * @description overlay를 관리하는 훅입니다. 
  * 선언적으로 프로그래밍을 할 수 있습니다.
- * 
+ * @example
  * 간단하게 overlay를 만들고 안에 컴포넌트를 넣어주면 됩니다.
   const overlay = useOverlay();
 
