@@ -1,10 +1,123 @@
 "use client";
 
+import { useState } from "react";
 import Header from "@/components/header";
 import "../globals.css";
 import Image from "next/image";
+import PopUp from "@/components/popUp";
+import axios from "axios";
+import useOverlay from "../../hooks/useoverlay";
+import CalendarModal from "./components/CalendarModal";
+import ActionBar from "./components/ActionBar";
+
+const formatDate = (date: Date) => {
+  const daysOfWeek = [
+    "일요일",
+    "월요일",
+    "화요일",
+    "수요일",
+    "목요일",
+    "금요일",
+    "토요일",
+  ];
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const dayOfWeek = daysOfWeek[date.getDay()];
+  return `${year}년 ${month}월 ${day}일 ${dayOfWeek}`;
+};
+
+const calculateDaysDifference = (selectedDate: string): number | null => {
+  if (!selectedDate) return null;
+
+  const [year, month, day] = selectedDate
+    .replace(/년|월|일/g, "")
+    .trim()
+    .split(" ")
+    .map(Number);
+
+  const today = new Date();
+  const selected = new Date(year, month - 1, day);
+
+  const diffInMs = selected.getTime() - today.getTime();
+  return Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+};
 
 const Page = () => {
+  const overlay = useOverlay();
+  const today = new Date();
+  const todayFormatted = formatDate(today);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+  };
+
+  const daysDifference = calculateDaysDifference(selectedDate);
+
+  const handleSubmitLetter = async () => {
+    if (!selectedDate) {
+      alert("날짜를 선택해주세요.");
+      return;
+    }
+
+    try {
+      const [year, month, day] = selectedDate
+        .replace(/년|월|일/g, "")
+        .trim()
+        .split(" ")
+        .map(Number);
+
+      const scheduledDate = new Date(year, month - 1, day, 12);
+      const scheduledAt = Math.floor(scheduledDate.getTime() / 1000);
+
+      console.log(scheduledAt);
+      const response = await axios.post(
+        "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/letters",
+        {
+          title,
+          description,
+          imageUrl: "https://example.com/image.jpg",
+          bgmUrl: "https://example.com/music.mp3",
+          category: "TEXT",
+          receiverId: 1,
+          isOpen: false,
+          scheduledAt,
+        },
+      );
+
+      if (response.status === 201) {
+        console.log("편지 작성 성공:", response.data);
+        overlay.unmount();
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "편지 작성 실패:",
+          error.response?.status,
+          error.response?.data,
+        );
+        alert(`편지 작성 실패: ${JSON.stringify(error.response?.data)}`);
+      } else console.error("알 수 없는 오류:", error);
+    }
+  };
+
+  const handleOpenPopUp = () => {
+    overlay.mount(
+      <PopUp
+        button="전달하기"
+        description="한 번 보낸 기억은 취소할 수 없습니다."
+        title="기억을 전달할까요?"
+        onConfirm={handleSubmitLetter}
+        onCancel={() => overlay.unmount()}
+        unmount={overlay.unmount}
+      />,
+    );
+  };
+
   return (
     <div className="flex h-screen flex-col bg-grey-900 text-white">
       <Header />
@@ -13,45 +126,21 @@ const Page = () => {
           <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
         </button>
         <h1 className="font-dongle text-lg">편지작성</h1>
-        <button aria-label="닫기" className="pr-2 text-white">
-          <Image src="/exit.png" alt="닫기" width={18} height={18} />
+        <button aria-label="닫기" className="pr-1 text-white">
+          <Image src="/icons/close.png" alt="닫기" width={28} height={28} />
         </button>
       </header>
 
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center justify-between px-4 pb-4 pt-8">
         <header className="flex w-full flex-col space-y-4 px-4">
-          <div className="flex items-center space-x-4">
-            <button aria-label="음악">
-              <Image
-                src="/writingletter/music.png"
-                alt="음악"
-                width={24}
-                height={24}
-              />
-            </button>
-            <button aria-label="사진 추가">
-              <Image
-                src="/writingletter/add_photo.png"
-                alt="사진 추가"
-                width={24}
-                height={24}
-              />
-            </button>
-            <div className="flex items-center space-x-2 text-sm text-gray-600">
-              <Image
-                src="/writingletter/location.png"
-                alt="위치 아이콘"
-                width={24}
-                height={24}
-              />
-              <span>서울특별시 한남동</span>
-            </div>
-          </div>
+          <ActionBar />
           <div className="w-full">
             <input
               type="text"
               placeholder="제목을 입력하세요"
-              className="w-full max-w-md border-none bg-transparent font-handwriting text-2xl text-black placeholder-gray-500 focus:outline-none"
+              className="w-full max-w-md border-none bg-transparent font-handwriting text-3xl text-black placeholder-gray-500 focus:outline-none"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
         </header>
@@ -59,19 +148,49 @@ const Page = () => {
         <div className="w-full flex-1">
           <textarea
             placeholder="내용을 입력하세요"
-            className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-Title01-M text-base text-black placeholder-gray-500 focus:outline-none"
+            className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-gray-500 focus:outline-none"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
+        </div>
+
+        <div className="mb-2 flex w-full justify-start">
+          <button
+            onClick={() => setIsCalendarOpen(true)}
+            className="flex space-x-2 rounded-md px-4 py-2 text-black"
+          >
+            <Image
+              src="/writingletter/calendar.png"
+              alt="달력 아이콘"
+              width={24}
+              height={24}
+              className="h-auto w-auto"
+            />
+            <span>{selectedDate || todayFormatted}</span>
+          </button>
         </div>
 
         <div className="w-full">
           <button
-            type="submit"
-            className="w-full rounded-md bg-primary-700 py-4 font-semibold text-white"
+            type="button"
+            className="mb-5 w-full rounded-md bg-primary-700 py-4 font-semibold text-white"
+            onClick={handleOpenPopUp}
           >
-            편지 보내기
+            {daysDifference !== null
+              ? daysDifference === 0
+                ? "오늘 편지 보내기"
+                : `${daysDifference}일 뒤 편지 보내기`
+              : "오늘 편지 보내기"}
           </button>
         </div>
       </main>
+
+      <CalendarModal
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+        onDateSelect={handleDateSelect}
+        selectedDate={selectedDate}
+      />
     </div>
   );
 };
