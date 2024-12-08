@@ -47,7 +47,7 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
       setIsLoading(true);
       setIsError(false);
       try {
-        const params = new URLSearchParams({ page: String(page), limit: "3" });
+        const params = new URLSearchParams({ page: String(page), limit: "6" });
         const newRoute = `${route}?${params.toString()}`;
         const response = await instance.get<InfiniteFetchReturnType<T>>(
           newRoute,
