@@ -23,11 +23,14 @@
   },
   "plugins": ["prettier"],
   "rules": {
+    "no-use-before-define": "off",
+    "react/jsx-props-no-spreading": "off",
     "react/jsx-no-useless-fragment": "off",
     "no-shadow": "off",
     "arrow-body-style": "off",
     "import/extensions": "off",
     "curly": ["error", "multi"],
+    "react/display-name": "off",
     "react/button-has-type": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": "off",
@@ -52,6 +55,14 @@
     "implicit-arrow-linebreak": "off", // let it handle by prettier
     "react/require-default-props": "off", // let it handle by TypeScript
     "nonblock-statement-body-position": "off", // let it handle by prettier
-    "react/jsx-one-expression-per-line": "off" // let it handle by prettier
+    "react/jsx-one-expression-per-line": "off", // let it handle by prettier
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "required": {
+          "some": ["nesting", "id"]
+        }
+      }
+    ]
   }
 }

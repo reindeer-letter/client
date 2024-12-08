@@ -18,7 +18,6 @@ export default function Home() {
             <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold dark:bg-white/[.06]">
               src/app/page.tsx
             </code>
-            .
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import OverlayProvider from "@/providers/overlayProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,11 +39,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} h-svh bg-black text-white antialiased`}
       >
-        <div className="max-w-[600px] min-w-[375px] h-svh m-auto">
-        {children}
-        </div>
+        <OverlayProvider>
+          <div className="mx-auto h-screen w-full min-w-[375px] max-w-[600px]">
+            {children}
+          </div>
+        </OverlayProvider>
       </body>
     </html>
   );
