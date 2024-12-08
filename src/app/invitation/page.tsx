@@ -13,7 +13,12 @@ export default function Home() {
           <p>오늘의 기억을 선물해주세요!</p>
         </div>
         <div>
-          <Image src="/invitation.png" alt="편지" width={350} height={221} />
+          <Image
+            src="/landing/invitation.png"
+            alt="편지"
+            width={350}
+            height={221}
+          />
         </div>
       </div>
 
