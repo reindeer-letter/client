@@ -10,6 +10,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import useOverlay from "../../hooks/useoverlay";
 import CalendarModal from "./components/CalendarModal";
 import ActionBar from "./components/ActionBar";
+import NavBar from "../../components/NavBar";
 
 const formatDate = (date: Date) => {
   const daysOfWeek = [
@@ -136,23 +137,13 @@ const Page = () => {
   return (
     <div className="flex h-screen flex-col bg-grey-900 text-white">
       <Header />
-      <header className="flex items-center justify-between px-4 py-6">
-        <button
-          aria-label="뒤로가기"
-          className="text-white"
-          onClick={() => router.back()}
-        >
-          <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
-        </button>
-        <h1 className="font-dongle text-lg">편지작성</h1>
-        <button
-          aria-label="닫기"
-          className="pr-1 text-white"
-          onClick={() => router.push("/")}
-        >
-          <Image src="/icons/close.png" alt="닫기" width={28} height={28} />
-        </button>
-      </header>
+      <NavBar
+        title="편지 작성"
+        loggedBack="/setNickName"
+        guestBack="/setNickName"
+        loggedClose="/home"
+        guestClose="/invitation"
+      />
 
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center justify-between px-4 pb-4 pt-8">
         <header className="flex w-full flex-col space-y-4 px-4">

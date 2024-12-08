@@ -58,7 +58,7 @@ const LoginPage = () => {
     <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-[#000000] to-[#434343] px-4 text-white">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mb-28 w-full max-w-xs space-y-7"
+        className="mb-28 w-full max-w-md space-y-7"
       >
         <div className="flex flex-col items-center space-y-2 pb-4 pt-8 text-center">
           <p className="text-sm">미래의 나에게</p>
@@ -99,14 +99,18 @@ const LoginPage = () => {
             비밀번호 찾기
           </a>
           <span>|</span>
-          <a href="#" className="hover:text-white">
+          <a
+            href="#"
+            className="hover:text-white"
+            onClick={() => router.push("/signUp")}
+          >
             회원가입
           </a>
         </div>
       </form>
 
       <div className="absolute bottom-10 w-full px-6">
-        <div className="mx-auto mb-5 flex w-full max-w-[600px] items-center sm:max-w-sm">
+        <div className="mx-auto mb-10 flex w-full max-w-md items-center">
           <div className="flex-1 border-t border-grey-300" />
           <p className="mx-4 whitespace-nowrap text-sm text-grey-300">
             간편하게 시작하기
@@ -116,12 +120,12 @@ const LoginPage = () => {
 
         <div className="flex items-center justify-center space-x-4">
           <Image src="/login/kakao.png" width={50} height={50} alt="카카오" />
-          <Image src="/login/naver.png" width={50} height={50} alt="카카오" />
+          <Image src="/login/naver.png" width={50} height={50} alt="네이버" />
           <Image
             src="/login/facebook.png"
             width={50}
             height={50}
-            alt="카카오"
+            alt="페이스북"
           />
         </div>
       </div>

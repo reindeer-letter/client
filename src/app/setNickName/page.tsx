@@ -2,9 +2,9 @@
 
 import Header from "@/components/header";
 import "../globals.css";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import NavBar from "../../components/NavBar";
 
 const Page = () => {
   const router = useRouter();
@@ -26,15 +26,13 @@ const Page = () => {
   return (
     <div className="flex h-screen flex-col bg-grey-900 text-white">
       <Header />
-      <header className="flex items-center justify-between px-4 py-6">
-        <button aria-label="뒤로가기" className="text-white">
-          <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
-        </button>
-        <h1 className="text-lg font-semibold">별명 입력</h1>
-        <button aria-label="닫기" className="text-white">
-          <Image src="/exit.png" alt="닫기" width={24} height={24} />
-        </button>
-      </header>
+      <NavBar
+        title="별명 입력"
+        loggedBack="/letterType"
+        guestBack="/letterType"
+        loggedClose="/home"
+        guestClose="/invitaion"
+      />
       <main className="flex w-full flex-1 flex-col items-center justify-start space-y-4 px-4 pt-2">
         <div className="text-md w-full text-left text-grey-50">
           편지에 적을 별명을 입력하세요
