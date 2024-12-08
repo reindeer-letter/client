@@ -10,6 +10,7 @@ import Header from "@/components/header";
 import Button from "@/components/button";
 import { isAxiosError } from "axios";
 import instance from "@/api/instance";
+import Modal from "@/components/modal";
 
 export default function Page() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function Page() {
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const checkPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -96,10 +97,19 @@ export default function Page() {
     }
   };
 
+  const handleProfileClick = () => {
+    setIsModalOpen(true); // 프로필 클릭 시 모달 열기
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false); // 닫기 버튼 클릭 시 모달 닫기
+  };
   return (
     <div className="flex min-h-screen flex-col bg-black text-white">
       {/* 헤더 */}
-      <Header />
+      <div className="px-4">
+        <Header />
+      </div>
 
       {/* 페이지 컨텐츠 */}
       <div className="flex flex-1 flex-col justify-between p-6">
@@ -211,7 +221,11 @@ export default function Page() {
               </label>
               <div className="flex gap-4">
                 {/* 프로필 이미지 1 */}
-                <div className="size-16 rounded-full">
+                <button
+                  className="size-16 rounded-full"
+                  onClick={handleProfileClick}
+                  type="button"
+                >
                   <Image
                     src="/signUp/profile1.png"
                     alt="Profile 1"
@@ -219,9 +233,13 @@ export default function Page() {
                     height={64}
                     className="rounded-full"
                   />
-                </div>
+                </button>
                 {/* 프로필 이미지 2 */}
-                <div className="size-16 rounded-full">
+                <button
+                  className="size-16 rounded-full"
+                  onClick={handleProfileClick}
+                  type="button"
+                >
                   <Image
                     src="/signUp/profile2.png"
                     alt="Profile 2"
@@ -229,7 +247,7 @@ export default function Page() {
                     height={64}
                     className="rounded-full"
                   />
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -242,6 +260,26 @@ export default function Page() {
           </div>
         </form>
       </div>
+      {/* 모달 */}
+      {isModalOpen && (
+        <Modal closeOnFocusOut unmount={handleModalClose}>
+          <div className="flex h-full flex-col justify-between">
+            <Modal.HeaderWithClose />
+            <div className="flex flex-1 flex-col items-center justify-center">
+              <Modal.Title>준비중인 서비스입니다.</Modal.Title>
+            </div>
+            <div className="mt-4">
+              <Modal.Button
+                onClick={handleModalClose}
+                buttonType="abled"
+                className="w-full text-black"
+              >
+                닫기
+              </Modal.Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

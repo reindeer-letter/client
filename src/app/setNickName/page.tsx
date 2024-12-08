@@ -10,6 +10,7 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
+  const receiverId = searchParams.get("receiverId");
   const [nickname, setNickname] = useState("");
 
   const handleNext = () => {
@@ -19,10 +20,11 @@ const Page = () => {
     }
 
     router.push(
-      `/writingLetter?type=${type}&nickname=${encodeURIComponent(nickname)}`,
+      `/writingLetter?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
+        nickname,
+      )}`,
     );
   };
-
   return (
     <div className="flex h-screen flex-col bg-grey-900 text-white">
       <Header />
