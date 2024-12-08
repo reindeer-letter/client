@@ -8,12 +8,9 @@ importers:
 
   .:
     dependencies:
-<<<<<<< HEAD
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.54.0(react@19.0.0))
-=======
->>>>>>> e5072dd (chore: axios 설치)
       axios:
         specifier: ^1.7.9
         version: 1.7.9
