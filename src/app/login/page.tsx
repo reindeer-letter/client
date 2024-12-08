@@ -1,5 +1,6 @@
 "use client";
 
+import useLocalStorage from "@/hooks/useLocalStorage";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +20,8 @@ const LoginPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  const [, setId] = useLocalStorage("userId");
+  const [, setToken] = useLocalStorage("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -35,7 +38,10 @@ const LoginPage = () => {
 
       if (response.status === 201) {
         const result = response.data;
-        localStorage.setItem("userId", result.user.id);
+        console.log("로그인 성공:", result);
+        setId(result.user.id);
+        setToken(result.access_token);
+        console.log("userId", result.user.id);
         router.push("/home");
       } else {
         console.error("로그인 실패:", response.statusText);
@@ -50,7 +56,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-[#000000] to-[#434343] px-6 text-white">
+    <div className="relative flex h-screen flex-col items-center justify-center -bg--background px-4 text-white">
       <div className="absolute left-4 top-8">
         <button
           onClick={() => router.back()}
