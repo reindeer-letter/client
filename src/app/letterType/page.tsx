@@ -54,10 +54,10 @@ const Page = () => {
         guestClose="/invitaion"
       />
 
-      <main className="flex flex-1 flex-col items-center justify-center space-y-5">
+      <main className="flex flex-1 flex-col items-center justify-start space-y-5 pt-10">
         <button
           onClick={() => setSelected("TEXT")}
-          className={`flex h-[175px] w-[350px] flex-col items-center justify-center space-y-2 rounded-lg transition focus:outline-none ${
+          className={`mt-16 flex h-[175px] w-[350px] flex-col items-center justify-center space-y-2 rounded-lg transition focus:outline-none ${
             selected === "TEXT"
               ? "bg-grey-800 ring-2 ring-white"
               : "bg-grey-800"
