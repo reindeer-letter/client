@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Header from "@/components/header";
 import PopUp from "@/components/popUp";
+import Button from "@/components/button";
 import useOverlay from "../../hooks/useoverlay";
 import NavBar from "../../components/NavBar";
 
@@ -98,16 +99,14 @@ const Page = () => {
         </button>
       </main>
 
-      <footer className="py-4">
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="m-5 w-full rounded-md bg-white py-4 font-semibold text-black"
-            onClick={handleNext}
-          >
-            다음
-          </button>
-        </div>
+      <footer className="fixed bottom-0 w-full max-w-[600px] bg-grey-900 px-5 pb-12">
+        <Button
+          buttonType="abled"
+          onClick={handleNext}
+          className="w-full text-black"
+        >
+          다음
+        </Button>
       </footer>
     </div>
   );
