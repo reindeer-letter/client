@@ -10,9 +10,11 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "lottie-react": "^2.4.0",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
     "motion": "^11.13.1",
+
     "@hookform/resolvers": "^3.9.1",
     "next": "15.0.4",
     "react": "^19.0.0",
