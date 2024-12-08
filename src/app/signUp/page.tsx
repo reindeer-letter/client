@@ -224,6 +224,7 @@ export default function Page() {
                 <button
                   className="size-16 rounded-full"
                   onClick={handleProfileClick}
+                  type="button"
                 >
                   <Image
                     src="/signUp/profile1.png"
@@ -237,6 +238,7 @@ export default function Page() {
                 <button
                   className="size-16 rounded-full"
                   onClick={handleProfileClick}
+                  type="button"
                 >
                   <Image
                     src="/signUp/profile2.png"
