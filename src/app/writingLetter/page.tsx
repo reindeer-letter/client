@@ -58,13 +58,13 @@ const Page = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("type");
   const nickname = searchParams.get("nickname");
+  const receiverId = searchParams.get("receiverId");
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
   };
 
   const daysDifference = calculateDaysDifference(selectedDate);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmitLetter = async () => {
     if (!selectedDate) {
@@ -87,36 +87,25 @@ const Page = () => {
       const scheduledAt = `${year}-${String(month).padStart(2, "0")}-${String(
         day,
       ).padStart(2, "0")}`;
-
-      console.log("scheduledAt:", scheduledAt);
-      console.log("nickname:", nickname);
-
       const response = await instance.post("/letters", {
-        senderNickName: nickname,
         title,
         description,
         imageUrl: "https://example.com/image.jpg",
         bgmUrl: "https://example.com/music.mp3",
         category,
-        receiverId: 1,
+        receiverId: Number(receiverId),
         isOpen: false,
         scheduledAt,
+        senderNickName: nickname,
       });
 
       if (response.status === 201) {
-        console.log("편지 작성 성공:", response.data);
         overlay.unmount();
-        router.push(`/writingComplete`);
+        router.push(`/writingComplete?nickname=${nickname}`);
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          "편지 작성 실패:",
-          error.response?.status,
-          error.response?.data,
-        );
+      if (axios.isAxiosError(error))
         alert(`편지 작성 실패: ${JSON.stringify(error.response?.data)}`);
-      } else console.error("알 수 없는 오류:", error);
     }
   };
 

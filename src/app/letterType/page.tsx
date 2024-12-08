@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import "../globals.css";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Header from "@/components/header";
 import PopUp from "@/components/popUp";
@@ -13,6 +13,8 @@ const Page = () => {
   const [selected, setSelected] = useState<"TEXT" | "VOICE" | null>(null);
   const router = useRouter();
   const overlay = useOverlay();
+  const searchParams = useSearchParams();
+  const receiverId = searchParams.get("receiverId");
 
   const handleNext = () => {
     if (!selected) {
@@ -24,6 +26,7 @@ const Page = () => {
         <PopUp
           button="확인"
           title="준비 중 입니다"
+          description="현재 기능은 준비 중입니다."
           onConfirm={() => {
             overlay.unmount();
           }}
@@ -31,13 +34,12 @@ const Page = () => {
             overlay.unmount();
           }}
           unmount={overlay.unmount}
-          description=""
         />,
       );
       return;
     }
 
-    router.push(`/setNickName?type=${selected}`);
+    router.push(`/setNickName?type=${selected}&receiverId=${receiverId}`);
   };
 
   return (
