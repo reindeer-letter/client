@@ -138,24 +138,14 @@ const LoginPage = () => {
         </div>
 
         <div className="flex items-center justify-center space-x-4">
-          <button
-            aria-label="Kakao Login"
-            className="h-12 w-12 rounded-full bg-yellow-400 font-semibold text-black"
-          >
-            K
-          </button>
-          <button
-            aria-label="Naver Login"
-            className="h-12 w-12 rounded-full bg-green-500 font-semibold text-white"
-          >
-            N
-          </button>
-          <button
-            aria-label="Facebook Login"
-            className="h-12 w-12 rounded-full bg-blue-600 font-semibold text-white"
-          >
-            F
-          </button>
+          <Image src="/login/kakao.png" width={50} height={50} alt="카카오" />
+          <Image src="/login/naver.png" width={50} height={50} alt="카카오" />
+          <Image
+            src="/login/facebook.png"
+            width={50}
+            height={50}
+            alt="카카오"
+          />
         </div>
       </div>
     </div>
