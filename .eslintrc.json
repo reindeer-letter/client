@@ -23,8 +23,13 @@
   },
   "plugins": ["prettier"],
   "rules": {
+    "no-console": "off", // console 사용 허용
+    "no-alert": "off", // alert 사용 허용
+    "react/jsx-props-no-spreading": "off", // props spreading 허용
+    "jsx-a11y/anchor-is-valid": "off", // 빈 href 허용
+    "no-nested-ternary": "off",
+
     "no-use-before-define": "off",
-    "react/jsx-props-no-spreading": "off",
     "react/jsx-no-useless-fragment": "off",
     "no-shadow": "off",
     "arrow-body-style": "off",
