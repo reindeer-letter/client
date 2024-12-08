@@ -21,9 +21,9 @@ export default function BackButton({ isLoggedIn }: BackButtonProps) {
   return (
     <button 
       onClick={handleClick}
-      className="z-50 flex items-center ml-auto"
+      className="z-50 flex items-center ml-auto pr-5 pt-4"
     >
-      <Image src="/images/close.svg" alt="close" width={24} height={24} />
+      <Image src="/images/close.svg" alt="close" width={28} height={28} />
     </button>
   )
 } 
