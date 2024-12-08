@@ -5,6 +5,7 @@ import LottieLetterSend from "@/components/LottieLetterSend";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import WritingText from "./WritingText";
 import BackButton from "./BackButton";
+import Header from "../header";
 
 export default function WritingCompleteClient() {
   const [isLottieComplete, setIsLottieComplete] = useState(false);
@@ -18,6 +19,7 @@ export default function WritingCompleteClient() {
 
   return (
     <div className="flex h-svh flex-col items-center justify-center">
+      <Header />
       <BackButton isLoggedIn={isLoggedIn} />
       <LottieLetterSend onComplete={() => setIsLottieComplete(true)} />
       {isLottieComplete && (
