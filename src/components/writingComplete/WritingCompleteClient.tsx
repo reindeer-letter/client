@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import LottieLetterSend from "@/components/LottieLetterSend";
+import useLocalStorage from "@/hooks/useLocalStorage";
 import WritingText from "./WritingText";
 import BackButton from "./BackButton";
 
@@ -9,11 +10,11 @@ export default function WritingCompleteClient() {
   const [isLottieComplete, setIsLottieComplete] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showBubble, setShowBubble] = useState(true);
+  const [token] = useLocalStorage("token");
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    setIsLoggedIn(!!accessToken);
-  }, []);
+    setIsLoggedIn(!!token);
+  }, [token]);
 
   return (
     <div className="flex h-svh flex-col items-center justify-center">
