@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import instance from "@/api/instance";
 import { loginSchema, LoginFormInputs } from "../../utils/loginSchema";
 import InputField from "./components/InputField";
 
@@ -30,7 +30,7 @@ const LoginPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, data, {
+      const response = await instance.post("/auth/login", data, {
         headers: {
           "Content-Type": "application/json",
         },

@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import { SignUpFormData, signUpSchema } from "@/utils/signUpSchema";
 import Header from "@/components/header";
 import Button from "@/components/button";
-import axios from "axios";
+import { isAxiosError } from "axios";
+import instance from "@/api/instance";
 
 export default function Page() {
   const router = useRouter();
@@ -24,8 +25,6 @@ export default function Page() {
     resolver: zodResolver(signUpSchema),
   });
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const checkPassword = () => {
@@ -37,7 +36,7 @@ export default function Page() {
 
   const checkEmail = async () => {
     try {
-      const response = await axios.get(`${API_URL}auth/check-email`, {
+      const response = await instance.get(`/auth/check-email`, {
         params: {
           email: emailValue,
         },
@@ -47,14 +46,14 @@ export default function Page() {
         clearErrors("email");
       }
     } catch (error) {
-      if (axios.isAxiosError(error))
+      if (isAxiosError(error))
         setError("email", { message: "이미 사용 중인 이메일입니다." });
     }
   };
 
   const checkNickname = async () => {
     try {
-      const response = await axios.get(`${API_URL}auth/check-nickname`, {
+      const response = await instance.get(`/auth/check-nickname`, {
         params: {
           nickname: nicknameValue,
         },
@@ -65,7 +64,7 @@ export default function Page() {
         clearErrors("nickname");
       }
     } catch (error) {
-      if (axios.isAxiosError(error))
+      if (isAxiosError(error))
         setError("nickname", { message: "이미 사용 중인 별명입니다." });
     }
   };
@@ -76,7 +75,7 @@ export default function Page() {
     setIsSubmit(true);
 
     try {
-      const response = await axios.post(`${API_URL}auth/register`, data, {
+      const response = await instance.post(`/auth/register`, data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -86,7 +85,7 @@ export default function Page() {
         router.push("/login");
       } else alert("회원가입에 실패했습니다. 다시 시도해주세요.");
     } catch (error) {
-      if (axios.isAxiosError(error))
+      if (isAxiosError(error))
         alert(
           error.response?.data?.message ||
             "오류가 발생했습니다. 다시 시도해주세요.",

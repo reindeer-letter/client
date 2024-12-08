@@ -1,5 +1,6 @@
 "use client";
 
+import instance from "@/api/instance";
 import { useState } from "react";
 import Header from "@/components/header";
 import "../globals.css";
@@ -90,7 +91,7 @@ const Page = () => {
       console.log("scheduledAt:", scheduledAt);
       console.log("nickname:", nickname);
 
-      const response = await axios.post(`${API_URL}/letters`, {
+      const response = await instance.post("/letters", {
         senderNickName: nickname,
         title,
         description,
