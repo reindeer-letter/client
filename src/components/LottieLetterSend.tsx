@@ -1,6 +1,6 @@
 'use client'
 
-import letterSend from '../../../public/letter_send.json'
+import letterSend from '../../public/letter_send.json'
 import Lottie from "lottie-react";
 import { useState } from 'react';
 

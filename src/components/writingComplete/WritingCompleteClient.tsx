@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import LottieLetterSend from '@/app/components/LottieLetterSend';
+import LottieLetterSend from '@/components/LottieLetterSend';
 import WritingText from './WritingText';
-import BackButton from '../common/BackButton';
+import BackButton from './BackButton';
 
 export default function WritingCompleteClient() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function WritingCompleteClient() {
             )}
             <div className='w-full flex justify-center p-[16px] h-[116px] z-[51]'>
               <div className='w-[350px] h-[56px] flex items-center justify-center rounded-md bg-white text-black'>
-                {isLoggedIn ?'다른 편지 더 선물하기':'내 편��함 만들기'}
+                {isLoggedIn ?'다른 편지 더 선물하기':'내 편지함 만들기'}
               </div>
             </div>
           </div>
