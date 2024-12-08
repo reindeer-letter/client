@@ -35,7 +35,7 @@ const Page = () => {
           <Image src="/exit.png" alt="닫기" width={24} height={24} />
         </button>
       </header>
-      <main className="flex w-full flex-1 flex-col items-center justify-start space-y-4 px-4 pt-8">
+      <main className="flex w-full flex-1 flex-col items-center justify-start space-y-4 px-4 pt-2">
         <div className="text-md w-full text-left text-grey-50">
           편지에 적을 별명을 입력하세요
         </div>

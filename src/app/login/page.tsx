@@ -1,39 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-
-interface LoginFormInputs {
-  email: string;
-  password: string;
-}
+import { useRouter } from "next/navigation";
+import { loginSchema, LoginFormInputs } from "../../utils/loginSchema";
+import InputField from "./components/InputField";
 
 const LoginPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInputs>();
+  } = useForm<LoginFormInputs>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+  const onSubmit = async (data: LoginFormInputs) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         },
-        body: JSON.stringify(data),
-      });
+      );
 
       if (response.ok) {
         const result = await response.json();
         console.log("로그인 성공:", result);
+        router.push("/home");
       } else {
         console.error("로그인 실패:", response.statusText);
         alert("로그인 실패: 이메일 또는 비밀번호를 확인해주세요.");
@@ -61,49 +67,18 @@ const LoginPage = () => {
         </div>
 
         <div className="w-full space-y-4">
-          <div>
-            <input
-              type="email"
-              placeholder="이메일 입력"
-              {...register("email", {
-                required: "이메일을 입력해주세요",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "유효한 이메일 주소를 입력하세요",
-                },
-              })}
-              className={`h-12 w-full rounded-lg border px-4 placeholder-gray-400 focus:border-white focus:bg-grey-800 focus:outline-none ${
-                errors.email
-                  ? "border-red-500 bg-transparent text-red-500"
-                  : "border-gray-400 bg-transparent text-white"
-              }`}
-            />
-
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <input
-              type="password"
-              placeholder="비밀번호 입력"
-              {...register("password", { required: "비밀번호를 입력해주세요" })}
-              className={`h-12 w-full rounded-lg border px-4 placeholder-gray-400 focus:border-white focus:bg-grey-800 focus:outline-none ${
-                errors.password
-                  ? "border-red-500 bg-transparent text-red-500"
-                  : "border-gray-400 bg-transparent text-white"
-              }`}
-            />
-            {errors.password && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
+          <InputField
+            type="email"
+            placeholder="이메일 입력"
+            register={register("email")}
+            error={errors.email}
+          />
+          <InputField
+            type="password"
+            placeholder="비밀번호 입력"
+            register={register("password")}
+            error={errors.password}
+          />
           <button
             type="submit"
             className="h-12 w-full rounded-lg bg-white font-semibold text-black hover:bg-gray-100 focus:outline-none"

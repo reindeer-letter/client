@@ -5,13 +5,35 @@ import "../globals.css";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Header from "@/components/header";
+import PopUp from "@/components/popUp";
+import useOverlay from "../../hooks/useoverlay";
 
 const Page = () => {
   const [selected, setSelected] = useState<"TEXT" | "VOICE" | null>(null);
   const router = useRouter();
+  const overlay = useOverlay();
+
   const handleNext = () => {
     if (!selected) {
       alert("편지 유형을 선택해주세요!");
+      return;
+    }
+    if (selected === "VOICE") {
+      // 목소리로 남기기 선택 시 모달 표시
+      overlay.mount(
+        <PopUp
+          button="확인"
+          title="준비 중 입니다"
+          onConfirm={() => {
+            overlay.unmount();
+          }}
+          onCancel={() => {
+            overlay.unmount();
+          }}
+          unmount={overlay.unmount}
+          description=""
+        />,
+      );
       return;
     }
 
