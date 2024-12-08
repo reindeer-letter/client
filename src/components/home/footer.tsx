@@ -15,9 +15,9 @@ export default function Footer() {
   const overlay = useOverlay();
 
   const handleShare = useCallback(async () => {
-    await navigator.clipboard.writeText(
-      `${window.location.origin}/letterType?receiverId=${id}`,
-    );
+    const currentUrl = new URL("invitation", window.location.origin);
+    currentUrl.searchParams.set("receiverId", String(id));
+    await navigator.clipboard.writeText(currentUrl.toString());
     overlay.mount(
       <PopUp
         title="링크 복사 완료"
@@ -31,7 +31,9 @@ export default function Footer() {
   }, [id, overlay]);
 
   const handleGift = useCallback(() => {
-    router.push(`${window.location.origin}?receiverId=${id}`);
+    const currentUrl = new URL("letterType", window.location.origin);
+    currentUrl.searchParams.set("receiverId", String(id));
+    router.push(currentUrl.toString());
   }, [id, router]);
 
   return (

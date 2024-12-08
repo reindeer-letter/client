@@ -1,11 +1,13 @@
 import { CATEGORY } from "@/constants/category";
+import Header from "@/components/header";
 import MailScroll from "@/components/home/mailScroll";
 import CategoryButton from "../../components/home/categoryButton";
 import Footer from "../../components/home/footer";
 
-export default async function Page() {
+export default function Page() {
   return (
     <>
+      <Header />
       <div className="mt-[25px] text-center text-Title01-SB text-white">
         받은 편지함
       </div>

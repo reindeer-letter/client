@@ -1,5 +1,6 @@
 "use client";
 
+import { CanceledError } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { GetLettersMyLettersResponse } from "@/types/letters";
@@ -17,7 +18,7 @@ export default function MailScroll() {
       route: "/letters/my",
     });
   const router = useRouter();
-  if (isError)
+  if (!data && isError && !(error instanceof CanceledError))
     return (
       <div className="mb-[116px] text-center text-Body01-B text-white">
         <div>편지를 불러오는 중에 오류가 발생했습니다.</div>
@@ -63,7 +64,7 @@ export default function MailScroll() {
       </section>
     );
   return (
-    <section className="mb-[116px] flex flex-col gap-7">
+    <section className="flex flex-col gap-7 pb-[128px]">
       {data
         ? data.map(
             ({
@@ -81,6 +82,7 @@ export default function MailScroll() {
                 return (
                   <SealedMail
                     key={id}
+                    id={id}
                     nickName={receiver.nickName}
                     title={title}
                     writtenDate={createdAt}
@@ -100,7 +102,7 @@ export default function MailScroll() {
           )
         : null}
       {isLoading && <MailScrollSkeleton />}
-      {hasMore && <IntersectionArea func={fetchMore} />}
+      {hasMore && !isLoading && <IntersectionArea func={fetchMore} />}
     </section>
   );
 }

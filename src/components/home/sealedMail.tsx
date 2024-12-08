@@ -1,19 +1,25 @@
 import formateISODateToYYYYMMDD from "@/utils/formatDate";
 import Image from "next/image";
+import Link from "next/link";
 
 interface SealedMailProps {
   title: string;
   nickName: string;
+  id: number;
   writtenDate: string;
 }
 
 export default function SealedMail({
   nickName,
   title,
+  id,
   writtenDate,
 }: SealedMailProps) {
   return (
-    <section className="relative mx-auto block h-[221px] w-[350px] selection:bg-none">
+    <Link
+      href={`/openLetter/${id}`}
+      className="relative mx-auto block h-[221px] w-[350px] selection:bg-none hover:opacity-70"
+    >
       <Image src="/images/letter.svg" alt="Mail" priority fill />
       <section className="absolute h-full w-full">
         <Image
@@ -41,6 +47,6 @@ export default function SealedMail({
           </section>
         </footer>
       </section>
-    </section>
+    </Link>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import instance from "@/api/instance";
-import { isAxiosError } from "axios";
+import { CanceledError, isAxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import useLocalStorage from "./useLocalStorage";
 
@@ -62,7 +62,8 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
         setHasMore(response.data.meta.page < response.data.meta.totalPages);
       } catch (error) {
         setIsError(true);
-        if (isAxiosError(error))
+        if (error instanceof CanceledError) setError(error);
+        else if (isAxiosError(error))
           setError(new Error(error.response?.data.message));
         else setError(new Error("알 수 없는 오류가 발생했습니다."));
       } finally {
