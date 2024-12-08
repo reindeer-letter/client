@@ -1,9 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import Button from "@/components/button";
 import Link from "next/link";
 import Header from "@/components/header";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const receiverId = searchParams.get("receiverId");
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-black to-grey-800 text-white">
       <Header />
@@ -23,7 +29,11 @@ export default function Home() {
       </div>
 
       <div className="flex w-full flex-col items-center justify-end space-y-4 px-6 pb-10">
-        <Link href="/letterType" className="w-full" passHref>
+        <Link
+          href={`/letterType${receiverId && `?receiverId=${receiverId}`}`}
+          className="w-full"
+          passHref
+        >
           <Button buttonType="abled" className="bg-primary-700 text-black">
             편지 선물하기
           </Button>
