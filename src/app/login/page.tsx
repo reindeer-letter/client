@@ -39,6 +39,8 @@ const LoginPage = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("로그인 성공:", result);
+        localStorage.setItem("userId", result.user.id);
+        console.log("userId", result.user.id);
         router.push("/home");
       } else {
         console.error("로그인 실패:", response.statusText);

@@ -83,7 +83,7 @@ const Page = () => {
 
       const scheduledAt = `${year}-${String(month).padStart(2, "0")}-${String(
         day,
-      ).padStart(2, "0")}`; // "YYYY-MM-DD" 형식
+      ).padStart(2, "0")}`;
 
       console.log("scheduledAt:", scheduledAt);
       console.log("nickname:", nickname);
@@ -99,16 +99,14 @@ const Page = () => {
           category,
           receiverId: 1,
           isOpen: false,
-          scheduledAt, // 문자열로 전달
+          scheduledAt,
         },
       );
 
       if (response.status === 201) {
         console.log("편지 작성 성공:", response.data);
         overlay.unmount();
-        router.push(
-          `/writingComplete?nickname=${encodeURIComponent(nickname)}`,
-        );
+        router.push(`/writingComplete`);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
