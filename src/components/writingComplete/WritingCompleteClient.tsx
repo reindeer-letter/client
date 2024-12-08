@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import LottieLetterSend from "@/components/LottieLetterSend";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import dynamic from "next/dist/shared/lib/dynamic";
 import WritingText from "./WritingText";
 import BackButton from "./BackButton";
 
@@ -16,8 +17,13 @@ export default function WritingCompleteClient() {
     setIsLoggedIn(!!token);
   }, [token]);
 
+  const HeaderWithNoSSR = dynamic(() => import("../header"), {
+    ssr: false,
+  });
+
   return (
-    <div className="flex h-svh flex-col items-center justify-center">
+    <div className="flex h-screen flex-col items-center justify-center">
+      <HeaderWithNoSSR />
       <BackButton isLoggedIn={isLoggedIn} />
       <LottieLetterSend onComplete={() => setIsLottieComplete(true)} />
       {isLottieComplete && (
@@ -39,7 +45,7 @@ export default function WritingCompleteClient() {
                 </div>
               </div>
             )}
-            <div className="z-[51] flex h-[116px] w-full justify-center p-[16px]">
+            <div className="z-[51] mt-auto flex h-[116px] w-full justify-center p-[16px]">
               <div className="flex h-[56px] w-[350px] items-center justify-center rounded-md bg-white text-black">
                 {isLoggedIn ? "다른 편지 더 선물하기" : "내 편지함 만들기"}
               </div>
