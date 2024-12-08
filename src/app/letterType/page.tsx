@@ -19,7 +19,6 @@ const Page = () => {
       return;
     }
     if (selected === "VOICE") {
-      // 목소리로 남기기 선택 시 모달 표시
       overlay.mount(
         <PopUp
           button="확인"

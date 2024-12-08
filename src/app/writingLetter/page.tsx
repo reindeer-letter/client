@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Header from "@/components/header";
 import "../globals.css";
 import Image from "next/image";
 import PopUp from "@/components/popUp";
 import axios from "axios";
+import { useSearchParams, useRouter } from "next/navigation";
 import useOverlay from "../../hooks/useoverlay";
 import CalendarModal from "./components/CalendarModal";
 import ActionBar from "./components/ActionBar";
@@ -52,7 +52,7 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-
+  const router = useRouter();
   const searchParams = useSearchParams();
   const category = searchParams.get("type");
   const nickname = searchParams.get("nickname");
@@ -69,6 +69,11 @@ const Page = () => {
       return;
     }
 
+    if (!nickname) {
+      alert("닉네임이 없습니다. 다시 시도해주세요.");
+      return;
+    }
+
     try {
       const [year, month, day] = selectedDate
         .replace(/년|월|일/g, "")
@@ -76,11 +81,13 @@ const Page = () => {
         .split(" ")
         .map(Number);
 
-      const scheduledDate = new Date(year, month - 1, day, 12);
-      const scheduledAt = Math.floor(scheduledDate.getTime() / 1000);
+      const scheduledAt = `${year}-${String(month).padStart(2, "0")}-${String(
+        day,
+      ).padStart(2, "0")}`; // "YYYY-MM-DD" 형식
 
-      console.log(scheduledAt);
-      console.log(nickname);
+      console.log("scheduledAt:", scheduledAt);
+      console.log("nickname:", nickname);
+
       const response = await axios.post(
         "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/letters",
         {
@@ -92,13 +99,16 @@ const Page = () => {
           category,
           receiverId: 1,
           isOpen: false,
-          scheduledAt,
+          scheduledAt, // 문자열로 전달
         },
       );
 
       if (response.status === 201) {
         console.log("편지 작성 성공:", response.data);
         overlay.unmount();
+        router.push(
+          `/writingComplete?nickname=${encodeURIComponent(nickname)}`,
+        );
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -129,11 +139,19 @@ const Page = () => {
     <div className="flex h-screen flex-col bg-grey-900 text-white">
       <Header />
       <header className="flex items-center justify-between px-4 py-6">
-        <button aria-label="뒤로가기" className="text-white">
+        <button
+          aria-label="뒤로가기"
+          className="text-white"
+          onClick={() => router.back()}
+        >
           <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
         </button>
         <h1 className="font-dongle text-lg">편지작성</h1>
-        <button aria-label="닫기" className="pr-1 text-white">
+        <button
+          aria-label="닫기"
+          className="pr-1 text-white"
+          onClick={() => router.push("/")}
+        >
           <Image src="/icons/close.png" alt="닫기" width={28} height={28} />
         </button>
       </header>
