@@ -133,7 +133,7 @@ export default function Page() {
                   id="email"
                   type="text"
                   {...register("email")}
-                  className="flex-1 rounded bg-grey-800 p-2 text-white"
+                  className="flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
                 />
                 <button
                   className="rounded-md border border-grey-700 px-3 py-2"
@@ -156,7 +156,7 @@ export default function Page() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className="w-full rounded bg-grey-800 p-2 pr-10 text-white"
+                  className="w-full rounded bg-grey-800 p-2 pr-10 text-white focus:outline-none"
                 />
                 <button
                   type="button"
@@ -190,7 +190,7 @@ export default function Page() {
                   id="nickname"
                   type="text"
                   {...register("nickname")}
-                  className="flex-1 rounded bg-grey-800 p-2 text-white"
+                  className="flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
                 />
                 <button
                   className="rounded-md border border-grey-700 px-3 py-2"
