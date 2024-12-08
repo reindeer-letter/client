@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LottieLetterSend from '@/app/components/LottieLetterSend';
 import WritingText from './WritingText';
+import BackButton from '../common/BackButton';
 
 export default function WritingCompleteClient() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function WritingCompleteClient() {
 
   return (
     <div className='flex flex-col items-center justify-center h-svh'>
+      <BackButton />
       <LottieLetterSend onComplete={() => setIsLottieComplete(true)} />
       {isLottieComplete && (
         <>
