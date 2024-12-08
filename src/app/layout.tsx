@@ -16,16 +16,22 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "순록의 편지",
-  description: "순록의 편지 - 설명",
+  description: "순록의 편지 - 오늘의 기억을 선물하는 편지",
+  icons: {
+    icon: [
+      { url: "/icons/favicon_16_16.png", sizes: "16x16", type: "image/png" },
+      { url: "/icons/favicon_96_96_2x.png", sizes: "96x96", type: "image/png" },
+    ],
+  },
   openGraph: {
-    title: "순록의 편지 - ...??",
-    description: "순록의 편지 설명",
+    title: "순록의 편지 - 오늘의 기억을 선물하는 편지",
+    description: "미래의 나에게, 오늘의 기억을 선물하는 편지",
     url: "https://example.com",
     type: "website",
     images: [
       {
-        url: "",
-        alt: "",
+        url: "/images/Tumbnail for kakaotalk.png",
+        alt: "순록의 편지",
       },
     ],
   },
