@@ -34,7 +34,7 @@ const Page = () => {
         guestClose="/invitaion"
       />
       <main className="flex w-full flex-1 flex-col items-center justify-start space-y-4 px-4 pt-2">
-        <div className="text-md w-full text-left text-grey-50">
+        <div className="text-md w-full text-left text-Body02-R">
           편지에 적을 별명을 입력하세요
         </div>
         <input

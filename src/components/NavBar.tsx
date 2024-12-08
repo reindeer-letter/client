@@ -48,7 +48,7 @@ const NavBar = ({
       <button aria-label="뒤로가기" className="text-white" onClick={handleBack}>
         <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
       </button>
-      <h1 className="font-dongle text-lg">{title}</h1>
+      <h1 className="font-dongle text-Title01-SB">{title}</h1>
       <button
         aria-label="닫기"
         className="pr-1 text-white"

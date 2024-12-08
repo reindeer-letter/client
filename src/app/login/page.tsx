@@ -20,31 +20,26 @@ const LoginPage = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const onSubmit = async (data: LoginFormInputs) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post(
-        "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/auth/login",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+      const response = await axios.post(`${API_URL}/auth/login`, data, {
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+      });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         const result = response.data;
-        console.log("로그인 성공:", result);
         localStorage.setItem("userId", result.user.id);
-        console.log("userId", result.user.id);
         router.push("/home");
       } else {
         console.error("로그인 실패:", response.statusText);
-        alert("로그인 실패: 이메일 또는 비밀번호를 확인해주세요.");
+        alert("이메일 또는 비밀번호를 확인해주세요.");
       }
     } catch (error) {
       console.error("오류 발생:", error);
@@ -55,14 +50,22 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-[#000000] to-[#434343] px-4 text-white">
+    <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-[#000000] to-[#434343] px-6 text-white">
+      <div className="absolute left-4 top-8">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center space-x-2 text-Body02-R text-grey-300 hover:text-white"
+        >
+          <Image src="/left_arrow.png" width={24} height={24} alt="뒤로가기" />
+        </button>
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mb-28 w-full max-w-md space-y-7"
+        className="mb-12 w-full max-w-md space-y-7"
       >
-        <div className="flex flex-col items-center space-y-2 pb-4 pt-8 text-center">
-          <p className="text-sm">미래의 나에게</p>
-          <p className="pb-2 text-sm">오늘의 기억을 선물하는 편지,</p>
+        <div className="flex flex-col items-center space-y-2 pb-4 pt-24 text-center">
+          <p className="text-Body01-M">미래의 나에게</p>
+          <p className="pb-2 text-Body01-M">오늘의 기억을 선물하는 편지,</p>
           <div className="flex w-full justify-center">
             <Image src="/logo.png" width={120} height={37} alt="로고" />
           </div>
@@ -83,14 +86,14 @@ const LoginPage = () => {
           />
           <button
             type="submit"
-            className="h-12 w-full rounded-lg bg-white font-semibold text-black hover:bg-gray-100 focus:outline-none"
+            className="h-12 w-full rounded-lg bg-white font-semibold text-grey-900 focus:outline-none"
             disabled={isSubmitting}
           >
             {isSubmitting ? "로그인 중..." : "로그인"}
           </button>
         </div>
 
-        <div className="mt-4 space-x-4 text-center text-sm text-grey-300">
+        <div className="mt-4 space-x-4 text-center text-Body02-R text-grey-300">
           <a href="#" className="hover:text-white">
             아이디 찾기
           </a>
@@ -109,13 +112,13 @@ const LoginPage = () => {
         </div>
       </form>
 
-      <div className="absolute bottom-10 w-full px-6">
-        <div className="mx-auto mb-10 flex w-full max-w-md items-center">
-          <div className="flex-1 border-t border-grey-300" />
-          <p className="mx-4 whitespace-nowrap text-sm text-grey-300">
+      <div className="w-full px-6 pt-12">
+        <div className="mx-auto mb-6 flex w-full max-w-md items-center">
+          <div className="flex-1 border-t border-grey-700" />
+          <p className="mx-2 flex-1 whitespace-nowrap text-sm text-grey-300">
             간편하게 시작하기
           </p>
-          <div className="flex-1 border-t border-grey-300" />
+          <div className="flex-1 border-t border-grey-700" />
         </div>
 
         <div className="flex items-center justify-center space-x-4">

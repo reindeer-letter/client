@@ -63,6 +63,7 @@ const Page = () => {
   };
 
   const daysDifference = calculateDaysDifference(selectedDate);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmitLetter = async () => {
     if (!selectedDate) {
@@ -89,20 +90,17 @@ const Page = () => {
       console.log("scheduledAt:", scheduledAt);
       console.log("nickname:", nickname);
 
-      const response = await axios.post(
-        "https://ak1pxbtetk.execute-api.ap-northeast-2.amazonaws.com/dev/letters",
-        {
-          senderNickName: nickname,
-          title,
-          description,
-          imageUrl: "https://example.com/image.jpg",
-          bgmUrl: "https://example.com/music.mp3",
-          category,
-          receiverId: 1,
-          isOpen: false,
-          scheduledAt,
-        },
-      );
+      const response = await axios.post(`${API_URL}/letters`, {
+        senderNickName: nickname,
+        title,
+        description,
+        imageUrl: "https://example.com/image.jpg",
+        bgmUrl: "https://example.com/music.mp3",
+        category,
+        receiverId: 1,
+        isOpen: false,
+        scheduledAt,
+      });
 
       if (response.status === 201) {
         console.log("편지 작성 성공:", response.data);
@@ -152,7 +150,7 @@ const Page = () => {
             <input
               type="text"
               placeholder="제목을 입력하세요"
-              className="w-full max-w-md border-none bg-transparent font-handwriting text-3xl text-black placeholder-gray-500 focus:outline-none"
+              className="w-full max-w-md border-none bg-transparent font-handwriting text-3xl text-black placeholder-grey-600 focus:outline-none"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -162,7 +160,7 @@ const Page = () => {
         <div className="w-full flex-1">
           <textarea
             placeholder="내용을 입력하세요"
-            className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-gray-500 focus:outline-none"
+            className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />

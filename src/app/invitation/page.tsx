@@ -1,10 +1,12 @@
 import Image from "next/image";
 import Button from "@/components/button";
 import Link from "next/link";
+import Header from "@/components/header";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-black to-grey-800 text-white">
+      <Header />
       <div className="flex flex-1 flex-col items-center justify-center space-y-6 text-center *:text-Body01-M">
         <div className="flex flex-col items-center space-y-2">
           <p>미래의 나에게</p>

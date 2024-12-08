@@ -19,7 +19,7 @@ const ActionBar = () => {
           height={24}
         />
       </button>
-      <div className="flex items-center space-x-2 text-sm text-gray-600">
+      <div className="flex items-center space-x-2 text-sm text-grey-900">
         <Image
           src="/writingletter/location.png"
           alt="위치 아이콘"
