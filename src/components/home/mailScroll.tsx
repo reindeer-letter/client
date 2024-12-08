@@ -40,9 +40,9 @@ export default function MailScroll() {
         </Button>
       </div>
     );
-  if (!data && !isLoading)
+  if ((!data || data.length === 0) && !isLoading)
     return (
-      <section className="relative mb-[212px] mt-[88px]">
+      <section className="relative mt-[88px]">
         <Image
           src="/images/reindeer-cry.png"
           alt="reindeer-cry"
