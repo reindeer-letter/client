@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Dongle&family=Nanum+Pen+Script&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -38,4 +40,10 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.bg-custom-background {
+  background-image: url("/writingletter/letter_paper.png");
+  background-size: cover;
+  background-position: center;
 }
