@@ -4,12 +4,15 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { SignUpFormData, signUpSchema } from "@/utils/signUpSchema";
 import Header from "@/components/header";
 import Button from "@/components/button";
 import axios from "axios";
 
 export default function Page() {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -39,9 +42,10 @@ export default function Page() {
           },
         },
       );
-      if (response.status === 201)
+      if (response.status === 201) {
         alert("회원가입이 성공적으로 완료되었습니다!");
-      else alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+        router.push("/login");
+      } else alert("회원가입에 실패했습니다. 다시 시도해주세요.");
     } catch (error) {
       if (axios.isAxiosError(error))
         alert(
