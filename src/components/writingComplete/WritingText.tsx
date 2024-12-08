@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 
 export default function WritingText() {
   const searchParams = useSearchParams();
-  const nickNamequery = searchParams.get("nickName") ?? "";
+  const nickNamequery = searchParams.get("nickname") ?? "";
   const nickName = decodeURIComponent(nickNamequery);
 
   return (
