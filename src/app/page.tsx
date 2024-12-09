@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex h-screen flex-col -bg--background text-white">
-      <div className="text-center*:text-Body01-M flex flex-1 flex-col items-center justify-start space-y-6 pt-36">
+      <div className="text-center*:text-Body01-M flex flex-1 flex-col items-center justify-start space-y-6 pt-32">
         {/* 상단 제목 */}
         <div className="flex flex-col items-center space-y-2">
           <p>미래의 나에게</p>
