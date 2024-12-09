@@ -7,6 +7,7 @@ import LottieLetterSend from "@/components/LottieLetterSend";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import BackButton from "./BackButton";
 import WritingText from "./WritingText";
+import Button from "../button";
 
 export default function WritingCompleteClient() {
   const router = useRouter();
@@ -56,12 +57,13 @@ export default function WritingCompleteClient() {
               </div>
             )}
             <div className="z-[51] mt-auto flex h-[116px] w-full justify-center p-[16px]">
-              <button
-                className="flex h-[56px] w-[350px] items-center justify-center rounded-md bg-white text-black"
+              <Button
+                buttonType="Primary"
+                className="flex h-[56px] !w-[350px] items-center justify-center rounded-md"
                 onClick={handleClick}
               >
                 {isLoggedIn ? "다른 편지 더 선물하기" : "내 편지함 만들기"}
-              </button>
+              </Button>
             </div>
           </div>
         </>
