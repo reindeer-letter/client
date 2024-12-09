@@ -253,13 +253,14 @@ export default function Page() {
           </div>
 
           {/* 완료 버튼 */}
-          <div className="flex justify-center bg-black pb-8">
+          <div className="flex justify-center bg-black pb-4">
             <Button type="submit" buttonType="abled" className="text-black">
               완료
             </Button>
           </div>
         </form>
       </div>
+
       {/* 모달 */}
       {isModalOpen && (
         <Modal closeOnFocusOut unmount={handleModalClose}>
