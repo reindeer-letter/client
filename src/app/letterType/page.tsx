@@ -44,8 +44,10 @@ const Page = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-grey-900 text-white">
-      <Header />
+    <div className="flex min-h-screen flex-col bg-grey-900 text-white">
+      <div className="px-4">
+        <Header />
+      </div>
       <NavBar
         title="편지 유형 선택"
         loggedBack="/home"
@@ -54,7 +56,7 @@ const Page = () => {
         guestClose="/invitaion"
       />
 
-      <main className="flex flex-1 flex-col items-center justify-start space-y-5 pt-10">
+      <main className="flex flex-1 flex-col items-center justify-start space-y-5">
         <button
           onClick={() => setSelected("TEXT")}
           className={`mt-16 flex h-[175px] w-[350px] flex-col items-center justify-center space-y-2 rounded-lg transition focus:outline-none ${
