@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 
 export default function Home() {
   const searchParams = useSearchParams();
+  const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
 
   return (
@@ -37,9 +38,13 @@ export default function Home() {
         </div>
       </div>
       <div className="flex w-full flex-col items-center justify-end space-y-4 px-6 pb-10">
-        <Link href="/signUp" className="w-full" passHref>
+        <Link
+          href={`/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`}
+          className="w-full"
+          passHref
+        >
           <Button buttonType="abled" className="text-black">
-            내 편지함 만들기
+            편지 선물하기
           </Button>
         </Link>
       </div>
