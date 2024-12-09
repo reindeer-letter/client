@@ -10,17 +10,7 @@ type Letter = {
   scheduledAt: string;
   createdAt: string;
   updatedAt: string;
-  userId: number | null;
-  receiverId: number;
-  receiver: {
-    id: number;
-    email: string;
-    password: string;
-    nickName: string;
-    profileImageUrl: string | null;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  senderNickName: string;
 };
 
 export interface GetLettersMyLettersResponse {
