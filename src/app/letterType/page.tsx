@@ -54,9 +54,9 @@ const Page = () => {
       <NavBar
         title="편지 유형 선택"
         loggedBack="/home"
-        guestBack="/invitaion"
+        guestBack="/invitation"
         loggedClose="/"
-        guestClose="/invitaion"
+        guestClose="/invitation"
       />
 
       <main className="flex flex-1 flex-col items-center justify-start space-y-5">
