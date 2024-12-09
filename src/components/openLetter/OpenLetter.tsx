@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import ActionBar from "@/app/writingLetter/components/ActionBar";
+import ActionBar from "@/components/writingLetter/ActionBar";
 import Link from "next/link";
 import Image from "next/image";
 import instance from "@/api/instance";

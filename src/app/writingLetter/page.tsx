@@ -9,10 +9,10 @@ import PopUp from "@/components/popUp";
 import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/button";
-import useOverlay from "../../hooks/useoverlay";
-import CalendarModal from "./components/CalendarModal";
-import ActionBar from "./components/ActionBar";
-import NavBar from "../../components/NavBar";
+import useOverlay from "@/hooks/useoverlay";
+import CalendarModal from "@/components/writingLetter/CalendarModal";
+import ActionBar from "@/components/writingLetter/ActionBar";
+import NavBar from "@/components/NavBar";
 
 const formatDate = (date: Date) => {
   const daysOfWeek = [
