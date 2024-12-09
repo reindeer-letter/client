@@ -53,7 +53,7 @@ export default function MailScroll() {
               isDelivered,
               scheduledAt,
               createdAt,
-              receiver,
+              senderNickName,
               isOpen,
             }) => {
               if (!isDelivered)
@@ -63,7 +63,7 @@ export default function MailScroll() {
                   <SealedMail
                     key={id}
                     id={id}
-                    nickName={receiver.nickName}
+                    nickName={senderNickName}
                     title={title}
                     writtenDate={createdAt}
                   />
@@ -73,7 +73,7 @@ export default function MailScroll() {
                   <Mail
                     id={id}
                     writtenDate={createdAt}
-                    nickName={receiver.nickName}
+                    nickName={senderNickName}
                     title={title}
                   />
                 </section>
