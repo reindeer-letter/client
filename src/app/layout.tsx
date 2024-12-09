@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
+// eslint-disable-next-line
+import { Nanum_Pen_Script } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import OverlayProvider from "@/providers/overlayProvider";
-import localFont from "next/font/local";
 
 const pretendard = localFont({
-  src: "../../public/fonts/PretendardVariable.woff2",
+  src: "/fonts/Pretendard-Regular.otf",
   display: "swap",
-  weight: "45 920",
-  variable: "--font-pretendard",
+});
+
+// eslint-disable-next-line
+const nanumPenScript = Nanum_Pen_Script({
+  weight: "400",
+  variable: "--font-nanum-pen-script",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -39,8 +47,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={pretendard.className}>
-      <body className={`${pretendard.className} h-svh bg-black antialiased`}>
+    <html
+      lang="en"
+      className={`${pretendard.className} ${nanumPenScript.variable}`}
+    >
+      <body className="h-svh bg-black antialiased">
         <OverlayProvider>
           <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
             {children}

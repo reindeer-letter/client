@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Button from "@/components/button";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import useOverlay from "@/hooks/useoverlay";
@@ -12,11 +13,13 @@ import PopUp from "../popUp";
 export default function Footer() {
   const router = useRouter();
   const [id] = useLocalStorage("userId");
+  const [nickName] = useLocalStorage("nickName");
   const overlay = useOverlay();
 
   const handleShare = useCallback(async () => {
     const currentUrl = new URL("invitation", window.location.origin);
     currentUrl.searchParams.set("receiverId", String(id));
+    currentUrl.searchParams.set("receiverNickName", String(nickName));
     await navigator.clipboard.writeText(currentUrl.toString());
     overlay.mount(
       <PopUp
@@ -28,20 +31,32 @@ export default function Footer() {
         button="확인"
       />,
     );
-  }, [id, overlay]);
+  }, [id, overlay, nickName]);
 
   const handleGift = useCallback(() => {
     const currentUrl = new URL("letterType", window.location.origin);
     currentUrl.searchParams.set("receiverId", String(id));
+    currentUrl.searchParams.set("receiverNickName", String(nickName));
     router.push(currentUrl.toString());
-  }, [id, router]);
+  }, [id, router, nickName]);
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 mx-auto flex h-[116px] w-full max-w-[600px] justify-center gap-2 bg-grey-900 px-5 pb-12 pt-3">
       <Button buttonType="abled" onClick={handleGift} className="truncate">
         나에게 편지 선물하기
       </Button>
-      <Button buttonType="Primary" onClick={handleShare}>
+      <Button
+        buttonType="Primary"
+        onClick={handleShare}
+        className="flex justify-center gap-2 px-4 py-4"
+      >
+        <Image
+          src="/icons/share.png"
+          alt="share"
+          width={24}
+          height={24}
+          priority
+        />
         내 편지함 공유하기
       </Button>
     </footer>

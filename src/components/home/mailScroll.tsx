@@ -20,7 +20,7 @@ export default function MailScroll() {
     });
   const router = useRouter();
 
-  if (!data && isError && !(error instanceof CanceledError))
+  if (isError && !(error instanceof CanceledError))
     return (
       <div className="mb-[116px] text-center text-Body01-B text-white">
         <div>편지를 불러오는 중에 오류가 발생했습니다.</div>
@@ -42,7 +42,7 @@ export default function MailScroll() {
         </Button>
       </div>
     );
-  if ((!data || data.length === 0) && !isLoading) return <EmptyMail />;
+  if (data && data.length === 0 && !isLoading) return <EmptyMail />;
   return (
     <section className="flex flex-col gap-7 pb-[128px]">
       {data
@@ -81,7 +81,7 @@ export default function MailScroll() {
             },
           )
         : null}
-      {isLoading && <MailScrollSkeleton />}
+      {(!data || isLoading) && <MailScrollSkeleton />}
       {hasMore && !isLoading && <IntersectionArea func={fetchMore} />}
     </section>
   );
