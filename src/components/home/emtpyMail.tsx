@@ -19,7 +19,7 @@ export default function EmptyMail() {
 
   return (
     <>
-      <section className="relative mt-[88px]">
+      <section className="relative mt-[88px] pb-[116px]">
         <Image
           src="/images/reindeer-cry.png"
           alt="reindeer-cry"
@@ -48,15 +48,15 @@ export default function EmptyMail() {
               exit={{ opacity: 0, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <section className="mx-auto grid w-full min-w-[375px] max-w-[600px] grid-cols-2">
-                <section />
-                <section className="relative flex items-center justify-center">
-                  <div className="relative bottom-[126px] right-10 mx-auto flex items-center justify-center whitespace-nowrap rounded border border-[#474747] bg-grey-800 px-5 py-2 text-center text-Body02-SB text-white">
+              <section className="mx-auto flex w-full min-w-[375px] max-w-[600px]">
+                <section className="flex-1" />
+                <section className="relative flex-1">
+                  <div className="relative bottom-[126px] right-5 flex justify-between whitespace-nowrap rounded border border-[#474747] bg-grey-800 px-2 py-2 pr-8 text-center text-Body02-SB text-white">
                     <span className="flex-shrink-0">
-                      내 편지함을 만들고 친구들에게 편지를 받아보세요!{" "}
-                    </span>{" "}
+                      지인에게 공유하고, 첫 기억을 채워보세요!
+                    </span>
                     <button
-                      className="flex flex-shrink-0 items-center justify-center text-white"
+                      className="absolute right-1 text-white"
                       onClick={handleUnmount}
                       type="button"
                     >
