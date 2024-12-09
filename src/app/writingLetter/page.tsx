@@ -129,8 +129,10 @@ const Page = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-grey-900 text-white">
-      <Header />
+    <div className="flex min-h-screen flex-col bg-grey-900 text-white">
+      <div className="px-4">
+        <Header />
+      </div>
       <NavBar
         title="편지 작성"
         loggedBack="/setNickName"

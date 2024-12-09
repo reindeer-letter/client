@@ -27,10 +27,12 @@ const LoginPage = () => {
   const [, setNickName] = useLocalStorage("nickName");
   const [, setToken] = useLocalStorage("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = async (data: LoginFormInputs) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+    setErrorMessage("");
 
     try {
       const response = await instance.post("/auth/login", data, {
@@ -45,12 +47,16 @@ const LoginPage = () => {
         setNickName(result.user.nickName);
         setToken(result.access_token);
         router.push("/home");
-      } else alert("이메일 또는 비밀번호를 확인해주세요.");
+      } else setErrorMessage("이메일 또는 비밀번호를 확인해주세요.");
     } catch (error) {
-      console.error("로그인 요청 중 오류:", error);
-      alert("로그인 요청 중 오류가 발생했습니다.");
-    } finally {
-      setIsSubmitting(false);
+      if (error instanceof Error)
+        setErrorMessage("이메일 또는 비밀번호를 확인해주세요.");
+      else {
+        console.error("알 수 없는 오류 발생");
+        setErrorMessage(
+          "로그인 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        );
+      }
     }
   };
   const handleSimpleStartClick = () => {
@@ -101,6 +107,9 @@ const LoginPage = () => {
             register={register("password")}
             error={errors.password}
           />
+          {errorMessage && (
+            <p className="text-sm text-red-500">{errorMessage}</p>
+          )}
           <button
             type="submit"
             className="h-12 w-full rounded-lg bg-white font-semibold text-grey-900 focus:outline-none"
