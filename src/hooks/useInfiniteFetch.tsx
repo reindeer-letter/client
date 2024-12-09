@@ -31,10 +31,10 @@ interface InfiniteFetchReturnType<T> {
 export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
   const [page, setPage] = useState(1);
   const [data, setData] = useState<T[]>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<Error>();
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [token] = useLocalStorage("token");
 
   const fetchMore = useCallback(() => {

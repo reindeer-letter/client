@@ -29,17 +29,6 @@
   --primary-900: #540114;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 .bg-custom-background {
   background-image: url("/writingletter/letter_paper.png");
   background-size: cover;

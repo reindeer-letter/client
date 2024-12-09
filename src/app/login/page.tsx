@@ -24,6 +24,7 @@ const LoginPage = () => {
   });
 
   const [, setId] = useLocalStorage("userId");
+  const [, setNickName] = useLocalStorage("nickName");
   const [, setToken] = useLocalStorage("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -43,6 +44,7 @@ const LoginPage = () => {
       if (response.status === 201) {
         const result = response.data;
         setId(result.user.id);
+        setNickName(result.user.nickName);
         setToken(result.access_token);
         router.push("/home");
       } else setErrorMessage("이메일 또는 비밀번호를 확인해주세요.");

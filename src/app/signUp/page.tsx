@@ -137,15 +137,15 @@ export default function Page() {
               <label htmlFor="email" className="mb-2 block text-Body02-R">
                 이메일을 입력하세요
               </label>
-              <div className="flex gap-2">
+              <div className="flex h-10 gap-2">
                 <input
                   id="email"
                   type="text"
                   {...register("email")}
-                  className="flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
+                  className="h-10 flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
                 />
                 <button
-                  className="rounded-md border border-grey-700 px-3 py-2"
+                  className="h-10 w-16 rounded-md border border-grey-700 text-[14px]"
                   type="button"
                   onClick={checkEmail}
                 >
@@ -165,7 +165,7 @@ export default function Page() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className="w-full rounded bg-grey-800 p-2 pr-10 text-white focus:outline-none"
+                  className="h-10 w-full rounded bg-grey-800 p-2 pr-10 text-white focus:outline-none"
                 />
                 <button
                   type="button"
@@ -194,15 +194,15 @@ export default function Page() {
               <label htmlFor="nickname" className="mb-2 block text-Body02-R">
                 별명을 입력하세요
               </label>
-              <div className="flex gap-2">
+              <div className="flex h-10 w-full gap-2">
                 <input
                   id="nickname"
                   type="text"
                   {...register("nickname")}
-                  className="flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
+                  className="h-10 flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
                 />
                 <button
-                  className="rounded-md border border-grey-700 px-3 py-2"
+                  className="h-10 w-16 rounded-md border border-grey-700 text-[14px]"
                   type="button"
                   onClick={checkNickname}
                 >
@@ -253,13 +253,14 @@ export default function Page() {
           </div>
 
           {/* 완료 버튼 */}
-          <div className="flex justify-center bg-black pb-8">
+          <div className="flex justify-center bg-black pb-4">
             <Button type="submit" buttonType="abled" className="text-black">
               완료
             </Button>
           </div>
         </form>
       </div>
+
       {/* 모달 */}
       {isModalOpen && (
         <Modal closeOnFocusOut unmount={handleModalClose}>

@@ -16,6 +16,7 @@ const Page = () => {
   const overlay = useOverlay();
   const searchParams = useSearchParams();
   const receiverId = searchParams.get("receiverId");
+  const receiverNickName = searchParams.get("receiverNickName");
 
   const handleNext = () => {
     if (!selected) {
@@ -40,7 +41,9 @@ const Page = () => {
       return;
     }
 
-    router.push(`/setNickName?type=${selected}&receiverId=${receiverId}`);
+    router.push(
+      `/setNickName?type=${selected}&receiverId=${receiverId}&receiverNickName=${receiverNickName}`,
+    );
   };
 
   return (

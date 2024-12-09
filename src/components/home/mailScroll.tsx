@@ -11,6 +11,7 @@ import Mail from "./mail";
 import IntersectionArea from "../intersectionArea";
 import SealedMail from "./sealedMail";
 import Button from "../button";
+import EmptyMail from "./emtpyMail";
 
 export default function MailScroll() {
   const { data, error, isLoading, fetchMore, isError, hasMore } =
@@ -18,7 +19,8 @@ export default function MailScroll() {
       route: "/letters/my",
     });
   const router = useRouter();
-  if (!data && isError && !(error instanceof CanceledError))
+
+  if (isError && !(error instanceof CanceledError))
     return (
       <div className="mb-[116px] text-center text-Body01-B text-white">
         <div>편지를 불러오는 중에 오류가 발생했습니다.</div>
@@ -40,29 +42,7 @@ export default function MailScroll() {
         </Button>
       </div>
     );
-  if ((!data || data.length === 0) && !isLoading)
-    return (
-      <section className="relative mt-[88px]">
-        <Image
-          src="/images/reindeer-cry.png"
-          alt="reindeer-cry"
-          height={372}
-          width={276}
-          priority
-          className="relative mx-auto mb-12 mt-12"
-        />
-        <section className="absolute bottom-0 left-0 right-0 top-0 flex justify-center">
-          <div className="mt-[118px] w-[276px] text-center text-Title01-M text-grey-300 text-white">
-            그리움의 끝은 어디까지일까,
-            <br />
-            손꼽아 헤아린다.
-            <div className="mt-2 text-end text-Caption text-grey-600">
-              시인 정광지
-            </div>
-          </div>
-        </section>
-      </section>
-    );
+  if (data && data.length === 0 && !isLoading) return <EmptyMail />;
   return (
     <section className="flex flex-col gap-7 pb-[128px]">
       {data
@@ -101,7 +81,7 @@ export default function MailScroll() {
             },
           )
         : null}
-      {isLoading && <MailScrollSkeleton />}
+      {(!data || isLoading) && <MailScrollSkeleton />}
       {hasMore && !isLoading && <IntersectionArea func={fetchMore} />}
     </section>
   );

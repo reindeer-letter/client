@@ -4,8 +4,8 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col -bg--background text-white">
-      <div className="flex flex-1 flex-col items-center justify-center space-y-6 text-center *:text-Body01-M">
+    <div className="flex h-screen flex-col -bg--background text-white">
+      <div className="text-center*:text-Body01-M flex flex-1 flex-col items-center justify-start space-y-6 pt-28">
         {/* 상단 제목 */}
         <div className="flex flex-col items-center space-y-2">
           <p>미래의 나에게</p>
@@ -29,9 +29,9 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex w-full flex-col items-center justify-end space-y-4 px-6 pb-10">
+      <div className="flex h-8 w-full flex-col items-center justify-end space-y-4 px-6 pb-8">
         {/* 말풍선 */}
-        <div className="relative w-[305px] rounded bg-primary-700 px-3 py-2 text-center text-Body02-SB">
+        <div className="relative rounded bg-primary-700 px-3 py-2 text-center text-Body02-SB">
           내 편지함을 만들고 친구들에게 편지를 받아보세요!
           <div className="absolute bottom-[-8px] left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 bg-primary-700" />
         </div>

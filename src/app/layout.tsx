@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
+// eslint-disable-next-line
+import { Nanum_Pen_Script } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import OverlayProvider from "@/providers/overlayProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const pretendard = localFont({
+  src: "/fonts/Pretendard-Regular.otf",
+  display: "swap",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+// eslint-disable-next-line
+const nanumPenScript = Nanum_Pen_Script({
+  weight: "400",
+  variable: "--font-nanum-pen-script",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -43,10 +47,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} h-svh bg-black antialiased`}
-      >
+    <html
+      lang="en"
+      className={`${pretendard.className} ${nanumPenScript.variable}`}
+    >
+      <body className="h-svh bg-black antialiased">
         <OverlayProvider>
           <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
             {children}
