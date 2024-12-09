@@ -42,21 +42,27 @@ export default function Footer() {
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 mx-auto flex h-[116px] w-full max-w-[600px] justify-center gap-2 bg-grey-900 px-5 pb-12 pt-3">
-      <Button buttonType="abled" onClick={handleGift} className="truncate">
+      <Button
+        buttonType="abled"
+        onClick={handleGift}
+        className="truncate text-Body02-SB md:text-Body01-SB"
+      >
         나에게 편지 선물하기
       </Button>
       <Button
         buttonType="Primary"
         onClick={handleShare}
-        className="flex justify-center gap-2 px-4 py-4"
+        className="flex justify-center gap-2 px-4 py-4 text-Body02-SB md:text-Body01-SB"
       >
-        <Image
-          src="/icons/share.png"
-          alt="share"
-          width={24}
-          height={24}
-          priority
-        />
+        <section className="relative h-5 w-5 md:h-6 md:w-6">
+          <Image
+            src="/icons/share.png"
+            alt="share"
+            fill
+            sizes="24px"
+            priority
+          />
+        </section>
         내 편지함 공유하기
       </Button>
     </footer>
