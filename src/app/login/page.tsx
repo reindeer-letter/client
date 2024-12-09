@@ -9,8 +9,8 @@ import { useRouter } from "next/navigation";
 import instance from "@/api/instance";
 import useOverlay from "@/hooks/useoverlay";
 import PopUp from "@/components/popUp";
-import { loginSchema, LoginFormInputs } from "../../utils/loginSchema";
-import InputField from "./components/InputField";
+import { loginSchema, LoginFormInputs } from "@/utils/loginSchema";
+import InputField from "@/components/login/InputField";
 
 const LoginPage = () => {
   const router = useRouter();
