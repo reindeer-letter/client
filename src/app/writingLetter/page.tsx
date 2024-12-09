@@ -176,7 +176,7 @@ const Page = () => {
               height={24}
               className="h-auto w-auto"
             />
-            <span className="pt-2">{selectedDate || todayFormatted}</span>
+            <span className="pt-1">{selectedDate || todayFormatted}</span>
           </button>
         </div>
 
