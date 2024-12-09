@@ -16,7 +16,7 @@ export default function Header({ className, showProfile = true }: HeaderProps) {
   return (
     <header
       className={cn(
-        "flex h-[60px] w-full items-center justify-between pt-8 opacity-90",
+        "flex h-[60px] w-full items-center justify-between pl-4 pt-8 opacity-90",
         className,
       )}
     >
