@@ -157,6 +157,7 @@ const Page = () => {
 
         <div className="w-full flex-1">
           <textarea
+            style={{ height: "520px" }}
             placeholder="내용을 입력하세요"
             className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
             value={description}
