@@ -1,0 +1,27 @@
+name: Sync to Personal Repo
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout organization repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Push to personal repository
+        env:
+          TARGET_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
+        run: |
+          git remote add personal https://${{ secrets.PERSONAL_TOKEN }}@github.com/Hyeongyu-619/reindeer-letter-fe.git
+          # Get the current branch name
+          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
+          # Push to the same branch name in personal repo
+          git push personal HEAD:$BRANCH_NAME --force
