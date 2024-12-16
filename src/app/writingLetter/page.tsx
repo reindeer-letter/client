@@ -2,7 +2,6 @@
 
 import instance from "@/api/instance";
 import { useState } from "react";
-import Header from "@/components/header";
 import "../globals.css";
 import Image from "next/image";
 import PopUp from "@/components/popUp";
@@ -11,41 +10,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/button";
 import useOverlay from "@/hooks/useoverlay";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
-import ActionBar from "@/components/writingLetter/ActionBar";
 import NavBar from "@/components/NavBar";
-
-const formatDate = (date: Date) => {
-  const daysOfWeek = [
-    "일요일",
-    "월요일",
-    "화요일",
-    "수요일",
-    "목요일",
-    "금요일",
-    "토요일",
-  ];
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const dayOfWeek = daysOfWeek[date.getDay()];
-  return `${year}년 ${month}월 ${day}일 ${dayOfWeek}`;
-};
-
-const calculateDaysDifference = (selectedDate: string): number | null => {
-  if (!selectedDate) return null;
-
-  const [year, month, day] = selectedDate
-    .replace(/년|월|일/g, "")
-    .trim()
-    .split(" ")
-    .map(Number);
-
-  const today = new Date();
-  const selected = new Date(year, month - 1, day);
-
-  const diffInMs = selected.getTime() - today.getTime();
-  return Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-};
+import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -129,21 +95,54 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-grey-900 text-white">
-      <div className="px-4">
-        <Header />
-      </div>
+    <div className="flex min-h-screen flex-col bg-White text-white">
       <NavBar
-        title="편지 작성"
+        title="작성하기"
         loggedBack="/setNickName"
         guestBack="/setNickName"
         loggedClose="/home"
         guestClose="/invitation"
       />
 
-      <main className="bg-custom-background flex w-full flex-1 flex-col items-center justify-between px-4 pb-4 pt-8">
+      <main className="bg-custom-background flex w-full flex-1 flex-col px-4 pb-4">
+        <div className="relative h-[300px] w-full overflow-x-auto pt-6">
+          <div className="flex w-full gap-4">
+            {[1, 2, 3].map((index) => (
+              <div
+                key={index}
+                className="relative flex h-[240px] w-[240px] flex-shrink-0 items-center justify-center overflow-visible rounded-lg"
+              >
+                <Image
+                  src={`/photo/photo${index}.png`}
+                  alt={`사진 ${index}`}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
+                />
+
+                <div className="absolute left-[50%] top-[-24px] z-10 -translate-x-1/2">
+                  <Image
+                    src="/photo/tape_blue.png"
+                    alt="테이프 위쪽"
+                    width={81}
+                    height={40}
+                  />
+                </div>
+
+                <div className="absolute bottom-[-16px] left-[50%] z-10 -translate-x-1/2">
+                  <Image
+                    src="/photo/tape_yellow.png"
+                    alt="테이프 아래쪽"
+                    width={102}
+                    height={40}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <header className="flex w-full flex-col space-y-4 px-4">
-          <ActionBar />
           <div className="w-full">
             <input
               type="text"
@@ -157,33 +156,43 @@ const Page = () => {
 
         <div className="w-full flex-1">
           <textarea
-            style={{ height: "520px" }}
             placeholder="내용을 입력하세요"
             className="h-full w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
+      </main>
 
-        <div className="mb-2 flex w-full justify-start">
+      <div className="w-full bg-primary-200 px-4 py-6">
+        <div className="flex justify-between gap-4">
           <button
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-4 py-2 text-Body02-M"
             onClick={() => setIsCalendarOpen(true)}
-            className="flex space-x-2 rounded-md px-4 text-black"
           >
             <Image
-              src="/writingletter/calendar.png"
+              src="/icons/Reservation_28.png"
               alt="달력 아이콘"
-              width={24}
-              height={24}
-              className="h-auto w-auto"
+              width={28}
+              height={28}
             />
-            <span className="pt-1">{selectedDate || todayFormatted}</span>
+            <span>{selectedDate || todayFormatted}</span>
+          </button>
+
+          <button className="flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-4 py-2 text-Body02-M">
+            <Image
+              src="/icons/Music_28.png"
+              alt="노래 아이콘"
+              width={28}
+              height={28}
+            />
+            <span>노래제목.</span>
           </button>
         </div>
 
         <div className="w-full px-2 py-4">
           <Button
-            buttonType="Primary"
+            buttonType="abled"
             onClick={handleOpenPopUp}
             className="w-full text-black"
           >
@@ -194,7 +203,7 @@ const Page = () => {
               : "오늘 편지 보내기"}
           </Button>
         </div>
-      </main>
+      </div>
 
       <CalendarModal
         isOpen={isCalendarOpen}
