@@ -93,7 +93,11 @@ export default function PopUp({
       <Modal.HeaderWithClose />
       <Modal.Title className="mt-5">{title}</Modal.Title>
       <Modal.Description className="mt-2">{description}</Modal.Description>
-      <Modal.Button className="mt-[42px]" type="button" onConfirm={onConfirm}>
+      <Modal.Button
+        className="mt-[38px] w-full"
+        type="button"
+        onConfirm={onConfirm}
+      >
         {button}
       </Modal.Button>
     </Modal>

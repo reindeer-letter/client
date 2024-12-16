@@ -70,13 +70,13 @@ export default function Modal({
               transition={{ duration: 0.5 }}
               exit={{ opacity: 0, y: 100 }}
               style={{
-                height: "253px",
                 width: "350px",
                 padding: "16px",
+                paddingBottom: "20px",
                 textAlign: "center",
                 borderRadius: "12px",
                 border: "1px solid #999999",
-                backgroundColor: "#292929",
+                backgroundColor: "#ffffff",
                 ...style,
               }}
               ref={
@@ -108,7 +108,9 @@ interface TitleProps {
 }
 
 function Title({ children, className }: TitleProps) {
-  return <h1 className={`text-Head text-white ${className}`}>{children}</h1>;
+  return (
+    <h1 className={`text-Head text-primary-200 ${className}`}>{children}</h1>
+  );
 }
 
 Title.displayName = "Modal.Title";
