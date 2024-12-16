@@ -5,9 +5,8 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className="top-[117px] flex h-screen flex-col bg-firstLanding bg-cover bg-center">
-      {/* 상단 텍스트 */}
       <div className="mt-[117px] flex flex-col items-center justify-center gap-[22px]">
-        {/* 미래의 나에게 선물하는 오늘의 기억 */}
+        {/* 텍스트 */}
         <div className="flex items-center justify-center gap-2 text-Body01-R text-primary-200">
           <span>미래의 </span>
           <div className="relative flex items-center justify-center">
@@ -18,10 +17,8 @@ export default function Home() {
           <span>에게 선물하는 오늘의 기억</span>
         </div>
 
-        {/* 순록의 편지 이미지 */}
-
         <Image
-          src="/landing/title.png" // 이미지 경로
+          src="/landing/title.png"
           alt="순록의 편지"
           width={212}
           height={60}
@@ -30,7 +27,6 @@ export default function Home() {
 
       {/* 버튼 영역 */}
       <footer className="mt-auto flex w-full flex-col items-center gap-[12px] px-[20px] pb-[56px] pt-[16px] *:text-Title01-SB">
-        {/* 내 편지함 만들기 버튼 */}
         <Link
           href="/signUp"
           className="flex w-full items-center justify-center"
@@ -38,13 +34,12 @@ export default function Home() {
         >
           <Button
             buttonType="Primary"
-            className="h-[62px] w-[350px] rounded-[60px] text-center"
+            className="h-[62px] w-full rounded-[60px] text-center"
           >
             내 편지함 만들기
           </Button>
         </Link>
 
-        {/* 로그인 버튼 */}
         <Link
           href="/login"
           className="flex w-full items-center justify-center"
@@ -52,7 +47,7 @@ export default function Home() {
         >
           <Button
             buttonType="abled"
-            className="h-[62px] w-[350px] rounded-[60px] text-center"
+            className="h-[62px] w-full rounded-[60px] text-center"
           >
             로그인
           </Button>
