@@ -1,6 +1,5 @@
 "use client";
 
-import Header from "@/components/header";
 import "../globals.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -28,37 +27,40 @@ const Page = () => {
     );
   };
   return (
-    <div className="flex min-h-screen flex-col bg-grey-900 text-white">
-      <div className="px-4">
-        <Header />
-      </div>
+    <div className="flex h-screen flex-col bg-White">
       <NavBar
-        title="별명 입력"
+        title=""
         loggedBack="/letterType"
         guestBack="/letterType"
         loggedClose="/home"
         guestClose="/invitaion"
       />
-      <main className="flex w-full flex-1 flex-col items-center justify-start space-y-4 px-4 pt-2">
-        <div className="text-md w-full text-left text-Body02-R">
-          편지에 적을 별명을 입력하세요
+      <div className="pl-4 text-left text-Head text-line-700">
+        누가 보내시는 건가요?
+      </div>
+
+      <main className="flex flex-1 flex-col items-center justify-center px-4">
+        <div className="mb-48 flex w-full flex-col items-center space-y-2">
+          <div className="text-md w-full text-left text-Body02-R text-line-600">
+            보내는 사람
+          </div>
+          <input
+            type="text"
+            value={nickname}
+            onChange={(e) => {
+              if (e.target.value.length <= 20) setNickname(e.target.value);
+              else alert("별명은 20자 이하로 입력해주세요.");
+            }}
+            className="h-12 w-full rounded-lg bg-grey-800 px-4 text-white focus:outline-none focus:ring-1 focus:ring-white"
+          />
         </div>
-        <input
-          type="text"
-          value={nickname}
-          onChange={(e) => {
-            if (e.target.value.length <= 20) setNickname(e.target.value);
-            else alert("별명은 20자 이하로 입력해주세요.");
-          }}
-          className="h-12 w-full rounded-lg bg-grey-800 px-4 text-white focus:outline-none focus:ring-1 focus:ring-white"
-        />
       </main>
 
-      <footer className="fixed bottom-0 w-full max-w-[600px] bg-grey-900 px-5 pb-12">
+      <footer className="fixed bottom-[50px] left-0 right-0 flex flex-col items-center gap-[12px] px-6">
         <Button
-          buttonType="abled"
+          buttonType={nickname.trim() ? "abled" : undefined}
           onClick={handleNext}
-          className="w-full text-black"
+          disabled={!nickname.trim()}
         >
           다음
         </Button>
