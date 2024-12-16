@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Button from "@/components/button";
 import Link from "next/link";
-import Header from "@/components/header";
 import { useSearchParams } from "next/navigation";
+import HighlightedText from "@/components/HighlightedText";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -12,42 +11,38 @@ export default function Home() {
   const receiverNickName = searchParams.get("receiverNickName");
 
   return (
-    <div className="flex min-h-screen flex-col -bg--background text-white">
-      <div className="px-4">
-        <Header />
-      </div>
+    <div
+      className="top-[117px] flex h-screen flex-col bg-cover bg-center"
+      style={{ backgroundImage: "url('/background/landing.png')" }}
+    >
+      <HighlightedText />
 
-      <div className="flex flex-1 flex-col items-center justify-center space-y-6 text-center *:text-Body01-M">
-        <div className="flex flex-col items-center space-y-2">
-          <p>미래의 {receiverNickName || "나"}에게</p>
-          <p>오늘의 기억을 선물하는 편지,</p>
-          <Image
-            src="/landing/landingTitle.png"
-            alt="title"
-            width={120}
-            height={37}
+      <section className="mt-8 flex flex-col items-center">
+        <div className="flex h-[180px] w-[180px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
+          <img
+            src="/images/reindeer-icon.png"
+            alt="순록 아이콘"
+            className="h-full w-full object-cover"
           />
         </div>
-        <div>
-          <Image
-            src="/landing/invitation.png"
-            alt="편지"
-            width={350}
-            height={221}
-          />
+        <div className="mt-4 flex items-center">
+          <span className="rounded-[62px] bg-White px-3 py-1 text-Title02-B text-grey-800">
+            케이크
+          </span>
+          <p className="ml-2 text-Title01-R text-grey-800">의 편지함</p>
         </div>
-      </div>
-      <div className="flex w-full flex-col items-center justify-end space-y-4 px-6 pb-10">
+      </section>
+
+      <footer className="mt-auto flex flex-col gap-[12px] px-6 pb-[56px]">
         <Link
           href={`/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`}
           className="w-full"
           passHref
         >
-          <Button buttonType="abled" className="text-black">
-            편지 선물하기
-          </Button>
+          <Button buttonType="Primary">편지 보내기</Button>
         </Link>
-      </div>
+        <Button buttonType="abled">로그인</Button>
+      </footer>
     </div>
   );
 }
