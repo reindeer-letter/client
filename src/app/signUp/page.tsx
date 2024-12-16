@@ -4,17 +4,13 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { SignUpFormData, signUpSchema } from "@/utils/signUpSchema";
-import Header from "@/components/header";
 import Button from "@/components/button";
 import { isAxiosError } from "axios";
 import instance from "@/api/instance";
-import Modal from "@/components/modal";
+import { useRouter } from "next/navigation";
 
-export default function Page() {
-  const router = useRouter();
-
+export default function SignUpPage() {
   const {
     register,
     handleSubmit,
@@ -24,23 +20,19 @@ export default function Page() {
     watch,
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
+    mode: "onChange",
   });
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const checkPassword = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const emailValue = watch("email");
-  const nicknameValue = watch("nickname");
 
   const checkEmail = async () => {
     try {
       const response = await instance.get(`/auth/check-email`, {
-        params: {
-          email: emailValue,
-        },
+        params: { email: emailValue },
       });
       if (response.status === 200) {
         alert("사용 가능한 이메일입니다.");
@@ -52,235 +44,113 @@ export default function Page() {
     }
   };
 
-  const checkNickname = async () => {
-    try {
-      const response = await instance.get(`/auth/check-nickname`, {
-        params: {
-          nickname: nicknameValue,
-        },
-      });
-      if (response.status === 200) {
-        alert("사용 가능한 별명입니다.");
-
-        clearErrors("nickname");
-      }
-    } catch (error) {
-      if (isAxiosError(error))
-        setError("nickname", { message: "이미 사용 중인 별명입니다." });
-    }
-  };
-  const [isSubmit, setIsSubmit] = useState(false);
-
-  const onSubmit: SubmitHandler<SignUpFormData> = async (data) => {
-    if (isSubmit) return;
-    setIsSubmit(true);
-
-    try {
-      const response = await instance.post(`/auth/register`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 201) {
-        alert("회원가입이 성공적으로 완료되었습니다!");
-        router.push("/login");
-      } else alert("회원가입에 실패했습니다. 다시 시도해주세요.");
-    } catch (error) {
-      if (isAxiosError(error))
-        alert(
-          error.response?.data?.message ||
-            "오류가 발생했습니다. 다시 시도해주세요.",
-        );
-      else alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsSubmit(false);
-    }
+  const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
+    console.log(data);
+    alert("회원가입 완료!");
   };
 
-  const handleProfileClick = () => {
-    setIsModalOpen(true); // 프로필 클릭 시 모달 열기
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false); // 닫기 버튼 클릭 시 모달 닫기
-  };
   return (
-    <div className="flex min-h-screen flex-col bg-black text-white">
-      {/* 헤더 */}
-      <div className="px-4">
-        <Header />
-      </div>
+    <div className="flex min-h-screen w-full flex-col bg-white px-5">
+      {/* 상단 헤더 */}
+      <header className="relative flex items-center justify-center pt-12">
+        <button className="absolute left-0" onClick={() => router.push("/")}>
+          <Image
+            src="/signUp/backArrow.svg"
+            alt="뒤로가기"
+            width={32}
+            height={32}
+          />
+        </button>
+        <h1 className="text-center text-Title01-SB text-line-700">회원가입</h1>
+        <button className="absolute right-0" onClick={() => router.push("/")}>
+          <Image src="/signUp/close.svg" alt="닫기" width={32} height={32} />
+        </button>
+      </header>
 
-      {/* 페이지 컨텐츠 */}
-      <div className="flex flex-1 flex-col justify-between p-6">
-        {/* 페이지 타이틀 */}
-        <header className="relative mb-8 flex items-center justify-center">
-          <button className="absolute left-0" onClick={() => router.push("/")}>
-            <Image
-              src="/signUp/backArrow.svg"
-              alt="뒤로가기"
-              width={28}
-              height={24}
-            />
-          </button>
-          <h1 className="text-center text-Title01-SB">회원가입</h1>
-        </header>
-
-        {/* 폼 영역 */}
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-1 flex-col justify-between"
-        >
-          <div className="flex-1 space-y-8 overflow-auto">
-            {/* 이메일 */}
-            <div>
-              <label htmlFor="email" className="mb-2 block text-Body02-R">
-                이메일을 입력하세요
-              </label>
-              <div className="flex h-10 gap-2">
-                <input
-                  id="email"
-                  type="text"
-                  {...register("email")}
-                  className="h-10 flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
-                />
-                <button
-                  className="h-10 w-16 rounded-md border border-grey-700 text-[14px]"
-                  type="button"
-                  onClick={checkEmail}
-                >
-                  중복확인
-                </button>
-              </div>
-              <p className="h-5 py-1 text-red-500">{errors.email?.message}</p>
-            </div>
-
-            {/* 비밀번호 */}
-            <div>
-              <label htmlFor="password" className="mb-2 block text-Body02-R">
-                비밀번호를 입력하세요
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
-                  className="h-10 w-full rounded bg-grey-800 p-2 pr-10 text-white focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={checkPassword}
-                  className="absolute inset-y-0 right-3 flex items-center"
-                >
-                  <Image
-                    src={
-                      showPassword
-                        ? "/signUp/closeEyeIcon.svg"
-                        : "/signUp/eyeIcon.svg"
-                    }
-                    alt="check password"
-                    width={24}
-                    height={24}
-                  />
-                </button>
-              </div>
-              <p className="h-5 py-1 text-red-500">
-                {errors.password?.message}
-              </p>
-            </div>
-
-            {/* 별명 */}
-            <div>
-              <label htmlFor="nickname" className="mb-2 block text-Body02-R">
-                별명을 입력하세요
-              </label>
-              <div className="flex h-10 w-full gap-2">
-                <input
-                  id="nickname"
-                  type="text"
-                  {...register("nickname")}
-                  className="h-10 flex-1 rounded bg-grey-800 p-2 text-white focus:outline-none"
-                />
-                <button
-                  className="h-10 w-16 rounded-md border border-grey-700 text-[14px]"
-                  type="button"
-                  onClick={checkNickname}
-                >
-                  중복확인
-                </button>
-              </div>
-              <p className="h-5 py-1 text-red-500">
-                {errors.nickname?.message}
-              </p>
-            </div>
-
-            {/* 프로필 이미지 */}
-            <div>
-              <label htmlFor="profileImg" className="mb-2 block text-Body01-R">
-                사용할 프로필 이미지를 선택하세요
-              </label>
-              <div className="flex gap-4">
-                {/* 프로필 이미지 1 */}
-                <button
-                  className="size-16 rounded-full"
-                  onClick={handleProfileClick}
-                  type="button"
-                >
-                  <Image
-                    src="/signUp/profile1.png"
-                    alt="Profile 1"
-                    width={64}
-                    height={64}
-                    className="rounded-full"
-                  />
-                </button>
-                {/* 프로필 이미지 2 */}
-                <button
-                  className="size-16 rounded-full"
-                  onClick={handleProfileClick}
-                  type="button"
-                >
-                  <Image
-                    src="/signUp/profile2.png"
-                    alt="Profile 2"
-                    width={64}
-                    height={64}
-                    className="rounded-full"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* 완료 버튼 */}
-          <div className="flex justify-center bg-black pb-4">
-            <Button type="submit" buttonType="abled" className="text-black">
-              완료
-            </Button>
-          </div>
-        </form>
-      </div>
-
-      {/* 모달 */}
-      {isModalOpen && (
-        <Modal closeOnFocusOut unmount={handleModalClose}>
-          <div className="flex h-full flex-col justify-between">
-            <Modal.HeaderWithClose />
-            <div className="flex flex-1 flex-col items-center justify-center">
-              <Modal.Title>준비중인 서비스입니다.</Modal.Title>
-            </div>
-            <div className="mt-4">
-              <Modal.Button
-                onClick={handleModalClose}
-                buttonType="abled"
-                className="w-full text-black"
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full flex-1 flex-col items-center justify-between"
+      >
+        <div className="flex w-full flex-1 flex-col items-center justify-center gap-[32px]">
+          {/* 이메일 */}
+          <div className="flex w-full flex-col gap-[8px]">
+            <label
+              htmlFor="email"
+              className="block text-Body02-SB text-line-600"
+            >
+              이메일
+            </label>
+            <div className="flex h-[40px] w-full items-center gap-2">
+              <input
+                id="email"
+                type="text"
+                {...register("email")}
+                placeholder="example1234@naver.com"
+                className="h-full flex-1 border-b border-line-200 text-Body01-M text-line-200 placeholder:text-line-200 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={checkEmail}
+                className="h-full flex-shrink-0 rounded-[62px] bg-line-50 px-4 text-Body01-M tracking-[-0.011em] text-line-800"
               >
-                닫기
-              </Modal.Button>
+                중복확인
+              </button>
             </div>
+            <p className="mt-1 h-3 text-sm text-red-500">
+              {errors.email?.message}
+            </p>
           </div>
-        </Modal>
-      )}
+
+          {/* 비밀번호 */}
+          <div className="flex w-full flex-col gap-[8px]">
+            <label
+              htmlFor="password"
+              className="block text-Body02-SB text-line-600"
+            >
+              비밀번호
+            </label>
+            <div className="relative h-[40px] w-full">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                {...register("password")}
+                placeholder="비밀번호를 입력하세요."
+                className="h-full w-full border-b border-line-200 text-Body01-M text-line-200 placeholder:text-line-200 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-2 top-1/2 -translate-y-1/2"
+              >
+                <Image
+                  src={
+                    showPassword
+                      ? "/signUp/closeEyeIcon.svg"
+                      : "/signUp/eyeIcon.svg"
+                  }
+                  alt="비밀번호 표시"
+                  width={24}
+                  height={24}
+                />
+              </button>
+            </div>
+            <p className="mt-1 h-3 text-sm text-red-500">
+              {errors.password?.message}
+            </p>
+          </div>
+        </div>
+
+        {/* 하단 버튼 영역 */}
+        <div className="flex w-full flex-col items-center pb-[56px] pt-[16px]">
+          <Button
+            type="submit"
+            buttonType="abled"
+            className="w-full rounded-[60px] border-none bg-grey-200 text-grey-400"
+          >
+            다음
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }
