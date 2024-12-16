@@ -8,21 +8,18 @@ interface FutureMailProps {
 export default function FutureMail({ scheduledAt }: FutureMailProps) {
   return (
     <section className="relative mx-auto block h-[221px] w-[350px] selection:bg-none">
-      <Image src="/images/letter.svg" alt="Mail" priority fill />
-      <section className="absolute h-full w-full">
+      <Image src="/images/sealed-letter.png" alt="Mail" priority fill />
+      <section className="absolute h-full w-full rounded-lg bg-black bg-opacity-80" />
+      <header className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center">
         <Image
-          src="/images/sealing-wax.png"
-          alt="sealingWax"
+          src="/icons/lock.png"
+          alt="clock"
+          width={48}
+          height={48}
+          sizes="48"
           priority
-          width={106}
-          height={101}
-          sizes="100"
-          className="mx-auto mt-20 focus:bg-none"
         />
-      </section>
-      <section className="absolute h-full w-full bg-black bg-opacity-50" />
-      <header className="absolute left-0 right-0 top-9 flex items-center justify-center">
-        <div className="text-center text-Body01-SB text-white">{`${formateISODateToYYYYMMDD(scheduledAt)}에 열리는 기억`}</div>
+        <div className="text-center text-Body01-M text-grey-100">{`${formateISODateToYYYYMMDD(scheduledAt)}`}</div>
       </header>
     </section>
   );
