@@ -33,10 +33,9 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="mt-auto flex flex-col gap-[12px] px-6 pb-[56px]">
+      <footer className="fixed bottom-[50px] left-0 right-0 flex flex-col items-center gap-[12px] px-6">
         <Link
           href={`/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`}
-          className="w-full"
           passHref
         >
           <Button buttonType="Primary">편지 보내기</Button>
