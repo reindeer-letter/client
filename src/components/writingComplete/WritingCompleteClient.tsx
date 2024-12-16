@@ -59,7 +59,7 @@ export default function WritingCompleteClient() {
             <div className="z-[51] mt-auto flex h-[116px] w-full justify-center p-[16px]">
               <Button
                 buttonType="Primary"
-                className="flex h-[56px] !w-[350px] items-center justify-center rounded-md"
+                className="flex h-[56px] w-[350px] items-center justify-center rounded-md"
                 onClick={handleClick}
               >
                 {isLoggedIn ? "다른 편지 더 선물하기" : "내 편지함 만들기"}
