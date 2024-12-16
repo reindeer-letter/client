@@ -135,6 +135,7 @@ export default {
       },
       backgroundImage: () => ({
         "--background": `linear-gradient(180deg, #000000 0%, #434343 100%)`,
+        firstLanding: "url('/background/firstLanding.png')",
       }),
       colors: {
         grey: {
