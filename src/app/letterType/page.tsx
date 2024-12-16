@@ -4,7 +4,6 @@ import { useState } from "react";
 import "../globals.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import Header from "@/components/header";
 import PopUp from "@/components/popUp";
 import Button from "@/components/button";
 import useOverlay from "../../hooks/useoverlay";
@@ -47,10 +46,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-grey-900 text-white">
-      <div className="px-4">
-        <Header />
-      </div>
+    <div className="flex min-h-screen flex-col bg-White text-white">
       <NavBar
         title="편지 유형 선택"
         loggedBack="/home"
@@ -58,58 +54,44 @@ const Page = () => {
         loggedClose="/"
         guestClose="/invitation"
       />
-
-      <main className="flex flex-1 flex-col items-center justify-start space-y-5">
+      <div className="pl-4 text-left text-Head text-line-700">
+        어떤 방법으로 전달하시나요?
+      </div>
+      <main className="flex flex-1 flex-col items-center justify-start space-y-4">
         <button
           onClick={() => setSelected("TEXT")}
-          className={`mt-16 flex h-[175px] w-[350px] flex-col items-center justify-center space-y-2 rounded-lg transition focus:outline-none ${
-            selected === "TEXT"
-              ? "bg-grey-800 ring-2 ring-white"
-              : "bg-grey-800"
+          className={`mt-16 flex h-[221px] w-[350px] flex-col items-center justify-center space-y-2 rounded-[32px] transition focus:outline-none ${
+            selected === "TEXT" ? "bg-primary-50" : "bg-grey-50"
           }`}
-          aria-label="글로 남기기"
+          aria-label="글"
         >
+          <span className="text-grey-900">글</span>
           <Image
-            src={
-              selected === "TEXT"
-                ? "/letterType/writingText_ON.png"
-                : "/letterType/writingText_OFF.png"
-            }
+            src="/character/Type_letter.png"
             alt="글로 남기기 아이콘"
-            width={77}
-            height={74}
+            width={168}
+            height={155}
           />
-          <span className="text-sm">글로 남기기</span>
         </button>
         <button
           onClick={() => setSelected("VOICE")}
-          className={`flex h-[175px] w-[350px] flex-col items-center justify-center space-y-2 rounded-lg transition focus:outline-none ${
-            selected === "VOICE"
-              ? "bg-grey-800 ring-2 ring-white"
-              : "bg-grey-800"
+          className={`mt-16 flex h-[221px] w-[350px] flex-col items-center justify-center space-y-2 rounded-[32px] transition focus:outline-none ${
+            selected === "VOICE" ? "bg-primary-50" : "bg-grey-50"
           }`}
-          aria-label="목소리로 남기기"
+          aria-label="글"
         >
+          <span className="text-grey-900">목소리</span>
           <Image
-            src={
-              selected === "VOICE"
-                ? "/letterType/voice_ON.png"
-                : "/letterType/voice_OFF.png"
-            }
-            alt="목소리로 남기기 아이콘"
-            width={77}
-            height={45}
+            src="/character/Type_voice.png"
+            alt="목소리"
+            width={168}
+            height={155}
           />
-          <span className="text-sm">목소리로 남기기</span>
         </button>
       </main>
 
-      <footer className="fixed bottom-0 w-full max-w-[600px] bg-grey-900 px-5 pb-12">
-        <Button
-          buttonType="abled"
-          onClick={handleNext}
-          className="w-full text-black"
-        >
+      <footer className="fixed bottom-[50px] left-0 right-0 flex flex-col items-center gap-[12px] px-6">
+        <Button buttonType="abled" onClick={handleNext}>
           다음
         </Button>
       </footer>
