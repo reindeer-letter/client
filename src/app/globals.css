@@ -5,32 +5,32 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --White: #ffffff;
+  --Black: #1a1a1a;
+
+  --primary-50: #b4e8eb;
+  --primary-100: #307b80;
+  --primary-200: #285857;
+
+  --line-900: #2c3636;
+  --line-800: #3c4b4c;
+  --line-700: #4a5e60;
+  --line-600: #597374;
+  --line-500: #658284;
+  --line-400: #7d9596;
+  --line-300: #95a8a9;
+  --line-200: #b5c1c1;
+  --line-100: #d4d9d9;
+  --line-50: #efefef;
+
   --grey-50: #f5f5f5;
   --grey-100: #ebebeb;
-  --grey-200: #e6e6e6;
-  --grey-300: #d9d9d9;
-  --grey-400: #cccccc;
-  --grey-500: #b8b8b8;
-  --grey-700: #666666;
-  --grey-600: #999999;
-  --grey-800: #292929;
-  --grey-900: #1a1a1a;
-  --primary-50: #ffdbc7;
-  --primary-100: #ffb9ac;
-  --primary-200: #e5948a;
-  --primary-300: #c04764;
-  --primary-400: #ac544a;
-  --primary-500: #933730;
-  --primary-600: #872e2b;
-  --primary-700: #762222;
-  --primary-800: #66131c;
-  --primary-900: #540114;
-}
-
-.bg-custom-background {
-  background-image: url("/writingletter/letter_paper.png");
-  background-size: cover;
-  background-position: center;
+  --grey-200: #d9d9d9;
+  --grey-300: #c2c2c2;
+  --grey-400: #999999;
+  --grey-500: #7a7a7a;
+  --grey-600: #666666;
+  --grey-700: #525252;
+  --grey-800: #3d3d3d;
+  --grey-900: #292929;
 }
