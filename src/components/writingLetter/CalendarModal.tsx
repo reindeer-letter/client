@@ -31,8 +31,8 @@ const CalendarModal = ({
 
   const getFormattedDate = useCallback(
     (year: number, month: number, date: number) => {
-      const dayOfWeek = daysOfWeek[new Date(year, month, date).getDay()];
-      return `${year}년 ${month + 1}월 ${date}일 ${dayOfWeek}`;
+      // const dayOfWeek = daysOfWeek[new Date(year, month, date).getDay()];
+      return `${year}년 ${month + 1}월 ${date}일 `;
     },
     [daysOfWeek],
   );
@@ -87,22 +87,22 @@ const CalendarModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-full max-w-md rounded-lg bg-White p-6 text-grey-800">
-        <div className="mb-9 flex items-center justify-between text-xl">
+        <div className="mb-9 flex items-center justify-between text-Head text-line-700">
           <span>언제 보낼까요?</span>
           <button onClick={onClose} aria-label="닫기">
-            <Image src="/icons/close.png" width={28} height={28} alt="close" />
+            <Image src="/Close_32.png" width={24} height={24} alt="close" />
           </button>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center gap-14">
           <button
             className="text-xl text-grey-800"
             onClick={handlePrevMonth}
             aria-label="이전 달"
           >
-            &lt;
+            <Image src="/Angle-left.png" width={24} height={24} alt="이전 달" />
           </button>
-          <h2 className="text-lg font-semibold">
+          <h2 className="flex-shrink-0 text-lg font-semibold">
             {currentYear}.{currentMonth + 1}
           </h2>
           <button
@@ -110,9 +110,15 @@ const CalendarModal = ({
             onClick={handleNextMonth}
             aria-label="다음 달"
           >
-            &gt;
+            <Image
+              src="/Angle-right.png"
+              width={24}
+              height={24}
+              alt="다음 달"
+            />
           </button>
         </div>
+
         <div className="mt-4">
           <div className="grid grid-cols-7 gap-2 text-center">
             {daysOfWeek.map((day) => (
@@ -159,7 +165,7 @@ const CalendarModal = ({
         </div>
         <div className="mb-8 mt-3 text-center">
           <p className="mb-4 text-left text-Body01-SB text-grey-900">
-            {selectedDate}요일
+            {selectedDate}
           </p>
           <Button buttonType="Primary" onClick={handleComplete}>
             완료

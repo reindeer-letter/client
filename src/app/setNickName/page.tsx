@@ -20,8 +20,9 @@ const Page = () => {
       return;
     }
 
+    const basePath = type === "VOICE" ? "voiceLetter" : "writingLetter";
     router.push(
-      `/writingLetter?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
+      `/${basePath}?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
         nickname,
       )}&receiverNickName=${receiverNickName}`,
     );
@@ -40,30 +41,34 @@ const Page = () => {
       </div>
 
       <main className="flex flex-1 flex-col items-center justify-center px-4">
-        <div className="mb-48 flex w-full flex-col items-center space-y-2">
+        <div className="mb-18 flex w-full max-w-xl flex-col items-center space-y-2">
           <div className="text-md w-full text-left text-Body02-R text-line-600">
             보내는 사람
           </div>
           <input
             type="text"
+            placeholder="보내시는 분의 성함, 별명 등을 입력하세요."
             value={nickname}
             onChange={(e) => {
               if (e.target.value.length <= 20) setNickname(e.target.value);
               else alert("별명은 20자 이하로 입력해주세요.");
             }}
-            className="h-12 w-full rounded-lg bg-grey-800 px-4 text-white focus:outline-none focus:ring-1 focus:ring-white"
+            className="h-12 w-full border-b-2 bg-White px-4 text-Title02-M text-primary-200 placeholder-line-200 focus:outline-none focus:ring-1 focus:ring-white"
           />
         </div>
       </main>
 
-      <footer className="fixed bottom-[50px] left-0 right-0 flex flex-col items-center gap-[12px] px-6">
-        <Button
-          buttonType={nickname.trim() ? "abled" : undefined}
-          onClick={handleNext}
-          disabled={!nickname.trim()}
-        >
-          다음
-        </Button>
+      <footer className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-5 pb-[56px]">
+        <div className="flex w-full flex-col space-y-3">
+          <Button
+            buttonType={nickname.trim() ? "abled" : undefined}
+            onClick={handleNext}
+            disabled={!nickname.trim()}
+            className="w-full"
+          >
+            다음
+          </Button>
+        </div>
       </footer>
     </div>
   );

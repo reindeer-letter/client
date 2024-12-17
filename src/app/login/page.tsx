@@ -10,9 +10,9 @@ import instance from "@/api/instance";
 import useOverlay from "@/hooks/useoverlay";
 import PopUp from "@/components/popUp";
 import { loginSchema, LoginFormInputs } from "@/utils/loginSchema";
-import InputField from "@/components/login/InputField";
 import HighlightedText from "@/components/HighlightedText";
 import Button from "@/components/button";
+import { InputField } from "@/components/login/InputField";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -78,36 +78,37 @@ const LoginPage = () => {
 
   return (
     <div
-      className="top-[117px] flex h-screen flex-col bg-cover bg-center"
+      className="flex h-screen flex-col bg-cover bg-center"
       style={{ backgroundImage: "url('/background/login.png')" }}
     >
       <HighlightedText />
-      <div className="flex h-screen items-center justify-center">
+      <div className="mt-14 flex h-screen items-center justify-center">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-[350px] max-w-md space-y-7 text-center"
+          className="w-full max-w-sm space-y-7 text-center"
         >
-          {/* 입력 필드 */}
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-10">
             <InputField
               type="email"
               placeholder="example1234@naver.com"
               register={register("email")}
               error={errors.email}
+              label="이메일"
             />
             <InputField
               type="password"
-              placeholder=""
+              placeholder="비밀번호를 입력하세요"
               register={register("password")}
               error={errors.password}
+              label="비밀번호"
             />
+
             {errorMessage && (
               <p className="text-sm text-red-500">{errorMessage}</p>
             )}
             <Button buttonType="Primary">로그인</Button>
           </div>
 
-          {/* 하단 링크 */}
           <div className="mt-4 space-x-4 text-Body02-R text-line-800">
             <a href="#" className="hover:text-primary-200">
               아이디 찾기

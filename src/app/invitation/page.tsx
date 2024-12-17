@@ -12,15 +12,15 @@ export default function Home() {
 
   return (
     <div
-      className="top-[117px] flex h-screen flex-col bg-cover bg-center"
+      className="flex min-h-screen flex-col bg-cover bg-center"
       style={{ backgroundImage: "url('/background/landing.png')" }}
     >
       <HighlightedText />
 
       <section className="mt-8 flex flex-col items-center">
-        <div className="flex h-[180px] w-[180px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
+        <div className="flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
           <img
-            src="/images/reindeer-icon.png"
+            src="/images/reindeer-basic.png"
             alt="순록 아이콘"
             className="h-full w-full object-cover"
           />
@@ -33,14 +33,20 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="fixed bottom-[50px] left-0 right-0 flex flex-col items-center gap-[12px] px-6">
-        <Link
-          href={`/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`}
-          passHref
-        >
-          <Button buttonType="Primary">편지 보내기</Button>
-        </Link>
-        <Button buttonType="abled">로그인</Button>
+      <footer className="mx-auto mt-40 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-5 pb-[56px]">
+        <div className="flex w-full flex-col space-y-3">
+          <Link
+            href={`/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`}
+            className="w-full"
+          >
+            <Button buttonType="Primary" className="w-full">
+              편지 보내기
+            </Button>
+          </Link>
+          <Button buttonType="abled" className="w-full">
+            로그인
+          </Button>
+        </div>
       </footer>
     </div>
   );

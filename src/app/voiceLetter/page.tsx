@@ -169,7 +169,7 @@ const Page = () => {
       <div className="fixed bottom-0 left-0 right-0 w-full bg-primary-200 px-4 py-6">
         <div className="flex justify-between gap-3">
           <button
-            className="ml-4 flex w-full items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
+            className="ml-4 flex w-[160px] items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
             onClick={() => setIsCalendarOpen(true)}
           >
             <Image
@@ -179,16 +179,6 @@ const Page = () => {
               height={24}
             />
             <span>{selectedDate || todayFormatted}</span>
-          </button>
-
-          <button className="mr-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M">
-            <Image
-              src="/icons/Music_28.png"
-              alt="노래 아이콘"
-              width={24}
-              height={24}
-            />
-            <span>노래제목.</span>
           </button>
         </div>
 

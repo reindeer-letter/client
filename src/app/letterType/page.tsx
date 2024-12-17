@@ -4,15 +4,12 @@ import { useState } from "react";
 import "../globals.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import PopUp from "@/components/popUp";
 import Button from "@/components/button";
-import useOverlay from "../../hooks/useoverlay";
 import NavBar from "../../components/NavBar";
 
 const Page = () => {
   const [selected, setSelected] = useState<"TEXT" | "VOICE" | null>(null);
   const router = useRouter();
-  const overlay = useOverlay();
   const searchParams = useSearchParams();
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
@@ -22,24 +19,6 @@ const Page = () => {
       alert("편지 유형을 선택해주세요!");
       return;
     }
-    if (selected === "VOICE") {
-      overlay.mount(
-        <PopUp
-          button="확인"
-          title="준비 중 입니다"
-          description="현재 기능은 준비 중입니다."
-          onConfirm={() => {
-            overlay.unmount();
-          }}
-          onCancel={() => {
-            overlay.unmount();
-          }}
-          unmount={overlay.unmount}
-        />,
-      );
-      return;
-    }
-
     router.push(
       `/setNickName?type=${selected}&receiverId=${receiverId}&receiverNickName=${receiverNickName}`,
     );
@@ -57,10 +36,10 @@ const Page = () => {
       <div className="pl-4 text-left text-Head text-line-700">
         어떤 방법으로 전달하시나요?
       </div>
-      <main className="flex flex-1 flex-col items-center justify-start space-y-4">
+      <main className="align-center flex flex-1 flex-col justify-start space-y-4">
         <button
           onClick={() => setSelected("TEXT")}
-          className={`mt-16 flex h-[221px] w-[350px] flex-col items-center justify-center space-y-2 rounded-[32px] transition focus:outline-none ${
+          className={`ml-5 mr-5 mt-14 flex h-[221px] w-auto flex-col items-center justify-center space-y-2 rounded-[32px] transition focus:outline-none ${
             selected === "TEXT" ? "bg-primary-50" : "bg-grey-50"
           }`}
           aria-label="글"
@@ -75,7 +54,7 @@ const Page = () => {
         </button>
         <button
           onClick={() => setSelected("VOICE")}
-          className={`mt-16 flex h-[221px] w-[350px] flex-col items-center justify-center space-y-2 rounded-[32px] transition focus:outline-none ${
+          className={`ml-5 mr-5 mt-16 flex h-[221px] w-auto flex-col items-center justify-center space-y-2 rounded-[32px] transition focus:outline-none ${
             selected === "VOICE" ? "bg-primary-50" : "bg-grey-50"
           }`}
           aria-label="글"
@@ -90,10 +69,12 @@ const Page = () => {
         </button>
       </main>
 
-      <footer className="fixed bottom-[50px] left-0 right-0 flex flex-col items-center gap-[12px] px-6">
-        <Button buttonType="abled" onClick={handleNext}>
-          다음
-        </Button>
+      <footer className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-5 pb-[56px]">
+        <div className="flex w-full flex-col space-y-3">
+          <Button buttonType="abled" className="w-full" onClick={handleNext}>
+            다음
+          </Button>
+        </div>
       </footer>
     </div>
   );

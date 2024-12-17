@@ -6,24 +6,34 @@ interface InputFieldProps {
   placeholder: string;
   register: UseFormRegisterReturn;
   error?: FieldError;
+  label: string;
 }
 
-function InputField({ type, placeholder, register, error }: InputFieldProps) {
+export const InputField = ({
+  type,
+  placeholder,
+  register,
+  error,
+  label,
+}: InputFieldProps) => {
   return (
-    <div>
+    <div className="flex flex-col space-y-0">
+      {label && (
+        <div className="w-full text-left text-Body02-R text-line-600">
+          {label}
+        </div>
+      )}
       <input
         type={type}
         placeholder={placeholder}
         {...register}
-        className={`h-12 w-full rounded-lg border px-4 placeholder-grey-600 focus:border-white focus:bg-grey-800 focus:outline-none ${
-          error
-            ? "border-red-500 bg-transparent text-red-500"
-            : "border-gray-400 bg-transparent text-white"
+        className={`h-12 w-full border-b-2 bg-White px-2 text-Title02-M text-primary-200 placeholder-line-200 focus:outline-none focus:ring-1 focus:ring-white ${
+          error ? "border-red-500" : "border-line-200"
         }`}
       />
-      {error && <p className="mt-1 text-sm text-red-500">{error.message}</p>}
+      {error && (
+        <span className="mt-1 text-xs text-red-500">{error.message}</span>
+      )}
     </div>
   );
-}
-
-export default InputField;
+};
