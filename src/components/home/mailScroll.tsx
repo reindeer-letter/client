@@ -22,20 +22,20 @@ export default function MailScroll() {
 
   if (isError && !(error instanceof CanceledError))
     return (
-      <div className="mb-[116px] text-center text-Body01-B text-white">
+      <div className="mt-[120px] pb-[313px] text-center text-Body01-B text-grey-400">
         <div>편지를 불러오는 중에 오류가 발생했습니다.</div>
-        <div>{error?.message}</div>
+        <div className="text-grey-600">{error?.message}</div>
         <Image
           src="/images/reindeer-cry.png"
           alt="reindeer-cry"
-          height={372}
-          width={276}
+          height={132}
+          width={117}
           priority
           className="mx-auto mb-12 mt-12"
         />
         <Button
-          buttonType="Primary"
-          className="hover:cursor-pointer hover:opacity-70"
+          buttonType="abled"
+          className="bg-red hover:cursor-pointer hover:opacity-70"
           onClick={() => router.push("/login")}
         >
           다시 로그인하기
@@ -44,7 +44,7 @@ export default function MailScroll() {
     );
   if (data && data.length === 0 && !isLoading) return <EmptyMail />;
   return (
-    <section className="flex flex-col gap-7 pb-[128px]">
+    <section className="mt-4 flex flex-col gap-7 pb-[208px]">
       {data
         ? data.map(
             ({

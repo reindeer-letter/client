@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-// eslint-disable-next-line
-import { Nanum_Pen_Script } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import OverlayProvider from "@/providers/overlayProvider";
@@ -10,11 +8,9 @@ const pretendard = localFont({
   display: "swap",
 });
 
-// eslint-disable-next-line
-const nanumPenScript = Nanum_Pen_Script({
-  weight: "400",
-  variable: "--font-nanum-pen-script",
-  subsets: ["latin"],
+const handWriting = localFont({
+  src: "/fonts/handwriting.ttf",
+  variable: "--font-hand-writing",
   display: "swap",
 });
 
@@ -49,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${pretendard.className} ${nanumPenScript.variable}`}
+      className={`${pretendard.className} ${handWriting.variable}`}
     >
       <body className="h-svh bg-black antialiased">
         <OverlayProvider>

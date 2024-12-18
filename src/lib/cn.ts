@@ -8,9 +8,9 @@ const twMerge = extendTailwindMerge({
         {
           text: [
             "Head",
-            "Title-01-B",
+            "Title01-B",
             "Title01-M",
-            "TitleBody01-SB",
+            "Title01-SB",
             "Title02-B",
             "Title01-R",
             "Title02-M",

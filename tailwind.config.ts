@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        handwriting: ["var(--font-nanum-pen-script)"],
+        handwriting: ["var(--font-hand-writing)"],
       },
       fontSize: {
         Head: [
