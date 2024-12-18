@@ -73,10 +73,10 @@ export default function SignUpPage() {
       >
         <div className="flex w-full flex-1 flex-col items-center justify-center gap-[32px]">
           {/* 이메일 */}
-          <div className="flex w-full flex-col gap-[8px]">
+          <div className="group flex w-full flex-col gap-[8px]">
             <label
               htmlFor="email"
-              className="block text-Body02-SB text-line-600"
+              className="block text-Body02-SB text-line-600 group-focus-within:text-line-900"
             >
               이메일
             </label>
@@ -86,7 +86,7 @@ export default function SignUpPage() {
                 type="text"
                 {...register("email")}
                 placeholder="example1234@naver.com"
-                className="h-full flex-1 border-b border-line-200 text-Body01-M text-line-200 placeholder:text-line-200 focus:outline-none"
+                className="h-full flex-1 border-b border-line-200 text-Body01-M text-line-900 placeholder:text-line-200 focus:border-line-900 focus:outline-none"
               />
               <button
                 type="button"
@@ -102,10 +102,10 @@ export default function SignUpPage() {
           </div>
 
           {/* 비밀번호 */}
-          <div className="flex w-full flex-col gap-[8px]">
+          <div className="group flex w-full flex-col gap-[8px]">
             <label
               htmlFor="password"
-              className="block text-Body02-SB text-line-600"
+              className="block text-Body02-SB text-line-600 group-focus-within:text-line-900"
             >
               비밀번호
             </label>
@@ -115,7 +115,7 @@ export default function SignUpPage() {
                 type={showPassword ? "text" : "password"}
                 {...register("password")}
                 placeholder="비밀번호를 입력하세요."
-                className="h-full w-full border-b border-line-200 text-Body01-M text-line-200 placeholder:text-line-200 focus:outline-none"
+                className="h-full w-full border-b border-line-200 text-Body01-M text-line-900 placeholder:text-line-200 focus:border-line-900 focus:outline-none"
               />
               <button
                 type="button"
