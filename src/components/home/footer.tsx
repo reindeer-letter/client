@@ -41,18 +41,11 @@ export default function Footer() {
   }, [id, router, nickName]);
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 mx-auto flex h-[116px] w-full max-w-[600px] justify-center gap-2 bg-grey-900 px-5 pb-12 pt-3">
-      <Button
-        buttonType="abled"
-        onClick={handleGift}
-        className="truncate text-Body02-SB md:text-Body01-SB"
-      >
-        나에게 편지 선물하기
-      </Button>
+    <footer className="fixed bottom-0 left-0 right-0 mx-auto flex h-[208px] w-full max-w-[600px] flex-col justify-center gap-3 bg-white px-5 pb-14 pt-4">
       <Button
         buttonType="Primary"
         onClick={handleShare}
-        className="flex justify-center gap-2 px-4 py-4 text-Body02-SB md:text-Body01-SB"
+        className="flex w-full items-center justify-center gap-2 px-4 py-4"
       >
         <section className="relative h-5 w-5 md:h-6 md:w-6">
           <Image
@@ -64,6 +57,13 @@ export default function Footer() {
           />
         </section>
         내 편지함 공유하기
+      </Button>
+      <Button
+        buttonType="abled"
+        onClick={handleGift}
+        className="flex w-full items-center justify-center truncate"
+      >
+        내게 쓰기
       </Button>
     </footer>
   );

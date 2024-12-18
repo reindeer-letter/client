@@ -16,11 +16,11 @@ export default function Header({ className, showProfile = true }: HeaderProps) {
   return (
     <header
       className={cn(
-        "flex h-[60px] w-full items-center justify-between pl-4 pt-8 opacity-90",
+        "flex w-full items-center justify-between border-b border-line-100 pb-4 pt-[52px] opacity-90",
         className,
       )}
     >
-      <Link href="/" className="relative h-[22px] w-[67px]">
+      <Link href="/" className="relative ml-5 h-[23px] w-[81px]">
         <Image
           src="/images/logo.png"
           alt="logo"
@@ -31,7 +31,7 @@ export default function Header({ className, showProfile = true }: HeaderProps) {
         />
       </Link>
       {WITH_PROFILE.includes(pathName) && (
-        <Link href="/myPage" className="relative h-8 w-8">
+        <Link href="/myPage" className="relative mr-5 h-8 w-8">
           {showProfile && (
             <Image
               src="/icons/profile_default.png"

@@ -19,25 +19,18 @@ export default function EmptyMail() {
 
   return (
     <>
-      <section className="relative mt-[88px] pb-[116px]">
+      <section className="mx-auto mt-[120px] w-[164px] pb-[313px]">
         <Image
-          src="/images/reindeer-cry.png"
+          src="/images/empty-mail-box.png"
           alt="reindeer-cry"
-          height={372}
-          width={276}
+          height={132}
+          width={117}
           priority
-          className="relative mx-auto mb-12 mt-12"
+          className="mx-auto block"
         />
-        <section className="absolute bottom-0 left-0 right-0 top-0 flex justify-center">
-          <div className="mt-[118px] w-[276px] text-center text-Title01-M text-grey-300 text-white">
-            그리움의 끝은 어디까지일까,
-            <br />
-            손꼽아 헤아린다.
-            <div className="mt-2 text-end text-Caption text-grey-600">
-              시인 정광지
-            </div>
-          </div>
-        </section>
+        <span className="mt-5 block whitespace-nowrap text-center text-Title01-M text-grey-400">
+          받은 편지가 없습니다
+        </span>
       </section>
       <AnimatePresence>
         {messageMount && (
@@ -48,21 +41,20 @@ export default function EmptyMail() {
               exit={{ opacity: 0, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <section className="mx-auto flex w-full min-w-[375px] max-w-[600px]">
-                <section className="flex-1" />
-                <section className="relative flex-1">
-                  <div className="relative bottom-[126px] right-5 flex justify-between whitespace-nowrap rounded border border-[#474747] bg-grey-800 px-2 py-2 pr-8 text-center text-Body02-SB text-white">
+              <section className="mx-auto flex w-full min-w-[375px] max-w-[600px] rounded-[60px]">
+                <section className="relative mx-6 flex-1">
+                  <div className="relative bottom-[220px] right-0 flex justify-center whitespace-nowrap rounded border-2 border-primary-200 bg-white px-2 py-2 text-center text-Body02-SB text-primary-200">
                     <span className="flex-shrink-0">
-                      지인에게 공유하고, 첫 기억을 채워보세요!
+                      내 편지함을 지인에게 공유하고, 첫 기억을 채워보세요!
                     </span>
                     <button
-                      className="absolute right-1 text-white"
+                      className="absolute right-1 text-primary-200 hover:opacity-70"
                       onClick={handleUnmount}
                       type="button"
                     >
                       <Image
-                        src="/icons/close_small.png"
-                        alt="close_small"
+                        src="/icons/close.png"
+                        alt="close"
                         width={20}
                         height={20}
                         sizes="20px"
@@ -70,7 +62,7 @@ export default function EmptyMail() {
                       />
                     </button>
                   </div>
-                  <div className="absolute bottom-[118px] left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-b border-r border-[#474747] bg-grey-800" />
+                  <div className="absolute bottom-[212px] left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-primary-200 bg-white" />
                 </section>
               </section>
             </motion.div>

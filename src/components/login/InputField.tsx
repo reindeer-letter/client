@@ -1,3 +1,4 @@
+import cn from "@/lib/cn";
 import React from "react";
 import { FieldError, UseFormRegisterReturn } from "react-hook-form";
 
@@ -27,9 +28,12 @@ export const InputField = ({
         type={type}
         placeholder={placeholder}
         {...register}
-        className={`h-12 w-full border-b-2 bg-White px-2 text-Title02-M text-primary-200 placeholder-line-200 focus:outline-none focus:ring-1 focus:ring-white ${
-          error ? "border-red-500" : "border-line-200"
-        }`}
+        className={cn(
+          "h-12 w-full rounded-lg border px-4 placeholder-grey-600 focus:border-white focus:bg-grey-800 focus:outline-none",
+          error
+            ? "border-red-500 bg-transparent text-red-500"
+            : "border-gray-400 bg-transparent text-white",
+        )}
       />
       {error && (
         <span className="mt-1 text-xs text-red-500">{error.message}</span>
