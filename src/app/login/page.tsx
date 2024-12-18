@@ -5,17 +5,18 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import instance from "@/api/instance";
 import useOverlay from "@/hooks/useoverlay";
 import PopUp from "@/components/popUp";
 import { loginSchema, LoginFormInputs } from "@/utils/loginSchema";
 import HighlightedText from "@/components/HighlightedText";
 import Button from "@/components/button";
-import { InputField } from "@/components/login/InputField";
+import InputField from "@/components/login/InputField";
 
 const LoginPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const overlay = useOverlay();
   const {
     register,
@@ -30,6 +31,9 @@ const LoginPage = () => {
   const [, setToken] = useLocalStorage("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const receiverId = searchParams.get("receiverId");
+  const receiverNickName = searchParams.get("receiverNickName");
 
   const onSubmit = async (data: LoginFormInputs) => {
     if (isSubmitting) return;
@@ -48,7 +52,12 @@ const LoginPage = () => {
         setId(result.user.id);
         setNickName(result.user.nickName);
         setToken(result.access_token);
-        router.push("/home");
+
+        if (receiverId && receiverNickName)
+          router.push(
+            `/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`,
+          );
+        else router.push("/home");
       } else setErrorMessage("이메일 또는 비밀번호를 확인해주세요.");
     } catch (error) {
       if (error instanceof Error)
@@ -97,7 +106,7 @@ const LoginPage = () => {
             />
             <InputField
               type="password"
-              placeholder="비밀번호를 입력하세요"
+              placeholder=""
               register={register("password")}
               error={errors.password}
               label="비밀번호"

@@ -10,7 +10,7 @@ interface InputFieldProps {
   label: string;
 }
 
-export const InputField = ({
+const InputField = ({
   type,
   placeholder,
   register,
@@ -29,10 +29,10 @@ export const InputField = ({
         placeholder={placeholder}
         {...register}
         className={cn(
-          "h-12 w-full rounded-lg border px-4 placeholder-grey-600 focus:border-white focus:bg-grey-800 focus:outline-none",
+          "h-12 w-full border-b-2 bg-White px-2 text-Title02-M text-primary-200 placeholder-line-200 focus:border-primary-200 focus:outline-none focus:ring-1 focus:ring-white",
           error
-            ? "border-red-500 bg-transparent text-red-500"
-            : "border-gray-400 bg-transparent text-white",
+            ? "border-red-500 bg-transparent"
+            : "border-line-200 bg-transparent",
         )}
       />
       {error && (
@@ -41,3 +41,4 @@ export const InputField = ({
     </div>
   );
 };
+export default InputField;

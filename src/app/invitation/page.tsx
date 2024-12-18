@@ -43,9 +43,14 @@ export default function Home() {
               편지 보내기
             </Button>
           </Link>
-          <Button buttonType="abled" className="w-full">
-            로그인
-          </Button>
+          <Link
+            href={`/login?receiverId=${receiverId}&receiverNickName=${receiverNickName}`}
+            className="w-full"
+          >
+            <Button buttonType="abled" className="w-full">
+              로그인
+            </Button>
+          </Link>
         </div>
       </footer>
     </div>

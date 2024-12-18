@@ -20,7 +20,7 @@ const Page = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [description] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const category = searchParams.get("type");
@@ -155,47 +155,40 @@ const Page = () => {
             />
           </div>
         </header>
-
-        <div className="w-full flex-1">
-          <textarea
-            placeholder="내용을 입력하세요"
-            className="h-[240px] w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 w-full bg-primary-200 px-4 py-6">
-        <div className="flex justify-between gap-3">
-          <button
-            className="ml-4 flex w-[160px] items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
-            onClick={() => setIsCalendarOpen(true)}
-          >
-            <Image
-              src="/icons/Reservation_28.png"
-              alt="달력 아이콘"
-              width={24}
-              height={24}
-            />
-            <span>{selectedDate || todayFormatted}</span>
-          </button>
-        </div>
+      <footer className="mx-auto w-full bg-primary-200 px-5 pb-[40px] pt-6">
+        <div className="flex w-full flex-col">
+          <div className="ml-4 flex">
+            <button
+              className="flex items-center gap-1 rounded-full bg-primary-100 px-6 py-2 text-Body02-M"
+              onClick={() => setIsCalendarOpen(true)}
+            >
+              <Image
+                src="/icons/Reservation_28.png"
+                alt="달력 아이콘"
+                width={24}
+                height={24}
+              />
+              <span>{selectedDate || todayFormatted}</span>
+            </button>
+          </div>
 
-        <div className="w-full px-2 py-4">
-          <Button
-            buttonType="abled"
-            onClick={handleOpenPopUp}
-            className="w-full text-black"
-          >
-            {daysDifference !== null
-              ? daysDifference === 0
-                ? "오늘 편지 보내기"
-                : `${daysDifference}일 뒤 편지 보내기`
-              : "오늘 편지 보내기"}
-          </Button>
+          <div className="w-full px-2 py-4">
+            <Button
+              buttonType="abled"
+              onClick={handleOpenPopUp}
+              className="w-full text-primary-200"
+            >
+              {daysDifference !== null
+                ? daysDifference === 0
+                  ? "오늘 편지 보내기"
+                  : `${daysDifference}일 뒤 편지 보내기`
+                : "오늘 편지 보내기"}
+            </Button>
+          </div>
         </div>
-      </div>
+      </footer>
 
       <CalendarModal
         isOpen={isCalendarOpen}
