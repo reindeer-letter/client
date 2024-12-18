@@ -5,11 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import instance from "@/api/instance";
+
 import Button from "@/components/button";
 import EmailVerificationForm from "@/components/signUp/VerifyEmail";
 import { SignUpFormData, signUpSchema } from "@/utils/signUpSchema";
-import { isAxiosError } from "axios";
 
 export default function SignUpPage() {
   const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
@@ -28,27 +27,19 @@ export default function SignUpPage() {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const onSignUp: SubmitHandler<SignUpFormData> = async (data) => {
-    console.log("onSignUp called with data:", data);
+  const onNextStep: SubmitHandler<SignUpFormData> = (data) => {
     if (!verifiedEmail) {
       alert("이메일 인증을 완료해주세요.");
       return;
     }
-    try {
-      await instance.post("/auth/register", {
-        email: verifiedEmail,
-        password: data.password,
-      });
-      alert("회원가입이 완료되었습니다.");
-      router.push("/");
-    } catch (error) {
-      console.error("회원가입 실패:", error); // 디버깅용
-      if (isAxiosError(error) && error.response)
-        alert(
-          `회원가입 실패: ${error.response.data.message || "오류가 발생했습니다."}`,
-        );
-      else alert("회원가입 중 알 수 없는 오류가 발생했습니다.");
-    }
+
+    const signUpData = { email: verifiedEmail, password: data.password };
+
+    // 데이터를 localStorage에 저장
+    localStorage.setItem("signUpData", JSON.stringify(signUpData));
+
+    console.log("데이터 저장됨:", localStorage.getItem("signUpData")); // 확인용 로그
+    router.push("/profile");
   };
 
   return (
@@ -79,10 +70,7 @@ export default function SignUpPage() {
         <EmailVerificationForm onSuccess={setVerifiedEmail} />
       ) : (
         <form
-          onSubmit={(e) => {
-            e.preventDefault(); // 기본 동작 방지
-            handleSubmit(onSignUp)(e); // 핸들러 호출
-          }}
+          onSubmit={handleSubmit(onNextStep)}
           className="flex w-full flex-1 flex-col items-center justify-between"
         >
           <div className="flex w-full flex-1 flex-col items-center justify-center gap-[32px]">
@@ -112,7 +100,7 @@ export default function SignUpPage() {
               <div className="relative h-[40px] w-full">
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password")}
                   placeholder="비밀번호를 입력하세요."
                   className="h-[40px] w-full border-b border-line-200 text-Body01-M text-line-900 placeholder:text-line-200 focus:border-line-900 focus:outline-none"
