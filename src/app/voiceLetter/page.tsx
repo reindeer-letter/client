@@ -12,6 +12,7 @@ import useOverlay from "@/hooks/useoverlay";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
+import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -20,7 +21,7 @@ const Page = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [description] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const category = searchParams.get("type");
@@ -50,15 +51,7 @@ const Page = () => {
     }
 
     try {
-      const [year, month, day] = selectedDate
-        .replace(/년|월|일/g, "")
-        .trim()
-        .split(" ")
-        .map(Number);
-
-      const scheduledAt = `${year}-${String(month).padStart(2, "0")}-${String(
-        day,
-      ).padStart(2, "0")}`;
+      const scheduledAt = formatDateStringToISO(selectedDate);
       const response = await instance.post("/letters", {
         title,
         description,
@@ -155,22 +148,13 @@ const Page = () => {
             />
           </div>
         </header>
-
-        <div className="w-full flex-1">
-          <textarea
-            placeholder="내용을 입력하세요"
-            className="h-[240px] w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
       </main>
 
       <footer className="mx-auto w-full bg-primary-200 px-5 pb-[40px] pt-6">
         <div className="flex w-full flex-col">
-          <div className="flex justify-between gap-4">
+          <div className="ml-4 flex">
             <button
-              className="ml-4 flex w-full items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
+              className="flex items-center gap-1 rounded-full bg-primary-100 px-6 py-2 text-Body02-M"
               onClick={() => setIsCalendarOpen(true)}
             >
               <Image
@@ -180,18 +164,6 @@ const Page = () => {
                 height={24}
               />
               <span>{selectedDate || todayFormatted}</span>
-            </button>
-
-            <button className="mr-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M">
-              <Image
-                src="/icons/Music_28.png"
-                alt="노래 아이콘"
-                width={24}
-                height={24}
-              />
-              <span className="w-[100px] truncate text-left">
-                노래제목노래제목노래제목노래제목노래제목
-              </span>
             </button>
           </div>
 
@@ -210,6 +182,7 @@ const Page = () => {
           </div>
         </div>
       </footer>
+
       <CalendarModal
         isOpen={isCalendarOpen}
         onClose={() => setIsCalendarOpen(false)}

@@ -1,6 +1,5 @@
 "use client";
 
-import Header from "@/components/header";
 import "../globals.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -14,54 +13,61 @@ const Page = () => {
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
   const [nickname, setNickname] = useState("");
+  const basePath = type === "VOICE" ? "voiceLetter" : "writingLetter";
 
   const handleNext = () => {
     if (!nickname.trim()) {
       alert("별명을 입력해주세요!");
       return;
     }
-
     router.push(
-      `/writingLetter?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
+      `/${basePath}?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
         nickname,
       )}&receiverNickName=${receiverNickName}`,
     );
   };
   return (
-    <div className="flex min-h-screen flex-col bg-grey-900 text-white">
-      <div className="px-4">
-        <Header />
-      </div>
+    <div className="flex h-screen flex-col bg-White">
       <NavBar
-        title="별명 입력"
+        title=""
         loggedBack="/letterType"
         guestBack="/letterType"
         loggedClose="/home"
         guestClose="/invitaion"
       />
-      <main className="flex w-full flex-1 flex-col items-center justify-start space-y-4 px-4 pt-2">
-        <div className="text-md w-full text-left text-Body02-R">
-          편지에 적을 별명을 입력하세요
+      <div className="pl-4 text-left text-Head text-line-700">
+        누가 보내시는 건가요?
+      </div>
+
+      <main className="flex flex-1 flex-col items-center justify-center px-4">
+        <div className="mb-18 flex w-full max-w-xl flex-col items-center space-y-2">
+          <div className="text-md w-full text-left text-Body02-R text-line-600">
+            보내는 사람
+          </div>
+          <input
+            type="text"
+            placeholder="보내시는 분의 성함, 별명 등을 입력하세요."
+            value={nickname}
+            onChange={(e) => {
+              if (e.target.value.length <= 20) setNickname(e.target.value);
+              else alert("별명은 20자 이하로 입력해주세요.");
+            }}
+            className="h-12 w-full border-b-2 bg-White px-4 text-Title02-M text-primary-200 placeholder-line-200 focus:border-primary-200 focus:outline-none focus:ring-1 focus:ring-white"
+          />
         </div>
-        <input
-          type="text"
-          value={nickname}
-          onChange={(e) => {
-            if (e.target.value.length <= 20) setNickname(e.target.value);
-            else alert("별명은 20자 이하로 입력해주세요.");
-          }}
-          className="h-12 w-full rounded-lg bg-grey-800 px-4 text-white focus:outline-none focus:ring-1 focus:ring-white"
-        />
       </main>
 
-      <footer className="fixed bottom-0 w-full max-w-[600px] bg-grey-900 px-5 pb-12">
-        <Button
-          buttonType="abled"
-          onClick={handleNext}
-          className="w-full text-black"
-        >
-          다음
-        </Button>
+      <footer className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-5 pb-[56px]">
+        <div className="flex w-full flex-col space-y-3">
+          <Button
+            buttonType={nickname.trim() ? "abled" : undefined}
+            onClick={handleNext}
+            disabled={!nickname.trim()}
+            className="w-full"
+          >
+            다음
+          </Button>
+        </div>
       </footer>
     </div>
   );

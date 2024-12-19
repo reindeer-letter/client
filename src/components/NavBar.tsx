@@ -46,17 +46,21 @@ const NavBar = ({
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-6">
-      <button aria-label="뒤로가기" className="text-white" onClick={handleBack}>
-        <Image src="/left_arrow.png" alt="뒤로가기" width={24} height={24} />
+    <div className="flex items-center justify-between px-4 py-10">
+      <button
+        aria-label="뒤로가기"
+        className="text-line-300"
+        onClick={handleBack}
+      >
+        <Image src="/Arrow-left_32.png" alt="뒤로가기" width={24} height={24} />
       </button>
-      <h1 className="font-dongle text-Title01-SB">{title}</h1>
+      <h1 className="font-dongle text-Title01-SB text-line-700">{title}</h1>
       <button
         aria-label="닫기"
         className="pr-1 text-white"
         onClick={handleClose}
       >
-        <Image src="/icons/close.png" alt="닫기" width={28} height={28} />
+        <Image src="/Close_32.png" alt="닫기" width={28} height={28} />
       </button>
     </div>
   );

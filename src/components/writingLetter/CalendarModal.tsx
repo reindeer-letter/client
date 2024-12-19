@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect, useMemo, useCallback } from "react";
+import Button from "../button";
 
 interface CalendarModalProps {
   isOpen: boolean;
@@ -30,8 +31,8 @@ const CalendarModal = ({
 
   const getFormattedDate = useCallback(
     (year: number, month: number, date: number) => {
-      const dayOfWeek = daysOfWeek[new Date(year, month, date).getDay()];
-      return `${year}년 ${month + 1}월 ${date}일 ${dayOfWeek}`;
+      // const dayOfWeek = daysOfWeek[new Date(year, month, date).getDay()];
+      return `${year}년 ${month + 1}월 ${date}일 `;
     },
     [daysOfWeek],
   );
@@ -85,42 +86,48 @@ const CalendarModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md rounded-lg bg-grey-800 p-6 text-white">
-        <div className="mb-9 flex items-center justify-between text-xl">
+      <div className="w-full max-w-md rounded-lg bg-White p-6 text-grey-800">
+        <div className="mb-9 flex items-center justify-between text-Head text-line-700">
           <span>언제 보낼까요?</span>
           <button onClick={onClose} aria-label="닫기">
-            <Image src="/icons/close.png" width={28} height={28} alt="close" />
+            <Image src="/Close_32.png" width={24} height={24} alt="close" />
           </button>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center gap-14">
           <button
-            className="text-xl text-white"
+            className="text-xl text-grey-800"
             onClick={handlePrevMonth}
             aria-label="이전 달"
           >
-            &lt;
+            <Image src="/Angle-left.png" width={24} height={24} alt="이전 달" />
           </button>
-          <h2 className="text-lg font-semibold">
+          <h2 className="flex-shrink-0 text-lg font-semibold">
             {currentYear}.{currentMonth + 1}
           </h2>
           <button
-            className="text-xl text-white"
+            className="text-xl text-grey-800"
             onClick={handleNextMonth}
             aria-label="다음 달"
           >
-            &gt;
+            <Image
+              src="/Angle-right.png"
+              width={24}
+              height={24}
+              alt="다음 달"
+            />
           </button>
         </div>
+
         <div className="mt-4">
           <div className="grid grid-cols-7 gap-2 text-center">
             {daysOfWeek.map((day) => (
-              <div key={day} className="font-semibold text-gray-400">
+              <div key={day} className="font-semibold text-grey-600">
                 {day}
               </div>
             ))}
           </div>
-          <hr className="my-2 border-gray-600" />
+          <hr className="my-2 border-line-100" />
           <div className="grid grid-cols-7 gap-2 text-center">
             {dates.map((date) => {
               const formattedDate = getFormattedDate(
@@ -141,12 +148,12 @@ const CalendarModal = ({
                 <button
                   key={date}
                   onClick={() => handleDateSelect(date)}
-                  className={`h-10 w-10 rounded-full ${
+                  className={`h-12 w-12 rounded-full ${
                     isSelected
-                      ? "bg-primary-700 text-white"
+                      ? "bg-primary-200 text-White"
                       : isPastDate
-                        ? "text-gray-500"
-                        : "text-gray-200 hover:bg-primary-700"
+                        ? "text-gray-200"
+                        : "hover:bg-primary-700 text-gray-800"
                   }`}
                 >
                   {date}
@@ -154,18 +161,15 @@ const CalendarModal = ({
               );
             })}
           </div>
-          <hr className="mb-0 mt-2 border-gray-600" />
+          <hr className="mb-0 mt-2 border-line-100" />
         </div>
-        <div className="mt-3 text-center">
-          <p className="text-md mb-4 text-left text-grey-400">
-            {selectedDate}요일
+        <div className="mb-8 mt-3 text-center">
+          <p className="mb-4 text-left text-Body01-SB text-grey-900">
+            {selectedDate}
           </p>
-          <button
-            onClick={handleComplete}
-            className="mt-4 w-full rounded-md bg-white py-4 font-semibold text-black"
-          >
+          <Button buttonType="Primary" onClick={handleComplete}>
             완료
-          </button>
+          </Button>
         </div>
       </div>
     </div>

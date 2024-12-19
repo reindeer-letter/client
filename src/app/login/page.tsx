@@ -5,15 +5,18 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import instance from "@/api/instance";
 import useOverlay from "@/hooks/useoverlay";
 import PopUp from "@/components/popUp";
 import { loginSchema, LoginFormInputs } from "@/utils/loginSchema";
+import HighlightedText from "@/components/HighlightedText";
+import Button from "@/components/button";
 import InputField from "@/components/login/InputField";
 
 const LoginPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const overlay = useOverlay();
   const {
     register,
@@ -28,6 +31,9 @@ const LoginPage = () => {
   const [, setToken] = useLocalStorage("token");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const receiverId = searchParams.get("receiverId");
+  const receiverNickName = searchParams.get("receiverNickName");
 
   const onSubmit = async (data: LoginFormInputs) => {
     if (isSubmitting) return;
@@ -46,7 +52,12 @@ const LoginPage = () => {
         setId(result.user.id);
         setNickName(result.user.nickName);
         setToken(result.access_token);
-        router.push("/home");
+
+        if (receiverId && receiverNickName)
+          router.push(
+            `/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`,
+          );
+        else router.push("/home");
       } else setErrorMessage("이메일 또는 비밀번호를 확인해주세요.");
     } catch (error) {
       if (error instanceof Error)
@@ -58,7 +69,6 @@ const LoginPage = () => {
         );
       }
     } finally {
-      // 요청이 끝난 후 isSubmitting 상태 복구
       setIsSubmitting(false);
     }
   };
@@ -76,94 +86,69 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative flex h-screen flex-col items-center justify-center -bg--background px-4 text-white">
-      <div className="absolute left-4 top-8">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center space-x-2 text-Body02-R text-grey-300 hover:text-white"
+    <div
+      className="flex h-screen flex-col bg-cover bg-center"
+      style={{ backgroundImage: "url('/background/login.png')" }}
+    >
+      <HighlightedText />
+      <div className="mt-14 flex h-screen items-center justify-center">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full max-w-sm space-y-7 text-center"
         >
-          <Image src="/left_arrow.png" width={24} height={24} alt="뒤로가기" />
-        </button>
-      </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="mb-12 w-full max-w-md space-y-7"
-      >
-        <div className="flex flex-col items-center space-y-2 pb-4 pt-24 text-center">
-          <p className="text-Body01-M">미래의 나에게</p>
-          <p className="pb-2 text-Body01-M">오늘의 기억을 선물하는 편지,</p>
-          <div className="flex w-full justify-center">
-            <Image src="/logo.png" width={120} height={37} alt="로고" />
+          <div className="flex flex-col space-y-10">
+            <InputField
+              type="email"
+              placeholder="example1234@naver.com"
+              register={register("email")}
+              error={errors.email}
+              label="이메일"
+            />
+            <InputField
+              type="password"
+              placeholder=""
+              register={register("password")}
+              error={errors.password}
+              label="비밀번호"
+            />
+
+            {errorMessage && (
+              <p className="text-sm text-red-500">{errorMessage}</p>
+            )}
+            <Button buttonType="Primary">로그인</Button>
           </div>
+
+          <div className="mt-4 space-x-4 text-Body02-R text-line-800">
+            <a href="#" className="hover:text-primary-200">
+              아이디 찾기
+            </a>
+            <span>|</span>
+            <a href="#" className="hover:text-primary-200">
+              비밀번호 찾기
+            </a>
+            <span>|</span>
+            <a
+              href="#"
+              className="hover:text-primary-200"
+              onClick={() => router.push("/signUp")}
+            >
+              회원가입
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <div className="w-full px-6 pb-[63px]">
+        <div className="mx-auto w-full max-w-md justify-center pb-[20px] text-center text-Body02-R text-line-800">
+          간편하게 시작하기
         </div>
 
-        <div className="w-full space-y-4">
-          <InputField
-            type="email"
-            placeholder="이메일 입력"
-            register={register("email")}
-            error={errors.email}
-          />
-          <InputField
-            type="password"
-            placeholder="비밀번호 입력"
-            register={register("password")}
-            error={errors.password}
-          />
-          {errorMessage && (
-            <p className="text-sm text-red-500">{errorMessage}</p>
-          )}
-          <button
-            type="submit"
-            className="h-12 w-full rounded-lg bg-white font-semibold text-grey-900 focus:outline-none"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "로그인 중..." : "로그인"}
-          </button>
-        </div>
-
-        <div className="mt-4 space-x-4 text-center text-Body02-R text-grey-300">
-          <a href="#" className="hover:text-white">
-            아이디 찾기
-          </a>
-          <span>|</span>
-          <a href="#" className="hover:text-white">
-            비밀번호 찾기
-          </a>
-          <span>|</span>
-          <a
-            href="#"
-            className="hover:text-white"
-            onClick={() => router.push("/signUp")}
-          >
-            회원가입
-          </a>
-        </div>
-      </form>
-
-      <div className="w-full px-6 pt-12">
-        <div className="mx-auto mb-6 flex w-full max-w-md items-center">
-          <div className="flex-1 border-t border-grey-700" />
-          <p className="mx-2 flex-1 whitespace-nowrap text-sm text-grey-300">
-            간편하게 시작하기
-          </p>
-          <div className="flex-1 border-t border-grey-700" />
-        </div>
-
-        <div className="flex items-center justify-center space-x-4">
+        <div className="flex items-center justify-center space-x-6">
           <button onClick={handleSimpleStartClick}>
             <Image src="/login/kakao.png" width={50} height={50} alt="카카오" />
           </button>
           <button onClick={handleSimpleStartClick}>
-            <Image src="/login/naver.png" width={50} height={50} alt="네이버" />
-          </button>
-          <button onClick={handleSimpleStartClick}>
-            <Image
-              src="/login/facebook.png"
-              width={50}
-              height={50}
-              alt="페이스북"
-            />
+            <Image src="/login/google.png" width={50} height={50} alt="구글" />
           </button>
         </div>
       </div>
