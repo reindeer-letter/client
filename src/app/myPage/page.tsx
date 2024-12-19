@@ -1,30 +1,44 @@
 "use client";
 
+import instance from "@/api/instance";
+import useGetFetch from "@/hooks/useGetFetch";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { GetAuthProfileResponse } from "@/types/profile";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 export default function Page() {
+  const { data, isLoading, isError, isCancelled, error } =
+    useGetFetch<GetAuthProfileResponse>({
+      route: "/auth/profile",
+    });
   const [, setUserId] = useLocalStorage("userId");
-  const [nickName, setNickName] = useLocalStorage("nickName");
-  const [, setToken] = useLocalStorage("token");
+  const [, setNickName] = useLocalStorage("nickName");
+  const [token, setToken] = useLocalStorage("token");
   const router = useRouter();
 
-  const handleLogout = useCallback(() => {
-    setUserId(null);
-    setNickName(null);
-    setToken(null);
-    router.push("/");
-  }, [setUserId, setNickName, setToken, router]);
+  const handleLogout = useCallback(async () => {
+    try {
+      await instance.post("/auth/logout", null, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUserId(null);
+      setNickName(null);
+      setToken(null);
+      router.push("/");
+    } catch (error) {
+      alert("로그아웃에 실패했습니다.");
+      throw error;
+    }
+  }, [setUserId, setNickName, setToken, router, token]);
 
   const handleBack = useCallback(() => {
     router.back();
   }, [router]);
 
   return (
-    // TODO: 마이페이지 구현
     <>
       <header className="relative w-full pb-4 pt-[52px] text-center">
         <span className="block pb-4 text-Title01-SB text-line-700">
@@ -44,15 +58,30 @@ export default function Page() {
           />
         </button>
         <section className="mt-5 flex flex-col items-center justify-center gap-4">
-          <Image
-            priority
-            src="/profile/Skin Color=Brown, Antlers=Option-01(Heart Shape), Muffler=Green.svg"
-            alt="profile"
-            width={240}
-            height={240}
-            className="rounded-full bg-[#d9d9d9]"
-          />
-          <div className="pb-9 text-Title01-R text-grey-800">{nickName}</div>
+          {isLoading && (
+            <div className="h-[240px] w-[240px] animate-pulse rounded-full bg-[#d9d9d9]" />
+          )}
+          {isError && !isCancelled && (
+            <div className="text-red-500">
+              에러가 발생했습니다: {error?.message}
+            </div>
+          )}
+          {data && (
+            <Image
+              priority
+              src={data.profileImageUrl}
+              alt="profile"
+              width={240}
+              height={240}
+              className="rounded-full bg-[#d9d9d9]"
+            />
+          )}
+          {isLoading && <div className="h-5 w-36 animate-pulse bg-[#d9d9d9]" />}
+          {data && (
+            <div className="pb-9 text-Title01-R text-grey-800">
+              {data.nickName}
+            </div>
+          )}
         </section>
       </header>
       <section className="flex flex-1 flex-col gap-3 pb-20">
@@ -71,7 +100,7 @@ export default function Page() {
           작성 중인 편지
         </Link>
         <Link
-          href="/myPage/letterToMe.png"
+          href="/myPage/letterToMe"
           className="mx-5 block rounded-2xl border-[1.5px] border-line-100 px-4 py-5 text-left text-Title01-M text-line-900 hover:bg-line-100"
         >
           <Image
@@ -89,6 +118,7 @@ export default function Page() {
         <button
           type="button"
           className="text-grey-400 underline hover:text-grey-600"
+          onClick={handleLogout}
         >
           회원탈퇴
         </button>
