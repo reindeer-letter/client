@@ -2,7 +2,7 @@
 
 import "../globals.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/button";
 import NavBar from "../../components/NavBar";
 
@@ -12,6 +12,7 @@ const Page = () => {
   const type = searchParams.get("type");
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
+  const source = searchParams.get("source");
   const [nickname, setNickname] = useState("");
   const basePath = type === "VOICE" ? "voiceLetter" : "writingLetter";
 
@@ -26,6 +27,11 @@ const Page = () => {
       )}&receiverNickName=${receiverNickName}`,
     );
   };
+
+  useEffect(() => {
+    if (source === "self") setNickname(receiverNickName || "");
+  }, [source, receiverNickName]);
+
   return (
     <div className="flex h-screen flex-col bg-White">
       <NavBar
