@@ -37,6 +37,7 @@ export default function Footer() {
     const currentUrl = new URL("letterType", window.location.origin);
     currentUrl.searchParams.set("receiverId", String(id));
     currentUrl.searchParams.set("receiverNickName", String(nickName));
+    currentUrl.searchParams.set("source", "self");
     router.push(currentUrl.toString());
   }, [id, router, nickName]);
 
