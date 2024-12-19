@@ -12,6 +12,7 @@ import useOverlay from "@/hooks/useoverlay";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
+import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -50,15 +51,7 @@ const Page = () => {
     }
 
     try {
-      const [year, month, day] = selectedDate
-        .replace(/년|월|일/g, "")
-        .trim()
-        .split(" ")
-        .map(Number);
-
-      const scheduledAt = `${year}-${String(month).padStart(2, "0")}-${String(
-        day,
-      ).padStart(2, "0")}`;
+      const scheduledAt = formatDateStringToISO(selectedDate);
       const response = await instance.post("/letters", {
         title,
         description,

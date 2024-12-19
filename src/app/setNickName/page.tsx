@@ -13,14 +13,13 @@ const Page = () => {
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
   const [nickname, setNickname] = useState("");
+  const basePath = type === "VOICE" ? "voiceLetter" : "writingLetter";
 
   const handleNext = () => {
     if (!nickname.trim()) {
       alert("별명을 입력해주세요!");
       return;
     }
-
-    const basePath = type === "VOICE" ? "voiceLetter" : "writingLetter";
     router.push(
       `/${basePath}?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
         nickname,
