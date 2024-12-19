@@ -5,8 +5,14 @@ import { useCallback, useEffect, useState } from "react";
 export default function useLocalStorage(key: string) {
   const [value, setValue] = useState(() => {
     if (typeof window === "undefined") return null;
-    return window.localStorage.getItem(key);
+    try {
+      return window.localStorage.getItem(key);
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   });
+  const [isMount, setIsMount] = useState(false);
 
   const setLocalStorage = useCallback(
     (value: string | null) => {
@@ -22,8 +28,10 @@ export default function useLocalStorage(key: string) {
   );
 
   useEffect(() => {
-    setValue(window.localStorage.getItem(key));
+    setIsMount(true);
   }, [key]);
+
+  if (!isMount) return [null, setLocalStorage] as const;
 
   return [value, setLocalStorage] as const;
 }

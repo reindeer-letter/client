@@ -11,7 +11,6 @@ import {
 interface OverlayContextType {
   addOverlay: (key: string, element: ReactNode) => void;
   removeOverlay: (key: string) => void;
-  isMount: (key: string) => boolean;
 }
 
 export const overlayContext = createContext<OverlayContextType | null>(null);
@@ -32,11 +31,10 @@ export default function OverlayProvider({ children }: { children: ReactNode }) {
       return newOverlay;
     });
   }, []);
-  const isMount = useCallback((key: string) => overlay.has(key), [overlay]);
 
   return (
     // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <overlayContext.Provider value={{ addOverlay, removeOverlay, isMount }}>
+    <overlayContext.Provider value={{ addOverlay, removeOverlay }}>
       {children}
       {[...overlay.entries()].map(([key, element]) => {
         return <Fragment key={key}>{element}</Fragment>;
