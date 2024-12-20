@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const [selectedHorn, setSelectedHorn] = useState<string>("OPTION-01");
   const [selectedScarf, setSelectedScarf] = useState<string>("RED");
   const [selectedSkin, setSelectedSkin] = useState<string>("BROWN");
-
+  const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
   const router = useRouter();
 
   const {
@@ -95,13 +95,18 @@ export default function ProfilePage() {
         clearErrors("nickname");
       }
     } catch (error) {
-      if (isAxiosError(error))
+      if (isAxiosError(error) && error.response?.status === 409) {
         setError("nickname", { message: "이미 사용 중인 별명입니다." });
+        setIsNicknameChecked(false);
+      } else alert("중복 확인 중 문제가 발생했습니다.");
     }
   };
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
-    if (!signUpData) return;
+    if (!signUpData || !isNicknameChecked) {
+      setError("nickname", { message: "별명 중복 확인을 완료해주세요." });
+      return;
+    }
 
     try {
       await instance.post("/auth/register", {
@@ -200,8 +205,13 @@ export default function ProfilePage() {
         <div className="flex w-full flex-col items-center pb-[56px] pt-[16px]">
           <Button
             type="submit"
-            buttonType="abled"
-            className="w-full rounded-[60px] border-none bg-grey-200 text-grey-400"
+            buttonType={nicknameValue?.trim() ? "abled" : undefined}
+            disabled={!nicknameValue?.trim()}
+            className={`w-full rounded-[60px] border-none ${
+              nicknameValue?.trim()
+                ? "bg-primary-200 text-white"
+                : "bg-grey-200 text-grey-400"
+            }`}
           >
             완료
           </Button>

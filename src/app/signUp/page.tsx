@@ -18,13 +18,14 @@ export default function SignUpPage() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     mode: "onChange",
   });
 
   const router = useRouter();
-
+  const passwordValue = watch("password");
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   const onNextStep: SubmitHandler<SignUpFormData> = (data) => {
@@ -131,8 +132,13 @@ export default function SignUpPage() {
           <div className="flex w-full flex-col items-center pb-[56px] pt-[16px]">
             <Button
               type="submit"
-              buttonType="abled"
-              className="w-full rounded-[60px] border-none bg-grey-200 text-grey-400"
+              buttonType={passwordValue?.trim() ? "abled" : undefined}
+              disabled={!passwordValue?.trim()}
+              className={`w-full rounded-[60px] border-none ${
+                passwordValue?.trim()
+                  ? "bg-primary-200 text-white"
+                  : "bg-grey-200 text-grey-400"
+              }`}
             >
               다음
             </Button>
