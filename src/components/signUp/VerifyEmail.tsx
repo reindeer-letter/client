@@ -27,7 +27,7 @@ export default function VerifyEmail({ onSuccess }: EmailVerificationFormProps) {
   });
 
   const emailValue = watch("email");
-
+  const codeValue = watch("code");
   const sendVerificationCode = async () => {
     try {
       await instance.post("/auth/send-verification", { email: emailValue });
@@ -115,8 +115,13 @@ export default function VerifyEmail({ onSuccess }: EmailVerificationFormProps) {
       <div className="flex w-full flex-col items-center pb-[56px] pt-[16px]">
         <Button
           type="submit"
-          buttonType="abled"
-          className="w-full rounded-[60px] border-none bg-grey-200 text-grey-400"
+          buttonType={emailValue && codeValue ? "abled" : undefined}
+          disabled={!emailValue || !codeValue}
+          className={`w-full rounded-[60px] border-none ${
+            emailValue && codeValue
+              ? "bg-primary-200 text-white"
+              : "bg-grey-200 text-grey-400"
+          }`}
         >
           인증 완료
         </Button>
