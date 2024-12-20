@@ -61,7 +61,7 @@ export default function ProfilePage() {
           mufflerColor: scarfColor,
         },
       });
-      setProfileImageUrl(response.data.profileImageUrl);
+      setProfileImageUrl(response.data.imageUrl);
     } catch (error) {
       console.error("미리보기 이미지 로드 실패:", error);
     }
