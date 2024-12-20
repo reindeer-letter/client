@@ -51,6 +51,10 @@ const Page = () => {
       alert("모든 필드를 채워주세요.");
       return;
     }
+    if (!uploadedImageUrl) {
+      alert("이미지를 업로드해주세요.");
+      return;
+    }
     try {
       const payload = {
         title,
