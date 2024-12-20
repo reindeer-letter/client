@@ -1,4 +1,4 @@
-type Letter = {
+export type Letter = {
   id: number;
   title: string;
   description: string;
