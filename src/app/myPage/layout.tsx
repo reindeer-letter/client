@@ -3,5 +3,9 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return (
+    <section className="flex min-h-screen flex-col bg-white">
+      {children}
+    </section>
+  );
 }
