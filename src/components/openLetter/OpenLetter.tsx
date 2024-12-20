@@ -2,7 +2,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import ActionBar from "@/components/writingLetter/ActionBar";
 import Link from "next/link";
 import Image from "next/image";
 import instance from "@/api/instance";
@@ -71,9 +70,7 @@ export default function OpenLetter() {
 
       <main className="flex w-full flex-1 flex-col items-center justify-between">
         <header className="flex w-full flex-col space-y-4">
-          <div className="p-2 px-4 pb-4">
-            <ActionBar />
-          </div>
+          <div className="p-2 px-4 pb-4"></div>
           <div className="flex w-full justify-end border-none bg-transparent p-2 px-4 font-handwriting text-sm text-black">
             <div>from: {letter?.senderNickName}</div>
           </div>

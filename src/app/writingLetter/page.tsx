@@ -12,6 +12,8 @@ import useOverlay from "@/hooks/useoverlay";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
+import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
+import ImageUploader from "@/components/writingLetter/ImageUploader";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -23,61 +25,55 @@ const Page = () => {
   const [description, setDescription] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const category = searchParams.get("type");
-  const nickname = searchParams.get("nickname");
   const receiverId = searchParams.get("receiverId");
-  const receiverNickName = searchParams.get("receiverNickName");
+  const authToken = localStorage.getItem("token");
+  const storedNickname = localStorage.getItem("nickName");
+
+  const defaultImage = "/photo/photo.png";
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
   };
-
+  const handleUploadSuccess = (url: string) => {
+    setUploadedImageUrl(url);
+  };
   const daysDifference = calculateDaysDifference(selectedDate);
-
-  const handleSubmitLetter = async () => {
-    if (!selectedDate) {
-      alert("날짜를 선택해주세요.");
+  const formattedDate = formatDateStringToISO(selectedDate);
+  const finalDate = selectedDate
+    ? formattedDate
+    : formatDateStringToISO(todayFormatted);
+  // 편지 전송
+  const handleSendLetter = async () => {
+    if (!title.trim() || !description.trim()) {
+      alert("모든 필드를 채워주세요.");
       return;
     }
-    if (!title.trim()) {
-      alert("제목을 입력해주세요.");
-      return;
-    }
-
-    if (!nickname) {
-      alert("닉네임이 없습니다. 다시 시도해주세요.");
-      return;
-    }
-
     try {
-      const [year, month, day] = selectedDate
-        .replace(/년|월|일/g, "")
-        .trim()
-        .split(" ")
-        .map(Number);
-
-      const scheduledAt = `${year}-${String(month).padStart(2, "0")}-${String(
-        day,
-      ).padStart(2, "0")}`;
-      const response = await instance.post("/letters", {
+      const payload = {
         title,
         description,
-        imageUrl: "https://example.com/image.jpg",
+        imageUrl: uploadedImageUrl,
         bgmUrl: "https://example.com/music.mp3",
         category,
         receiverId: Number(receiverId),
         isOpen: false,
-        scheduledAt,
-        senderNickName: nickname,
-      });
+        scheduledAt: finalDate,
+        senderNickName: storedNickname?.trim() || "익명의 친구",
+      };
 
-      if (response.status === 201) {
-        overlay.unmount();
-        router.push(`/writingComplete?nickname=${receiverNickName}`);
-      }
+      const headers = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+      const response = await instance.post("/letters", payload, { headers });
+
+      if (response.status === 201) router.push("/writingComplete");
     } catch (error) {
-      if (axios.isAxiosError(error))
-        alert(`편지 작성 실패: ${JSON.stringify(error.response?.data)}`);
+      console.error("편지 전송 실패:", error);
+
+      if (axios.isAxiosError(error) && error.response?.status === 401)
+        alert("인증 문제가 발생했습니다. 다시 로그인해주세요.");
+      else alert("편지 전송 실패. 다시 시도해주세요.");
     }
   };
 
@@ -87,7 +83,7 @@ const Page = () => {
         button="전달하기"
         description="한 번 보낸 기억은 취소할 수 없습니다."
         title="기억을 전달할까요?"
-        onConfirm={handleSubmitLetter}
+        onConfirm={handleSendLetter}
         onCancel={() => overlay.unmount()}
         unmount={overlay.unmount}
       />,
@@ -107,44 +103,12 @@ const Page = () => {
         guestClose="/invitation"
       />
 
-      <main className="bg-custom-background flex w-full flex-1 flex-col px-4 pb-4">
-        <div className="relative mb-4 h-[300px] w-full overflow-x-auto pt-6">
-          <div className="ml-4 flex w-full gap-6">
-            {[1, 2, 3].map((index) => (
-              <div
-                key={index}
-                className="relative flex h-[240px] w-[240px] flex-shrink-0 items-center justify-center overflow-visible rounded-lg"
-              >
-                <Image
-                  src={`/photo/photo${index}.png`}
-                  alt={`사진 ${index}`}
-                  width={274}
-                  height={312}
-                />
-
-                <div className="absolute left-[50%] top-[-24px] z-10 -translate-x-1/2">
-                  <Image
-                    src="/photo/tape_blue.png"
-                    alt="테이프 위쪽"
-                    width={81}
-                    height={40}
-                  />
-                </div>
-
-                <div className="absolute bottom-[-16px] left-[50%] z-10 -translate-x-1/2">
-                  <Image
-                    src="/photo/tape_yellow.png"
-                    alt="테이프 아래쪽"
-                    width={102}
-                    height={40}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <header className="flex w-full flex-col space-y-4 px-4">
+      <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
+        <ImageUploader
+          defaultImage={defaultImage}
+          onUploadSuccess={handleUploadSuccess}
+        />
+        <header className="flex w-full flex-col space-y-4 px-4 pt-6">
           <div className="w-full">
             <input
               type="text"
@@ -159,18 +123,18 @@ const Page = () => {
         <div className="w-full flex-1">
           <textarea
             placeholder="내용을 입력하세요"
-            className="h-[240px] w-full resize-none rounded-lg bg-transparent p-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
+            className="mt-4 h-[200px] w-full resize-none rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
       </main>
 
-      <footer className="mx-auto w-full bg-primary-200 px-5 pb-[40px] pt-6">
+      <footer className="mx-auto w-full bg-primary-200 px-5 pb-[30px] pt-6">
         <div className="flex w-full flex-col">
-          <div className="flex justify-between gap-4">
+          <div className="flex justify-between gap-3">
             <button
-              className="ml-4 flex w-full items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
+              className="ml-3 flex w-full items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
               onClick={() => setIsCalendarOpen(true)}
             >
               <Image
@@ -182,7 +146,7 @@ const Page = () => {
               <span>{selectedDate || todayFormatted}</span>
             </button>
 
-            <button className="mr-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M">
+            <button className="mr-3 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M">
               <Image
                 src="/icons/Music_28.png"
                 alt="노래 아이콘"

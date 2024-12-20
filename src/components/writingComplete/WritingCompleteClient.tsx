@@ -2,72 +2,85 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import LottieLetterSend from "@/components/LottieLetterSend";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import BackButton from "./BackButton";
-import WritingText from "./WritingText";
+import Image from "next/image";
 import Button from "../button";
 
 export default function WritingCompleteClient() {
-  const router = useRouter();
   const [isLottieComplete, setIsLottieComplete] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showBubble, setShowBubble] = useState(true);
   const [token] = useLocalStorage("token");
-
+  const router = useRouter();
   useEffect(() => {
     setIsLoggedIn(!!token);
   }, [token]);
 
-  const HeaderWithNoSSR = dynamic(() => import("@/components/header"), {
-    ssr: false,
-  });
-
-  // 클릭 핸들러 함수
-  const handleClick = () => {
-    if (isLoggedIn)
-      router.push("/home"); // isLoggedIn이 true일 경우 /home으로 이동
-    else router.push("/signUp"); // isLoggedIn이 false일 경우 /signUp으로 이동
-  };
+  const [isBoxVisible, setIsBoxVisible] = useState(true);
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) setIsLoggedIn(true);
+    else setIsBoxVisible(true);
+  }, []);
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
-      <HeaderWithNoSSR />
-      <BackButton isLoggedIn={isLoggedIn} />
+    <>
       <LottieLetterSend onComplete={() => setIsLottieComplete(true)} />
       {isLottieComplete && (
         <>
-          <div className="flex-1" />
-          <WritingText />
-          <div className="flex-1" />
-          <div className="relative">
-            {!isLoggedIn && showBubble && (
-              <div className="absolute -top-[30px] left-1/2 z-10 w-[310px] -translate-x-1/2 rounded-[4px] bg-[#762222] px-[4px] py-[6px] text-black">
-                <div className="absolute -bottom-[5.5px] left-1/2 h-[11px] w-[9px] -translate-x-1/2 rotate-45 transform bg-[#762222]" />
-                <div className="relative z-10 text-center text-sm font-semibold text-white">
-                  내 편지함을 만들고 친구들에게 편지를 받아보세요!
-                  <button
-                    onClick={() => setShowBubble(false)}
-                    className="h-[20px] w-[20px] text-[20px] text-white"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-            )}
-            <div className="z-[51] mt-auto flex h-[116px] w-full justify-center p-[16px]">
-              <Button
-                buttonType="Primary"
-                className="flex h-[56px] w-[350px] items-center justify-center rounded-md"
-                onClick={handleClick}
-              >
-                {isLoggedIn ? "다른 편지 더 선물하기" : "내 편지함 만들기"}
-              </Button>
+          <div
+            className="flex min-h-screen flex-col bg-cover bg-center"
+            style={{
+              backgroundImage: "url('/background/writingComplete.png')",
+            }}
+          >
+            <div className="mb-60 flex flex-1 flex-col items-center justify-center px-5">
+              <h1 className="mb-4 text-3xl text-Head text-line-800">
+                배달부 순록에게 전달했어요
+              </h1>
+              <p className="text-center text-Body01-M text-line-500">
+                잊지 않고 맞춰서 배달해드릴게요!
+              </p>
             </div>
+
+            <footer className="mx-auto flex w-full max-w-xl flex-col px-5 pb-[56px]">
+              <div
+                className={`mb-4 flex w-full items-center justify-between rounded-lg bg-white p-3 shadow-md ${
+                  isBoxVisible ? "visible" : "invisible"
+                }`}
+              >
+                <span className="text-Body01-M text-grey-900">
+                  내 편지함을 만들고 기억을 받아보세요!
+                </span>
+                <button
+                  className="h-5 w-5 cursor-pointer"
+                  onClick={() => setIsBoxVisible(false)}
+                >
+                  <Image
+                    src="/Close_32.png"
+                    alt="닫기"
+                    width={20}
+                    height={20}
+                  />
+                </button>
+              </div>
+
+              <div className="w-full">
+                <Button
+                  buttonType="Primary"
+                  className="w-full"
+                  onClick={() => {
+                    if (isLoggedIn) router.push("/home");
+                    else router.push("/signUp");
+                  }}
+                >
+                  {isLoggedIn ? "다른 편지 작성하기" : "내 편지함 만들기"}
+                </Button>
+              </div>
+            </footer>
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }
