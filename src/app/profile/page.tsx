@@ -156,6 +156,7 @@ export default function ProfilePage() {
             alt="프로필 이미지"
             width={240}
             height={240}
+            className="rounded-full bg-line-200"
           />
           <div className="flex w-full items-center pt-5">
             <div className="group flex w-full flex-col gap-[8px]">
