@@ -29,7 +29,7 @@ const InputField = ({
         placeholder={placeholder}
         {...register}
         className={cn(
-          "h-12 w-full border-b-2 bg-White px-2 text-Title02-M text-primary-200 placeholder-line-200 focus:border-primary-200 focus:outline-none focus:ring-1 focus:ring-white",
+          "h-12 w-full border-b-2 bg-White text-Title02-M text-primary-200 placeholder-line-200 focus:border-primary-200 focus:outline-none focus:ring-1 focus:ring-white",
           error
             ? "border-red-500 bg-transparent"
             : "border-line-200 bg-transparent",

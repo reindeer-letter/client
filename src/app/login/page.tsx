@@ -87,7 +87,7 @@ const LoginPage = () => {
 
   return (
     <div
-      className="flex h-screen flex-col bg-cover bg-center"
+      className="flex h-screen flex-col bg-cover bg-center px-5"
       style={{ backgroundImage: "url('/background/login.png')" }}
     >
       <HighlightedText />

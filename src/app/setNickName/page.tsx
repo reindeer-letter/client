@@ -58,7 +58,7 @@ const Page = () => {
               if (e.target.value.length <= 20) setNickname(e.target.value);
               else alert("별명은 20자 이하로 입력해주세요.");
             }}
-            className="h-12 w-full border-b-2 bg-White px-4 text-Title02-M text-primary-200 placeholder-line-200 focus:border-primary-200 focus:outline-none focus:ring-1 focus:ring-white"
+            className="h-12 w-full border-b-2 bg-White text-Title02-M text-primary-200 placeholder-line-200 focus:border-primary-200 focus:outline-none focus:ring-1 focus:ring-white"
           />
         </div>
       </main>
