@@ -6,7 +6,7 @@ export type Letter = {
   bgmUrl: string;
   category: "TEXT" | "VOICE";
   isOpen: boolean;
-  isDelivered: false;
+  isDelivered: boolean;
   scheduledAt: string;
   createdAt: string;
   updatedAt: string;

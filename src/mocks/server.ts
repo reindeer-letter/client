@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 // server.ts
 import { createMiddleware } from "@mswjs/http-middleware";
 import express from "express";

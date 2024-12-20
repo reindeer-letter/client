@@ -1,23 +1,36 @@
 import { Letter } from "@/types/letters";
 
-export const makeLetter: (id: number) => Letter = (id) => ({
-  bgmUrl: "null",
-  category: "TEXT",
-  createdAt: new Date().toISOString(),
+export const makeLetter: (id: number, category: "TEXT" | "VOICE") => Letter = (
   id,
-  title: "null",
-  updatedAt: new Date().toISOString(),
-  description: "null",
-  imageUrl: "null",
-  isDelivered: false,
-  isOpen: false,
-  scheduledAt: `2024-12-${19 - Math.floor(Math.random() * 10)}T14:00:00.000Z`,
-  senderNickName: "test",
-});
+  category,
+) => {
+  const scheduledAt = new Date();
+  scheduledAt.setDate(
+    scheduledAt.getDate() + 5 - Math.floor(Math.random() * 10),
+  );
+  return {
+    bgmUrl: "null",
+    category,
+    createdAt: new Date().toISOString(),
+    id,
+    title: "null",
+    updatedAt: new Date().toISOString(),
+    description: "null",
+    imageUrl: "null",
+    isDelivered: scheduledAt < new Date(),
+    isOpen: false,
+    scheduledAt: scheduledAt.toISOString(),
+    senderNickName: "test",
+  };
+};
 
-export const makePaginatedLetters = (page: number, limit: number) => ({
+export const makePaginatedLetters = (
+  page: number,
+  limit: number,
+  category: "TEXT" | "VOICE",
+) => ({
   items: Array.from({ length: limit }, (_, i) =>
-    makeLetter(i + 1 + (page - 1) * limit),
+    makeLetter(i + 1 + (page - 1) * limit, category),
   ),
   meta: {
     totalPages: 5,
