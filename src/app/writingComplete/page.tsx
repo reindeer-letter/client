@@ -10,9 +10,7 @@ const WritingCompleteClientWithNoSSR = dynamic(
 export default function WritingComplete() {
   return (
     <>
-      <div className="h-svh bg-gradient-to-b from-[#C396C2] to-[#7BA1D2]">
-        <WritingCompleteClientWithNoSSR />
-      </div>
+      <WritingCompleteClientWithNoSSR />
     </>
   );
 }
