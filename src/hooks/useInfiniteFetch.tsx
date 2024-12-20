@@ -84,5 +84,14 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
     };
   }, [route, page, token]);
 
-  return { data, isLoading, error, fetchMore, isError, hasMore, isCancelled };
+  return {
+    data,
+    isLoading,
+    error,
+    fetchMore,
+    isError,
+    hasMore,
+    isCancelled,
+    setData,
+  };
 }
