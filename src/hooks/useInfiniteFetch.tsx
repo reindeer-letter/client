@@ -2,7 +2,7 @@
 
 import instance from "@/api/instance";
 import { CanceledError, isAxiosError } from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useLocalStorage from "./useLocalStorage";
 
 interface UseInfiniteFetchType {
@@ -20,12 +20,8 @@ interface InfiniteFetchReturnType<T> {
 }
 
 /**
- * T: 응답 데이터에서 item 하나의 타입
- * U: 요청 바디 타입
- *
- * @param route API 경로
- * @param method HTTP 메소드
- * @param body 요청 바디
+ * @description 무한 스크롤을 위한 커스텀 훅, 무한 스크롤을 위한 데이터를 가져옵니다.
+ * @param route API 경로, searchParams가 있을 경우 searchParams도 함께 넣어주시면 됩니다, page와 limit는 자동으로 추가됩니다.
  * @returns 응답 데이터, 로딩 상태, 에러
  */
 export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
@@ -37,9 +33,20 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
   const [hasMore, setHasMore] = useState(false);
   const [token] = useLocalStorage("token");
 
+  const isCancelled = useMemo(() => error instanceof CanceledError, [error]);
+
   const fetchMore = useCallback(() => {
     setPage((prev) => prev + 1);
   }, []);
+
+  useEffect(() => {
+    setData(undefined);
+    setPage(1);
+    setHasMore(false);
+    setIsError(false);
+    setError(undefined);
+    setIsLoading(false);
+  }, [route]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -47,10 +54,11 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
       setIsLoading(true);
       setIsError(false);
       try {
-        const params = new URLSearchParams({ page: String(page), limit: "6" });
-        const newRoute = `${route}?${params.toString()}`;
+        const newRoute = new URL(route, process.env.NEXT_PUBLIC_API_URL);
+        newRoute.searchParams.append("page", String(page));
+        newRoute.searchParams.append("limit", "10");
         const response = await instance.get<InfiniteFetchReturnType<T>>(
-          newRoute,
+          newRoute.pathname + newRoute.search,
           {
             signal: abortController.signal,
             headers: { Authorization: `Bearer ${token}` },
@@ -65,6 +73,7 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
         if (error instanceof CanceledError) setError(error);
         else if (isAxiosError(error))
           setError(new Error(error.response?.data.message));
+        else if (error instanceof Error) setError(error);
         else setError(new Error("알 수 없는 오류가 발생했습니다."));
       } finally {
         setIsLoading(false);
@@ -75,5 +84,5 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
     };
   }, [route, page, token]);
 
-  return { data, isLoading, error, fetchMore, isError, hasMore };
+  return { data, isLoading, error, fetchMore, isError, hasMore, isCancelled };
 }

@@ -1,7 +1,7 @@
 export default function MailScrollSkeleton() {
   return (
-    <section className="mb-[116px] flex flex-col gap-7">
-      {[...Array(6)]
+    <section className="flex flex-col gap-7 pb-[208px]">
+      {[...Array(3)]
         .fill(0)
         .map((v, i) => i + 1)
         .map((v) => (
