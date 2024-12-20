@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import instance from "@/api/instance";
 import { isAxiosError } from "axios";
 import Button from "@/components/button";
+import ProfileCustomization from "@/components/profile/ProfileCustomization";
 import { ProfileFormData, profileSchema } from "@/utils/signUpSchema";
 
 export default function ProfilePage() {
@@ -15,6 +16,11 @@ export default function ProfilePage() {
     email: string;
     password: string;
   } | null>(null);
+
+  const [profileImageUrl, setProfileImageUrl] = useState<string>("");
+  const [selectedHorn, setSelectedHorn] = useState<string>("OPTION-01");
+  const [selectedScarf, setSelectedScarf] = useState<string>("RED");
+  const [selectedSkin, setSelectedSkin] = useState<string>("BROWN");
 
   const router = useRouter();
 
@@ -39,7 +45,43 @@ export default function ProfilePage() {
       alert("데이터가 없습니다. 처음부터 다시 진행해주세요.");
       router.push("/signUp");
     }
+    fetchProfilePreview("OPTION-01", "RED", "BROWN");
   }, [router]);
+
+  const fetchProfilePreview = async (
+    hornType: string,
+    scarfColor: string,
+    skinColor: string,
+  ) => {
+    try {
+      const response = await instance.get("/auth/reindeer-preview", {
+        params: {
+          skinColor,
+          antlerType: hornType,
+          mufflerColor: scarfColor,
+        },
+      });
+      setProfileImageUrl(response.data.imageUrl);
+    } catch (error) {
+      console.error("미리보기 이미지 로드 실패:", error);
+    }
+  };
+
+  const handleOptionClick = (
+    hornType: string,
+    scarfColor: string,
+    skinColor: string,
+  ) => {
+    if (hornType) setSelectedHorn(hornType);
+    if (scarfColor) setSelectedScarf(scarfColor);
+    if (skinColor) setSelectedSkin(skinColor);
+
+    fetchProfilePreview(
+      hornType || selectedHorn,
+      scarfColor || selectedScarf,
+      skinColor || selectedSkin,
+    );
+  };
 
   const checkNickname = async () => {
     try {
@@ -50,7 +92,6 @@ export default function ProfilePage() {
       });
       if (response.status === 200) {
         alert("사용 가능한 별명입니다.");
-
         clearErrors("nickname");
       }
     } catch (error) {
@@ -67,6 +108,10 @@ export default function ProfilePage() {
         email: signUpData.email,
         password: signUpData.password,
         nickname: data.nickname,
+        profileImageUrl,
+        skinColor: selectedSkin,
+        antlerType: selectedHorn,
+        mufflerColor: selectedScarf,
       });
       alert("회원가입이 완료되었습니다!");
       localStorage.removeItem("signUpData");
@@ -107,12 +152,12 @@ export default function ProfilePage() {
       >
         <div className="flex h-full w-full flex-col items-center gap-[16px]">
           <Image
-            src="/profile/image.png"
+            src={profileImageUrl || "/profile/image.png"}
             alt="프로필 이미지"
             width={240}
             height={240}
+            className="rounded-full bg-line-200"
           />
-          {/* 별명 입력 */}
           <div className="flex w-full items-center pt-5">
             <div className="group flex w-full flex-col gap-[8px]">
               <label
@@ -142,71 +187,13 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
-          {/* 뿔, 목도리, 피부 선택 */}
-          <div className="flex w-full flex-col gap-[24px]">
-            {/* 뿔 선택 */}
-            <div className="flex items-center gap-[24px]">
-              <p className="w-[42px] text-Body02-R text-line-900">뿔</p>
-              <div className="flex">
-                {["horn1", "horn2", "horn3"].map((horn) => (
-                  <button
-                    key={horn}
-                    type="button"
-                    className="flex h-[44px] w-[76px] items-center justify-center rounded-[12px]"
-                  >
-                    <Image
-                      src={`/profile/horn/${horn}.png`}
-                      alt={`뿔 ${horn}`}
-                      width={46}
-                      height={22}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
 
-            {/* 목도리 선택 */}
-            <div className="flex items-center gap-[24px]">
-              <p className="w-[42px] text-Body02-R text-line-900">목도리</p>
-              <div className="flex">
-                {["red", "green", "pink"].map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    className="flex h-[44px] w-[76px] items-center justify-center rounded-[12px]"
-                  >
-                    <Image
-                      src={`/profile/neckwarmer/${color}.png`}
-                      alt={`목도리 ${color}`}
-                      width={28}
-                      height={28}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 피부 선택 */}
-            <div className="flex items-center gap-[24px]">
-              <p className="w-[42px] text-Body02-R text-line-900">피부</p>
-              <div className="flex">
-                {["default", "sky"].map((skin) => (
-                  <button
-                    key={skin}
-                    type="button"
-                    className="flex h-[44px] w-[76px] items-center justify-center"
-                  >
-                    <Image
-                      src={`/profile/skin/${skin}.png`}
-                      alt={`피부 ${skin}`}
-                      width={28}
-                      height={28}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>{" "}
+          <ProfileCustomization
+            selectedHorn={selectedHorn}
+            selectedScarf={selectedScarf}
+            selectedSkin={selectedSkin}
+            handleOptionClick={handleOptionClick}
+          />
         </div>
 
         {/* 완료 버튼 */}
