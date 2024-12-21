@@ -111,6 +111,9 @@ export default function ProfilePage() {
       } else alert("중복 확인 중 문제가 발생했습니다.");
     }
   };
+  useEffect(() => {
+    setIsNicknameChecked(false);
+  }, [nicknameValue]);
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
     if (!userData || !isNicknameChecked) {
