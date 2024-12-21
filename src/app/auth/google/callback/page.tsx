@@ -19,6 +19,7 @@ export default function GoogleCallbackPage() {
 
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}auth/google/callback?code=${code}`,
+          { withCredentials: true },
         );
 
         console.log("Response:", response.data);

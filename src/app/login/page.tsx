@@ -87,8 +87,8 @@ const LoginPage = () => {
   const handleKakaoLogin = () => {
     const redirectUri =
       process.env.NODE_ENV === "production"
-        ? "https://www.reindeer-letter.site/auth/google/callback"
-        : "http://localhost:3000/auth/google/callback";
+        ? "https://www.reindeer-letter.site/auth/kakao/callback"
+        : "http://localhost:3000/auth/kakao/callback";
 
     window.location.href = `https://kauth.kakao.com/oauth/authorize?=client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code`;
   };
