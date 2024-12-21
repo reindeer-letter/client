@@ -1,6 +1,6 @@
 "use client";
 
-import useLocalStorage from "@/hooks/useLocalStorage";
+import { useUserStore } from "@/providers/userStoreProvider";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Button from "../button";
@@ -8,8 +8,8 @@ import Button from "../button";
 export default function Footer() {
   const router = useRouter();
 
-  const [id] = useLocalStorage("userId");
-  const [nickName] = useLocalStorage("nickName");
+  const id = useUserStore((store) => store.id);
+  const nickName = useUserStore((store) => store.nickName);
 
   const handleGift = useCallback(() => {
     const currentUrl = new URL("letterType", window.location.origin);

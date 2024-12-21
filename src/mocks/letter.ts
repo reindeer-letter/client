@@ -20,7 +20,7 @@ export const makeLetter: (id: number, category: "TEXT" | "VOICE") => Letter = (
     isDelivered: scheduledAt < new Date(),
     isOpen: false,
     scheduledAt: scheduledAt.toISOString(),
-    senderNickName: "test",
+    senderNickname: "test",
   };
 };
 
