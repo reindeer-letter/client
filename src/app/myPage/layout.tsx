@@ -1,3 +1,5 @@
+import UserDataProvider from "@/providers/userDataProvider";
+
 export default function Layout({
   children,
 }: Readonly<{
@@ -5,7 +7,7 @@ export default function Layout({
 }>) {
   return (
     <section className="flex min-h-screen flex-col bg-white">
-      {children}
+      <UserDataProvider>{children}</UserDataProvider>
     </section>
   );
 }

@@ -4,7 +4,6 @@ import "./globals.css";
 import OverlayProvider from "@/providers/overlayProvider";
 import { UserStoreProvider } from "@/providers/userStoreProvider";
 import { LetterStoreProvider } from "@/providers/letterStoreProvider";
-import UserDataProvider from "@/providers/userDataProvider";
 
 const pretendard = localFont({
   src: "/fonts/Pretendard-Regular.otf",
@@ -52,15 +51,13 @@ export default function RootLayout({
     >
       <body className="h-svh bg-black antialiased">
         <UserStoreProvider>
-          <UserDataProvider>
-            <LetterStoreProvider>
-              <OverlayProvider>
-                <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
-                  {children}
-                </div>
-              </OverlayProvider>
-            </LetterStoreProvider>
-          </UserDataProvider>
+          <LetterStoreProvider>
+            <OverlayProvider>
+              <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
+                {children}
+              </div>
+            </OverlayProvider>
+          </LetterStoreProvider>
         </UserStoreProvider>
       </body>
     </html>

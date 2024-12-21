@@ -54,7 +54,7 @@ export default function Page() {
           {isPending && (
             <div className="h-[240px] w-[240px] animate-pulse rounded-full bg-[#d9d9d9]" />
           )}
-          {profileUrl && (
+          {!isPending && profileUrl && (
             <Image
               priority
               src={profileUrl}
@@ -64,7 +64,7 @@ export default function Page() {
               className="rounded-full bg-[#d9d9d9]"
             />
           )}
-          {nickName && (
+          {!isPending && nickName && (
             <div className="pb-9 text-Title01-R text-grey-800">{nickName}</div>
           )}
         </section>
