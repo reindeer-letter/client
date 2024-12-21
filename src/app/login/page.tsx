@@ -7,8 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import instance from "@/api/instance";
-import useOverlay from "@/hooks/useoverlay";
-import PopUp from "@/components/popUp";
+
 import { loginSchema, LoginFormInputs } from "@/utils/loginSchema";
 import HighlightedText from "@/components/HighlightedText";
 import Button from "@/components/button";
@@ -17,7 +16,7 @@ import InputField from "@/components/login/InputField";
 const LoginPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const overlay = useOverlay();
+
   const {
     register,
     handleSubmit,
@@ -72,18 +71,42 @@ const LoginPage = () => {
       setIsSubmitting(false);
     }
   };
-  const handleSimpleStartClick = () => {
-    overlay.mount(
-      <PopUp
-        button="확인"
-        title="준비 중 입니다."
-        description="현재 기능은 준비 중입니다."
-        onConfirm={() => overlay.unmount()}
-        onCancel={() => overlay.unmount()}
-        unmount={overlay.unmount}
-      />,
-    );
+  // const handleSimpleStartClick = () => {
+  //   overlay.mount(
+  //     <PopUp
+  //       button="확인"
+  //       title="준비 중 입니다."
+  //       description="현재 기능은 준비 중입니다."
+  //       onConfirm={() => overlay.unmount()}
+  //       onCancel={() => overlay.unmount()}
+  //       unmount={overlay.unmount}
+  //     />,
+  //   );
+  // };
+
+  const handleKakaoLogin = () => {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+    window.location.href = `${backendUrl}auth/kakao`;
+    // const kakaoId = process.env.NEXT_PUBLIC_KAKAO_KEY;
+    // const redirect_uri = process.env.NEXT_PUBLIC_KAKAO_URI;
+    // window.location.href = `https://kauth.kakao.com/oauth/authorize?=client_id=${kakaoId}&redirect_uri=${redirect_uri}&response_type=code`;
   };
+
+  const handleGoogleLogin = () => {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+    window.location.href = `${backendUrl}auth/google`;
+  };
+
+  // const handleGoogleLogin = () => {
+  //   const redirectUri =
+  //     process.env.NODE_ENV === "production"
+  //       ? "https://www.reindeer-letter.site/auth/google/callback"
+  //       : "http://localhost:3000/auth/google/callback";
+
+  //   const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CILENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=email profile openid`;
+
+  //   window.location.href = googleAuthUrl;
+  // };
 
   return (
     <div
@@ -144,10 +167,10 @@ const LoginPage = () => {
         </div>
 
         <div className="flex items-center justify-center space-x-6">
-          <button onClick={handleSimpleStartClick}>
+          <button onClick={handleKakaoLogin}>
             <Image src="/login/kakao.png" width={50} height={50} alt="카카오" />
           </button>
-          <button onClick={handleSimpleStartClick}>
+          <button onClick={handleGoogleLogin}>
             <Image src="/login/google.png" width={50} height={50} alt="구글" />
           </button>
         </div>
