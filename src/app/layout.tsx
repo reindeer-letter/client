@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import OverlayProvider from "@/providers/overlayProvider";
+import { UserStoreProvider } from "@/providers/userStoreProvider";
+import { LetterStoreProvider } from "@/providers/letterStoreProvider";
 
 const pretendard = localFont({
   src: "/fonts/Pretendard-Regular.otf",
@@ -48,11 +50,15 @@ export default function RootLayout({
       className={`${pretendard.className} ${handWriting.variable}`}
     >
       <body className="h-svh bg-black antialiased">
-        <OverlayProvider>
-          <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
-            {children}
-          </div>
-        </OverlayProvider>
+        <UserStoreProvider>
+          <LetterStoreProvider>
+            <OverlayProvider>
+              <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
+                {children}
+              </div>
+            </OverlayProvider>
+          </LetterStoreProvider>
+        </UserStoreProvider>
       </body>
     </html>
   );
