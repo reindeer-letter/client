@@ -1,4 +1,5 @@
 import { getCookie } from "@/lib/cookie";
+import redirectAction from "@/lib/redirectAction";
 import axios from "axios";
 
 const instance = axios.create({
@@ -17,5 +18,13 @@ instance.interceptors.request.use(async (config) => {
   newConfig.headers.Authorization = `Bearer ${token}`;
   return newConfig;
 });
+
+instance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) await redirectAction("/login");
+    return Promise.reject(error);
+  },
+);
 
 export default instance;
