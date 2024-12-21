@@ -1,10 +1,16 @@
-import { CATEGORY } from "@/constants/category";
+import { CATEGORY as CATEGORIES, CategoryValue } from "@/constants/category";
 import Header from "@/components/header";
+import Link from "next/link";
 import MailScroll from "@/components/home/mailScroll";
 import CategoryButton from "../../components/home/categoryButton";
 import Footer from "../../components/home/footer";
 
-export default function Page() {
+interface PageProps {
+  searchParams: Promise<{ [key in "category"]: CategoryValue | undefined }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
+  const { category } = await searchParams;
   return (
     <>
       <Header />
@@ -12,11 +18,20 @@ export default function Page() {
         받은 편지함
       </div>
       <section className="flex gap-2 px-5 py-3">
-        {CATEGORY.map((category) => (
-          <CategoryButton key={category.key} category={category} />
+        {CATEGORIES.map((categoryItem) => (
+          <Link
+            href={`/home?category=${categoryItem.value}`}
+            key={categoryItem.key}
+          >
+            <CategoryButton
+              key={categoryItem.key}
+              category={categoryItem}
+              currentCategory={category}
+            />
+          </Link>
         ))}
       </section>
-      <MailScroll />
+      <MailScroll route={`/letters/my?category=${category || ""}`} />
       <Footer />
     </>
   );
