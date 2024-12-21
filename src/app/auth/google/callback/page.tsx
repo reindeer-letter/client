@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 "use client";
 
 import { useEffect } from "react";
@@ -15,21 +17,35 @@ export default function GoogleCallbackPage() {
 
         if (!code) throw new Error("Authorization code not found");
 
-        // 백엔드로 code 전달
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}auth/google/callback?code=${code}`,
         );
 
-        const { accessToken, user } = response.data;
+        console.log("Response:", response.data);
 
-        // Access Token 저장
-        localStorage.setItem("access_token", accessToken);
-        localStorage.setItem("user", JSON.stringify(user));
+        // 새로운 사용자인 경우
+        if (response.data.isNewUser) {
+          localStorage.setItem(
+            "googleUserData",
+            JSON.stringify(response.data.userData),
+          );
+          router.push("/profile");
+          return;
+        }
 
-        // 메인 페이지로 이동
+        // 기존 사용자인 경우
+        const { access_token, user } = response.data;
+        localStorage.setItem("token", access_token);
+        localStorage.setItem("userId", user.id);
+        localStorage.setItem("nickName", user.nickName);
+
         router.push("/home");
       } catch (error) {
-        console.error("Google Login Callback Error:", error);
+        if (axios.isAxiosError(error))
+          console.error("Error details:", {
+            response: error.response?.data,
+            status: error.response?.status,
+          });
         alert("로그인에 실패했습니다. 다시 시도해주세요.");
         router.push("/login");
       }

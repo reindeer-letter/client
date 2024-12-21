@@ -85,28 +85,24 @@ const LoginPage = () => {
   // };
 
   const handleKakaoLogin = () => {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
-    window.location.href = `${backendUrl}auth/kakao`;
-    // const kakaoId = process.env.NEXT_PUBLIC_KAKAO_KEY;
-    // const redirect_uri = process.env.NEXT_PUBLIC_KAKAO_URI;
-    // window.location.href = `https://kauth.kakao.com/oauth/authorize?=client_id=${kakaoId}&redirect_uri=${redirect_uri}&response_type=code`;
+    const redirectUri =
+      process.env.NODE_ENV === "production"
+        ? "https://www.reindeer-letter.site/auth/google/callback"
+        : "http://localhost:3000/auth/google/callback";
+
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?=client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code`;
   };
 
   const handleGoogleLogin = () => {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
-    window.location.href = `${backendUrl}auth/google`;
+    const redirectUri =
+      process.env.NODE_ENV === "production"
+        ? "https://www.reindeer-letter.site/auth/google/callback"
+        : "http://localhost:3000/auth/google/callback";
+
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=email profile openid`;
+
+    window.location.href = googleAuthUrl;
   };
-
-  // const handleGoogleLogin = () => {
-  //   const redirectUri =
-  //     process.env.NODE_ENV === "production"
-  //       ? "https://www.reindeer-letter.site/auth/google/callback"
-  //       : "http://localhost:3000/auth/google/callback";
-
-  //   const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CILENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=email profile openid`;
-
-  //   window.location.href = googleAuthUrl;
-  // };
 
   return (
     <div

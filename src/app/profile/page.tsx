@@ -12,9 +12,10 @@ import ProfileCustomization from "@/components/profile/ProfileCustomization";
 import { ProfileFormData, profileSchema } from "@/utils/signUpSchema";
 
 export default function ProfilePage() {
-  const [signUpData, setSignUpData] = useState<{
+  const [userData, setUserData] = useState<{
     email: string;
-    password: string;
+    password?: string; // 일반 회원가입 사용자를 위한 비밀번호
+    googleId?: string; // 소셜 로그인 사용자
   } | null>(null);
 
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
@@ -22,6 +23,7 @@ export default function ProfilePage() {
   const [selectedScarf, setSelectedScarf] = useState<string>("RED");
   const [selectedSkin, setSelectedSkin] = useState<string>("BROWN");
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
+
   const router = useRouter();
 
   const {
@@ -39,12 +41,19 @@ export default function ProfilePage() {
   const nicknameValue = watch("nickname");
 
   useEffect(() => {
-    const data = localStorage.getItem("signUpData");
-    if (data) setSignUpData(JSON.parse(data));
+    // 일반 회원가입 데이터 또는 소셜 로그인 데이터를 확인
+    const googleData = localStorage.getItem("googleUserData");
+    const signUpData = localStorage.getItem("signUpData");
+
+    if (googleData)
+      setUserData(JSON.parse(googleData)); // 소셜 로그인 사용자 데이터
+    else if (signUpData)
+      setUserData(JSON.parse(signUpData)); // 일반 회원가입 사용자 데이터
     else {
-      alert("데이터가 없습니다. 처음부터 다시 진행해주세요.");
-      router.push("/signUp");
+      alert("데이터가 없습니다. 다시 로그인해주세요.");
+      router.push("/login");
     }
+
     fetchProfilePreview("OPTION-01", "RED", "BROWN");
   }, [router]);
 
@@ -93,6 +102,7 @@ export default function ProfilePage() {
       if (response.status === 200) {
         alert("사용 가능한 별명입니다.");
         clearErrors("nickname");
+        setIsNicknameChecked(true);
       }
     } catch (error) {
       if (isAxiosError(error) && error.response?.status === 409) {
@@ -103,22 +113,39 @@ export default function ProfilePage() {
   };
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
-    if (!signUpData || !isNicknameChecked) {
+    if (!userData || !isNicknameChecked) {
       setError("nickname", { message: "별명 중복 확인을 완료해주세요." });
       return;
     }
 
     try {
-      await instance.post("/auth/register", {
-        email: signUpData.email,
-        password: signUpData.password,
-        nickname: data.nickname,
-        profileImageUrl,
-        skinColor: selectedSkin,
-        antlerType: selectedHorn,
-        mufflerColor: selectedScarf,
-      });
+      // 소셜 로그인 사용자와 일반 회원가입 사용자 구분
+      if (userData.googleId)
+        // 소셜 로그인 사용자 회원가입
+        await instance.post("/auth/google/register", {
+          googleId: userData.googleId,
+          email: userData.email,
+          additionalData: {
+            nickname: data.nickname,
+            skinColor: selectedSkin,
+            antlerType: selectedHorn,
+            mufflerColor: selectedScarf,
+          },
+        });
+      else
+        // 일반 회원가입 사용자 회원가입
+        await instance.post("/auth/register", {
+          email: userData.email,
+          password: userData.password,
+          nickname: data.nickname,
+          profileImageUrl,
+          skinColor: selectedSkin,
+          antlerType: selectedHorn,
+          mufflerColor: selectedScarf,
+        });
+
       alert("회원가입이 완료되었습니다!");
+      localStorage.removeItem("googleUserData");
       localStorage.removeItem("signUpData");
       router.push("/login");
     } catch (error) {
