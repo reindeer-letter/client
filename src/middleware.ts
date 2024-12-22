@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
-  const protectedURL = ["/myPage", "/home"];
+  const protectedURL = ["/myPage", "/home", "/openLetter"];
   if (!token && protectedURL.some((route) => pathname.startsWith(route)))
     return NextResponse.redirect(new URL("/login", request.url));
 
@@ -18,5 +18,12 @@ export async function middleware(request: NextRequest) {
 
 // matcher 설정
 export const config = {
-  matcher: ["/myPage", "/home", "/login", "/signUp", "/profile"],
+  matcher: [
+    "/myPage",
+    "/home",
+    "/login",
+    "/signUp",
+    "/profile",
+    "/openLetter/:id*",
+  ],
 };
