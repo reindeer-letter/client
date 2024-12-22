@@ -1,4 +1,4 @@
-type Letter = {
+export type Letter = {
   id: number;
   title: string;
   description: string;
@@ -6,11 +6,11 @@ type Letter = {
   bgmUrl: string;
   category: "TEXT" | "VOICE";
   isOpen: boolean;
-  isDelivered: false;
+  isDelivered: boolean;
   scheduledAt: string;
   createdAt: string;
   updatedAt: string;
-  senderNickName: string;
+  senderNickname: string;
 };
 
 export interface GetLettersMyLettersResponse {

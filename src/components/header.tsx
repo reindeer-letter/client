@@ -2,6 +2,7 @@
 
 import WITH_PROFILE from "@/constants/route";
 import cn from "@/lib/cn";
+import { useUserStore } from "@/providers/userStoreProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,6 +14,7 @@ interface HeaderProps {
 
 export default function Header({ className, showProfile = true }: HeaderProps) {
   const pathName = usePathname();
+  const profileUrl = useUserStore((store) => store.profileUrl);
   return (
     <header
       className={cn(
@@ -30,18 +32,16 @@ export default function Header({ className, showProfile = true }: HeaderProps) {
           className="hover:opacity-80"
         />
       </Link>
-      {WITH_PROFILE.includes(pathName) && (
+      {WITH_PROFILE.includes(pathName) && showProfile && (
         <Link href="/myPage" className="relative mr-5 h-8 w-8">
-          {showProfile && (
-            <Image
-              src="/icons/profile_default.png"
-              alt="profile"
-              fill
-              priority
-              sizes="32"
-              className="hover:opacity-80"
-            />
-          )}
+          <Image
+            src={profileUrl ?? "/icons/profile_default.png"}
+            alt="profile"
+            fill
+            priority
+            sizes="32"
+            className="hover:opacity-80"
+          />
         </Link>
       )}
     </header>

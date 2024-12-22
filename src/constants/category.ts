@@ -1,5 +1,5 @@
-type CategoryKey = "all" | "letter" | "voice";
-type CategoryValue = "전체" | "글" | "목소리";
+export type CategoryKey = "전체" | "글" | "목소리";
+export type CategoryValue = "" | "TEXT" | "VOICE";
 
 export interface Category {
   key: CategoryKey;
@@ -7,7 +7,7 @@ export interface Category {
 }
 
 export const CATEGORY: Category[] = [
-  { key: "all", value: "전체" },
-  { key: "letter", value: "글" },
-  { key: "voice", value: "목소리" },
+  { key: "전체", value: "" },
+  { key: "글", value: "TEXT" },
+  { key: "목소리", value: "VOICE" },
 ];

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import HighlightedText from "@/components/HighlightedText";
 import useGetFetch from "@/hooks/useGetFetch";
+import Image from "next/image";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -14,7 +15,7 @@ export default function Home() {
   const { data } = useGetFetch<{ profileImageUrl: string }>({
     route: "/auth/profile",
   });
-  const profileImageUrl = data?.profileImageUrl;
+
   return (
     <div
       className="flex min-h-screen flex-col bg-cover bg-center"
@@ -23,11 +24,13 @@ export default function Home() {
       <HighlightedText />
 
       <section className="mt-8 flex flex-col items-center">
-        <div className="flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
-          <img
-            src={profileImageUrl}
-            alt="프로필 이미지"
-            className="h-full w-full object-cover"
+        <div className="relative flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
+          <Image
+            src={data?.profileImageUrl ?? "/images/reindeer-basic.png"}
+            alt="순록 아이콘"
+            priority
+            sizes="240px"
+            fill
           />
         </div>
         <div className="mt-4 flex items-center">

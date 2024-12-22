@@ -1,19 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import { useUserStore } from "@/providers/userStoreProvider";
 import Button from "@/components/button";
-import useLocalStorage from "@/hooks/useLocalStorage";
 import useOverlay from "@/hooks/useoverlay";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import PopUp from "../popUp";
 
-// TODO: 소셜 공유 기능 추가
-
 export default function Footer() {
   const router = useRouter();
-  const [id] = useLocalStorage("userId");
-  const [nickName] = useLocalStorage("nickName");
+  const id = useUserStore((store) => store.id);
+  const nickName = useUserStore((store) => store.nickName);
   const overlay = useOverlay();
 
   const handleShare = useCallback(async () => {
@@ -37,7 +35,6 @@ export default function Footer() {
     const currentUrl = new URL("letterType", window.location.origin);
     currentUrl.searchParams.set("receiverId", String(id));
     currentUrl.searchParams.set("receiverNickName", String(nickName));
-    currentUrl.searchParams.set("source", "self");
     router.push(currentUrl.toString());
   }, [id, router, nickName]);
 

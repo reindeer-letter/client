@@ -1,26 +1,27 @@
 "use client";
 
-import { CanceledError } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { GetLettersMyLettersResponse } from "@/types/letters";
 import useInfiniteFetch from "@/hooks/useInfiniteFetch";
 import MailScrollSkeleton from "@/app/home/skeletons/mailScrollSkeleton";
 import FutureMail from "./futureMail";
-import Mail from "./mail";
 import IntersectionArea from "../intersectionArea";
-import SealedMail from "./sealedMail";
 import Button from "../button";
 import EmptyMail from "./emtpyMail";
+import Mail from "./mail";
 
-export default function MailScroll() {
-  const { data, error, isLoading, fetchMore, isError, hasMore } =
+interface MailScrollProps {
+  route: string;
+}
+
+export default function MailScroll({ route }: MailScrollProps) {
+  const { data, error, isLoading, fetchMore, isError, hasMore, isCancelled } =
     useInfiniteFetch<GetLettersMyLettersResponse["items"][0]>({
-      route: "/letters/my",
+      route,
     });
   const router = useRouter();
-
-  if (isError && !(error instanceof CanceledError))
+  if (isError && !isCancelled)
     return (
       <div className="mt-[120px] pb-[313px] text-center text-Body01-B text-grey-400">
         <div>편지를 불러오는 중에 오류가 발생했습니다.</div>
@@ -53,30 +54,20 @@ export default function MailScroll() {
               isDelivered,
               scheduledAt,
               createdAt,
-              senderNickName,
+              senderNickname,
               isOpen,
             }) => {
               if (!isDelivered)
                 return <FutureMail key={id} scheduledAt={scheduledAt} />;
-              if (!isOpen)
-                return (
-                  <SealedMail
-                    key={id}
-                    id={id}
-                    nickName={senderNickName}
-                    title={title}
-                    writtenDate={createdAt}
-                  />
-                );
               return (
-                <section key={id}>
-                  <Mail
-                    id={id}
-                    writtenDate={createdAt}
-                    nickName={senderNickName}
-                    title={title}
-                  />
-                </section>
+                <Mail
+                  key={id}
+                  id={id}
+                  nickName={senderNickname}
+                  title={title}
+                  writtenDate={createdAt}
+                  isOpen={isOpen}
+                />
               );
             },
           )

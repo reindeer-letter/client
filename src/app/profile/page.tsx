@@ -93,6 +93,7 @@ export default function ProfilePage() {
       if (response.status === 200) {
         alert("사용 가능한 별명입니다.");
         clearErrors("nickname");
+        setIsNicknameChecked(true);
       }
     } catch (error) {
       if (isAxiosError(error) && error.response?.status === 409) {
@@ -101,6 +102,9 @@ export default function ProfilePage() {
       } else alert("중복 확인 중 문제가 발생했습니다.");
     }
   };
+  useEffect(() => {
+    setIsNicknameChecked(false);
+  }, [nicknameValue]);
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
     if (!signUpData || !isNicknameChecked) {
