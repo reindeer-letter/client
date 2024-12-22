@@ -26,7 +26,7 @@ const Page = () => {
     searchParams.set("receiverId", receiverId ?? "");
     searchParams.set("receiverNickName", receiverNickName ?? "");
     searchParams.set("type", type ?? "");
-    searchParams.set("senderNickname", encodeURIComponent(nickname));
+    searchParams.set("senderNickname", nickname);
     router.push(`/${basePath}?${searchParams.toString()}`);
   };
 
