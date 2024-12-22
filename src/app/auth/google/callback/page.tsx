@@ -5,6 +5,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import instance from "@/api/instance";
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
@@ -17,8 +18,8 @@ export default function GoogleCallbackPage() {
 
         if (!code) throw new Error("Authorization code not found");
 
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}auth/google/callback?code=${code}`,
+        const response = await instance.get(
+          `auth/google/callback?code=${code}`,
           { withCredentials: true },
         );
 
