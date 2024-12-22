@@ -3,23 +3,22 @@
 import instance from "@/api/instance";
 import { useState } from "react";
 import "../globals.css";
-import Image from "next/image";
-import PopUp from "@/components/popUp";
-import axios from "axios";
-import { useSearchParams, useRouter } from "next/navigation";
+import ImageUploader from "@/components/writingLetter/ImageUploader";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/button";
-import useOverlay from "@/hooks/useoverlay";
-import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
-import ImageUploader from "@/components/writingLetter/ImageUploader";
+import useOverlay from "@/hooks/useoverlay";
+import BottomSheetMusicSelect from "@/components/writingLetter/BottomSheetMusicSelect";
+import PopUp from "@/components/popUp";
+import Image from "next/image";
+import CalendarModal from "@/components/writingLetter/CalendarModal";
 
 const Page = () => {
   const overlay = useOverlay();
   const today = new Date();
   const todayFormatted = formatDate(today);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -32,34 +31,52 @@ const Page = () => {
   const storedNickname = localStorage.getItem("nickName");
 
   const defaultImage = "/photo/photo.png";
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
+  const initialImages = [
+    { id: "image1", url: "" },
+    { id: "image2", url: "" },
+    { id: "image3", url: "" },
+  ];
+  const [uploadedImages, setUploadedImages] = useState(initialImages);
+  const [selectedMusic, setSelectedMusic] = useState<string>("노래 제목");
 
-  const handleDateSelect = (date: string) => {
-    setSelectedDate(date);
+  const handleUploadSuccess = (index: number, url: string) => {
+    const newImages = [...uploadedImages];
+    newImages[index].url = url;
+    setUploadedImages(newImages);
   };
-  const handleUploadSuccess = (url: string) => {
-    setUploadedImageUrl(url);
-  };
+
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
   const finalDate = selectedDate
     ? formattedDate
     : formatDateStringToISO(todayFormatted);
-  // 편지 전송
+
+  const openMusicSelector = () => {
+    overlay.mount(
+      <BottomSheetMusicSelect
+        onSelect={(title: string) => {
+          setSelectedMusic(title);
+        }}
+        unmount={overlay.unmount}
+      />,
+    );
+  };
+
   const handleSendLetter = async () => {
     if (!title.trim() || !description.trim()) {
       alert("모든 필드를 채워주세요.");
       return;
     }
-    if (!uploadedImageUrl) {
-      alert("이미지를 업로드해주세요.");
+    if (uploadedImages.every((image) => !image)) {
+      alert("적어도 하나의 이미지를 업로드해주세요.");
       return;
     }
+
     try {
       const payload = {
         title,
         description,
-        imageUrl: uploadedImageUrl,
+        images: uploadedImages.filter((image) => image),
         bgmUrl: "https://example.com/music.mp3",
         category,
         receiverId: Number(receiverId),
@@ -74,13 +91,9 @@ const Page = () => {
       if (response.status === 201) router.push("/writingComplete");
     } catch (error) {
       console.error("편지 전송 실패:", error);
-
-      if (axios.isAxiosError(error) && error.response?.status === 401)
-        alert("인증 문제가 발생했습니다. 다시 로그인해주세요.");
-      else alert("편지 전송 실패. 다시 시도해주세요.");
+      alert("편지 전송에 실패했습니다. 다시 시도해주세요.");
     }
   };
-
   const handleOpenPopUp = () => {
     overlay.mount(
       <PopUp
@@ -89,6 +102,16 @@ const Page = () => {
         title="기억을 전달할까요?"
         onConfirm={handleSendLetter}
         onCancel={() => overlay.unmount()}
+        unmount={overlay.unmount}
+      />,
+    );
+  };
+  const openCalendar = () => {
+    overlay.mount(
+      <CalendarModal
+        onSelect={(date: string) => {
+          setSelectedDate(date);
+        }}
         unmount={overlay.unmount}
       />,
     );
@@ -108,10 +131,22 @@ const Page = () => {
       />
 
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
-        <ImageUploader
-          defaultImage={defaultImage}
-          onUploadSuccess={handleUploadSuccess}
-        />
+        <div className="no-scrollbar flex w-full flex-row-reverse space-x-4 space-x-reverse overflow-x-auto px-4">
+          {uploadedImages.map((image) => (
+            <div key={image.id} className="shrink-0">
+              <ImageUploader
+                defaultImage={defaultImage}
+                onUploadSuccess={(url) =>
+                  handleUploadSuccess(
+                    Number(image.id.replace("image", "")),
+                    url,
+                  )
+                }
+              />
+            </div>
+          ))}
+        </div>
+
         <header className="flex w-full flex-col space-y-4 px-4 pt-6">
           <div className="w-full">
             <input
@@ -139,7 +174,7 @@ const Page = () => {
           <div className="flex justify-between gap-3">
             <button
               className="ml-3 flex w-full items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
-              onClick={() => setIsCalendarOpen(true)}
+              onClick={openCalendar}
             >
               <Image
                 src="/icons/Reservation_28.png"
@@ -150,15 +185,18 @@ const Page = () => {
               <span>{selectedDate || todayFormatted}</span>
             </button>
 
-            <button className="mr-3 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M">
+            <button
+              onClick={openMusicSelector}
+              className="mr-3 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
+            >
               <Image
                 src="/icons/Music_28.png"
                 alt="노래 아이콘"
                 width={24}
                 height={24}
               />
-              <span className="w-[100px] truncate text-left">
-                노래제목노래제목노래제목노래제목노래제목
+              <span className="max-w-[120px] overflow-hidden truncate whitespace-nowrap">
+                {selectedMusic}
               </span>
             </button>
           </div>
@@ -178,12 +216,6 @@ const Page = () => {
           </div>
         </div>
       </footer>
-      <CalendarModal
-        isOpen={isCalendarOpen}
-        onClose={() => setIsCalendarOpen(false)}
-        onDateSelect={handleDateSelect}
-        selectedDate={selectedDate}
-      />
     </div>
   );
 };
