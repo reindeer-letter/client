@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable react/no-array-index-key */
 import instance from "@/api/instance";
 import { useState } from "react";
 import "../globals.css";
@@ -19,29 +20,26 @@ const Page = () => {
   const overlay = useOverlay();
   const today = new Date();
   const todayFormatted = formatDate(today);
+
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const receiverId = searchParams.get("receiverId");
   const senderNickname = searchParams.get("senderNickname");
 
-  const defaultImage = "/photo/photo.png";
-  const initialImages = [
-    { id: "image1", url: "" },
-    { id: "image2", url: "" },
-    { id: "image3", url: "" },
-  ];
-  const [uploadedImages, setUploadedImages] = useState(initialImages);
-  const [selectedMusic, setSelectedMusic] = useState<string>("노래 제목");
+  const [imageUrls, setImageUrls] = useState(["", "", ""]);
 
-  const handleUploadSuccess = (index: number, url: string) => {
-    const newImages = [...uploadedImages];
-    newImages[index].url = url;
-    setUploadedImages(newImages);
+  const handleUploadSuccess = (index: number, remoteUrl: string) => {
+    setImageUrls((prev) => {
+      const newArr = [...prev];
+      newArr[index] = remoteUrl;
+      return newArr;
+    });
   };
+  const [selectedMusic, setSelectedMusic] = useState<string>("노래 제목");
 
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
@@ -60,21 +58,32 @@ const Page = () => {
     );
   };
 
+  const openCalendar = () => {
+    overlay.mount(
+      <CalendarModal
+        onSelect={(date: string) => {
+          setSelectedDate(date);
+        }}
+        unmount={overlay.unmount}
+      />,
+    );
+  };
+
   const handleSendLetter = async () => {
     if (!title.trim() || !description.trim()) {
       alert("모든 필드를 채워주세요.");
       return;
     }
-    if (uploadedImages.every((image) => !image)) {
-      alert("적어도 하나의 이미지를 업로드해주세요.");
-      return;
-    }
 
     try {
+      const imagesArray = imageUrls
+        .map((img) => img)
+        .filter((url) => url !== "");
+
       const payload = {
         title,
         description,
-        images: uploadedImages.filter((image) => image),
+        imageUrls: imagesArray,
         bgmUrl: "https://example.com/music.mp3",
         category: "TEXT",
         receiverId: Number(receiverId),
@@ -84,7 +93,6 @@ const Page = () => {
       };
 
       const response = await instance.post("/letters", payload);
-
       if (response.status === 201) router.push("/writingComplete");
     } catch (error) {
       console.error("편지 전송 실패:", error);
@@ -103,16 +111,6 @@ const Page = () => {
       />,
     );
   };
-  const openCalendar = () => {
-    overlay.mount(
-      <CalendarModal
-        onSelect={(date: string) => {
-          setSelectedDate(date);
-        }}
-        unmount={overlay.unmount}
-      />,
-    );
-  };
 
   return (
     <div
@@ -126,22 +124,20 @@ const Page = () => {
         loggedClose="/home"
         guestClose="/invitation"
       />
-
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
         <div className="no-scrollbar flex w-full flex-row-reverse space-x-4 space-x-reverse overflow-x-auto px-4">
-          {uploadedImages.map((image) => (
-            <div key={image.id} className="shrink-0">
+          <div style={{ display: "flex", gap: 16 }}>
+            {imageUrls.map((serverImage, index) => (
               <ImageUploader
-                defaultImage={defaultImage}
-                onUploadSuccess={(url) =>
-                  handleUploadSuccess(
-                    Number(image.id.replace("image", "")),
-                    url,
-                  )
+                key={index}
+                index={index}
+                serverImage={serverImage}
+                onUploadSuccess={(remoteUrl) =>
+                  handleUploadSuccess(index, remoteUrl)
                 }
               />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <header className="flex w-full flex-col space-y-4 px-4 pt-6">
@@ -165,7 +161,6 @@ const Page = () => {
           />
         </div>
       </main>
-
       <footer className="mx-auto w-full bg-primary-200 px-5 pb-[30px] pt-6">
         <div className="flex w-full flex-col">
           <div className="flex justify-between gap-3">

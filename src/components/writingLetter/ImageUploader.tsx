@@ -1,30 +1,40 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import useImageUpload from "@/hooks/useImageUpload";
 
-const ImageUploader = ({
-  defaultImage,
-  onUploadSuccess,
-}: {
-  defaultImage: string;
+interface ImageUploaderProps {
+  index: number;
+  serverImage: string;
   onUploadSuccess: (url: string) => void;
-}) => {
-  const { uploadedImage, handleImageUpload, handleImageDelete, isUploading } =
-    useImageUpload(defaultImage, onUploadSuccess);
+}
+
+const ImageUploader = ({
+  index,
+  serverImage,
+  onUploadSuccess,
+}: ImageUploaderProps) => {
+  const { localPreview, isUploading, handleImageUpload, handleImageDelete } =
+    useImageUpload(serverImage, onUploadSuccess);
+
+  const inputId = `file-input-${index}`;
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) handleImageUpload(file);
   };
 
+  const displayImage = localPreview || "/photo/photo.png";
+
   return (
     <div
       className="relative mb-8 mt-6 h-[280px] w-[280px] cursor-pointer rounded-lg border border-gray-300"
-      onClick={() => document.getElementById("file-input")?.click()}
+      onClick={() => document.getElementById(inputId)?.click()}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          document.getElementById("file-input")?.click();
+          document.getElementById(inputId)?.click();
         }
       }}
       role="button"
@@ -32,14 +42,15 @@ const ImageUploader = ({
     >
       <div className="relative z-10 h-full w-full overflow-hidden rounded-lg">
         <Image
-          src={uploadedImage}
+          src={displayImage}
           alt="업로드된 사진"
           fill
+          unoptimized
           className="aspect-square object-cover"
         />
       </div>
 
-      <div className="pointer-events-none absolute left-[50%] top-[-22px] z-20 -translate-x-1/2">
+      <div className="pointer-events-none absolute left-1/2 top-[-22px] z-20 -translate-x-1/2">
         <Image
           src="/photo/tape_blue.png"
           alt="테이프 위"
@@ -48,8 +59,7 @@ const ImageUploader = ({
           className="drop-shadow-lg"
         />
       </div>
-
-      <div className="pointer-events-none absolute bottom-[-26px] left-[50%] z-20 -translate-x-1/2">
+      <div className="pointer-events-none absolute bottom-[-26px] left-1/2 z-20 -translate-x-1/2">
         <Image
           src="/photo/tape_yellow.png"
           alt="테이프 아래"
@@ -59,10 +69,13 @@ const ImageUploader = ({
         />
       </div>
 
-      {uploadedImage !== defaultImage && (
+      {localPreview && localPreview !== "/photo/photo.png" && (
         <button
           className="absolute right-0 top-0 z-30"
-          onClick={handleImageDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleImageDelete();
+          }}
         >
           <Image
             src="/icons/photo_delete.png"
@@ -80,7 +93,7 @@ const ImageUploader = ({
       )}
 
       <input
-        id="file-input"
+        id={inputId}
         type="file"
         accept="image/*"
         className="hidden"

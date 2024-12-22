@@ -32,9 +32,14 @@ const Page = () => {
 
   useEffect(() => {
     console.log(receiverNickName, myNickName);
-    if (myNickName === receiverNickName) setNickname(myNickName ?? "");
-  }, [receiverNickName, myNickName]);
-
+    if (
+      myNickName &&
+      receiverNickName &&
+      myNickName === receiverNickName &&
+      !nickname
+    )
+      setNickname(myNickName);
+  }, [receiverNickName, myNickName, nickname]);
   return (
     <div className="flex h-screen flex-col bg-White">
       <NavBar
