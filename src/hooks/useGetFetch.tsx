@@ -3,7 +3,6 @@
 import instance from "@/api/instance";
 import { CanceledError, isAxiosError } from "axios";
 import { useEffect, useMemo, useState } from "react";
-import useLocalStorage from "./useLocalStorage";
 
 interface UseGetFetchType {
   route: string;
@@ -20,7 +19,6 @@ export default function useGetFetch<T>({ route }: UseGetFetchType) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<Error>();
-  const [token] = useLocalStorage("token");
 
   const isCancelled = useMemo(() => error instanceof CanceledError, [error]);
 
@@ -32,7 +30,6 @@ export default function useGetFetch<T>({ route }: UseGetFetchType) {
       try {
         const response = await instance.get<T>(route, {
           signal: abortController.signal,
-          headers: { Authorization: `Bearer ${token}` },
         });
         setData(response.data);
       } catch (error) {
@@ -49,7 +46,7 @@ export default function useGetFetch<T>({ route }: UseGetFetchType) {
     return () => {
       abortController.abort();
     };
-  }, [route, token]);
+  }, [route]);
 
   return { data, isLoading, error, isError, isCancelled };
 }

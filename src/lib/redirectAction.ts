@@ -1,0 +1,5 @@
+import { redirect } from "next/navigation";
+
+export default async function redirectAction(path: string) {
+  await redirect(path);
+}

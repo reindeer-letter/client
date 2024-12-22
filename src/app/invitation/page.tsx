@@ -4,6 +4,7 @@ import Button from "@/components/button";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import HighlightedText from "@/components/HighlightedText";
+import Image from "next/image";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -18,11 +19,13 @@ export default function Home() {
       <HighlightedText />
 
       <section className="mt-8 flex flex-col items-center">
-        <div className="flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
-          <img
+        <div className="relative flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
+          <Image
             src="/images/reindeer-basic.png"
             alt="순록 아이콘"
-            className="h-full w-full object-cover"
+            priority
+            sizes="240px"
+            fill
           />
         </div>
         <div className="mt-4 flex items-center">

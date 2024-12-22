@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import useLocalStorage from "@/hooks/useLocalStorage";
+import { useUserStore } from "@/providers/userStoreProvider";
 
 interface NavBarProps {
   title: string;
@@ -29,7 +29,7 @@ const NavBar = ({
   guestClose,
 }: NavBarProps) => {
   const router = useRouter();
-  const [id] = useLocalStorage("userId");
+  const id = useUserStore((store) => store.id);
 
   const isLoggedIn = !!id;
 

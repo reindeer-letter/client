@@ -1,26 +1,31 @@
 "use client";
 
+import { useUserStore } from "@/providers/userStoreProvider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LottieLetterSend from "@/components/LottieLetterSend";
-import useLocalStorage from "@/hooks/useLocalStorage";
 import Image from "next/image";
 import Button from "../button";
 
 export default function WritingCompleteClient() {
   const [isLottieComplete, setIsLottieComplete] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token] = useLocalStorage("token");
-  const router = useRouter();
-  useEffect(() => {
-    setIsLoggedIn(!!token);
-  }, [token]);
-
   const [isBoxVisible, setIsBoxVisible] = useState(true);
+  const router = useRouter();
+  const isPending = useUserStore((store) => store.isPending);
+  const id = useUserStore((store) => store.id);
+
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (userId) setIsLoggedIn(true);
-    else setIsBoxVisible(true);
+    if (isPending) return;
+    if (id) setIsLoggedIn(true);
+  }, [isPending, id]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsBoxVisible(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (

@@ -6,11 +6,10 @@ import { GetLettersMyLettersResponse } from "@/types/letters";
 import useInfiniteFetch from "@/hooks/useInfiniteFetch";
 import MailScrollSkeleton from "@/app/home/skeletons/mailScrollSkeleton";
 import FutureMail from "./futureMail";
-import Mail from "./mail";
 import IntersectionArea from "../intersectionArea";
-import SealedMail from "./sealedMail";
 import Button from "../button";
 import EmptyMail from "./emtpyMail";
+import Mail from "./mail";
 
 interface MailScrollProps {
   route: string;
@@ -55,30 +54,20 @@ export default function MailScroll({ route }: MailScrollProps) {
               isDelivered,
               scheduledAt,
               createdAt,
-              senderNickName,
+              senderNickname,
               isOpen,
             }) => {
               if (!isDelivered)
                 return <FutureMail key={id} scheduledAt={scheduledAt} />;
-              if (!isOpen)
-                return (
-                  <SealedMail
-                    key={id}
-                    id={id}
-                    nickName={senderNickName}
-                    title={title}
-                    writtenDate={createdAt}
-                  />
-                );
               return (
-                <section key={id}>
-                  <Mail
-                    id={id}
-                    writtenDate={createdAt}
-                    nickName={senderNickName}
-                    title={title}
-                  />
-                </section>
+                <Mail
+                  key={id}
+                  id={id}
+                  nickName={senderNickname}
+                  title={title}
+                  writtenDate={createdAt}
+                  isOpen={isOpen}
+                />
               );
             },
           )
