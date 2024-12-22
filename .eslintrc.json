@@ -28,7 +28,12 @@
     "react/jsx-props-no-spreading": "off", // props spreading 허용
     "jsx-a11y/anchor-is-valid": "off", // 빈 href 허용
     "no-nested-ternary": "off",
-
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
     "no-use-before-define": "off",
     "react/jsx-no-useless-fragment": "off",
     "no-shadow": "off",

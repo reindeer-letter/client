@@ -14,6 +14,7 @@ import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
 import ImageUploader from "@/components/writingLetter/ImageUploader";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -23,15 +24,15 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [authToken] = useLocalStorage("token");
+  const [storedNickname] = useLocalStorage("nickName");
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const category = searchParams.get("type");
   const receiverId = searchParams.get("receiverId");
-  const authToken = localStorage.getItem("token");
-  const storedNickname = localStorage.getItem("nickName");
 
-  const defaultImage = "/photo/photo.png";
+  const defaultImage = "/photo/photo_tape.png";
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
 
   const handleDateSelect = (date: string) => {

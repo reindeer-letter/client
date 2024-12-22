@@ -8,8 +8,6 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import PopUp from "../popUp";
 
-// TODO: 소셜 공유 기능 추가
-
 export default function Footer() {
   const router = useRouter();
   const [id] = useLocalStorage("userId");

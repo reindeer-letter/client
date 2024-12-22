@@ -34,3 +34,16 @@
   --grey-800: #3d3d3d;
   --grey-900: #292929;
 }
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--line-500);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--line-50);
+}
