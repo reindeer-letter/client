@@ -1,5 +1,4 @@
 import { getCookie } from "@/lib/cookie";
-import redirectAction from "@/lib/redirectAction";
 import axios from "axios";
 
 const instance = axios.create({
@@ -22,7 +21,10 @@ instance.interceptors.request.use(async (config) => {
 instance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response.status === 401) await redirectAction("/login");
+    if (error.response.status === 401) {
+      if (typeof window === "undefined") return error;
+      window.location.href = "/login";
+    }
     return Promise.reject(error);
   },
 );
