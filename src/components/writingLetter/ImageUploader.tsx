@@ -1,31 +1,41 @@
 "use client";
 
-import React from "react";
+import React, { ChangeEvent } from "react";
 import Image from "next/image";
-import useImageUpload from "@/hooks/useImageUpload";
 
 interface ImageUploaderProps {
   index: number;
-  serverImage: string;
-  onUploadSuccess: (url: string) => void;
+  previewUrl: string;
+  onSelectImage: (index: number, file: File | null, preview: string) => void;
 }
 
 const ImageUploader = ({
   index,
-  serverImage,
-  onUploadSuccess,
+  previewUrl,
+  onSelectImage,
 }: ImageUploaderProps) => {
-  const { localPreview, isUploading, handleImageUpload, handleImageDelete } =
-    useImageUpload(serverImage, onUploadSuccess);
-
   const inputId = `file-input-${index}`;
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) handleImageUpload(file);
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (loadEvent) => {
+      if (typeof loadEvent.target?.result === "string") {
+        const base64Url = loadEvent.target.result;
+        onSelectImage(index, file, base64Url);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
-  const displayImage = localPreview || "/photo/photo.png";
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSelectImage(index, null, "");
+  };
+
+  const displayImage = previewUrl || "/photo/photo.png";
 
   return (
     <div
@@ -43,7 +53,7 @@ const ImageUploader = ({
       <div className="relative z-10 h-full w-full overflow-hidden rounded-lg">
         <Image
           src={displayImage}
-          alt="업로드된 사진"
+          alt="미리보기 이미지"
           fill
           unoptimized
           className="aspect-square object-cover"
@@ -69,14 +79,8 @@ const ImageUploader = ({
         />
       </div>
 
-      {localPreview && localPreview !== "/photo/photo.png" && (
-        <button
-          className="absolute right-0 top-0 z-30"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleImageDelete();
-          }}
-        >
+      {previewUrl && (
+        <button className="absolute right-0 top-0 z-30" onClick={handleDelete}>
           <Image
             src="/icons/photo_delete.png"
             alt="이미지 삭제"
@@ -86,18 +90,12 @@ const ImageUploader = ({
         </button>
       )}
 
-      {isUploading && (
-        <p className="absolute inset-0 z-30 flex items-center justify-center bg-white/70 text-black">
-          업로드 중...
-        </p>
-      )}
-
       <input
         id={inputId}
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={onFileChange}
+        onChange={handleFileChange}
       />
     </div>
   );

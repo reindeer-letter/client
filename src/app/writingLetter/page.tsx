@@ -15,6 +15,7 @@ import BottomSheetMusicSelect from "@/components/writingLetter/BottomSheetMusicS
 import PopUp from "@/components/popUp";
 import Image from "next/image";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
+import useImagePreview from "@/hooks/useImagePreview";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -29,16 +30,8 @@ const Page = () => {
   const searchParams = useSearchParams();
   const receiverId = searchParams.get("receiverId");
   const senderNickname = searchParams.get("senderNickname");
+  const { images, handleSelectImage } = useImagePreview(3);
 
-  const [imageUrls, setImageUrls] = useState(["", "", ""]);
-
-  const handleUploadSuccess = (index: number, remoteUrl: string) => {
-    setImageUrls((prev) => {
-      const newArr = [...prev];
-      newArr[index] = remoteUrl;
-      return newArr;
-    });
-  };
   const [selectedMusic, setSelectedMusic] = useState<string>("노래 제목");
 
   const daysDifference = calculateDaysDifference(selectedDate);
@@ -76,14 +69,23 @@ const Page = () => {
     }
 
     try {
-      const imagesArray = imageUrls
-        .map((img) => img)
-        .filter((url) => url !== "");
+      const uploadPromises = images
+        .filter((item) => item.file)
+        .map(async (item) => {
+          const formData = new FormData();
+          formData.append("file", item.file as File);
 
+          const res = await instance.post("/letters/upload/image", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          const { imageUrl } = res.data;
+          return imageUrl;
+        });
+      const imageUrls = await Promise.all(uploadPromises);
       const payload = {
         title,
         description,
-        imageUrls: imagesArray,
+        imageUrls,
         bgmUrl: "https://example.com/music.mp3",
         category: "TEXT",
         receiverId: Number(receiverId),
@@ -127,14 +129,12 @@ const Page = () => {
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
         <div className="no-scrollbar flex w-full flex-row-reverse space-x-4 space-x-reverse overflow-x-auto px-4">
           <div style={{ display: "flex", gap: 16 }}>
-            {imageUrls.map((serverImage, index) => (
+            {images.map((item, index) => (
               <ImageUploader
                 key={index}
                 index={index}
-                serverImage={serverImage}
-                onUploadSuccess={(remoteUrl) =>
-                  handleUploadSuccess(index, remoteUrl)
-                }
+                previewUrl={item.previewUrl}
+                onSelectImage={handleSelectImage}
               />
             ))}
           </div>
