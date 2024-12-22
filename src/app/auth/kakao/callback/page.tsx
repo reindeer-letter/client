@@ -5,6 +5,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import instance from "@/api/instance";
 
 export default function KakaoCallbackPage() {
   const router = useRouter();
@@ -17,9 +18,7 @@ export default function KakaoCallbackPage() {
 
         if (!code) throw new Error("Authorization code not found");
 
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}auth/kakao/callback?code=${code}`,
-        );
+        const response = await instance.get(`auth/kakao/callback?code=${code}`);
 
         console.log("Response:", response.data);
 
@@ -54,5 +53,9 @@ export default function KakaoCallbackPage() {
     handleKakaoCallback();
   }, [router]);
 
-  return <div>kakao 로그인 처리 중...</div>;
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-firstLanding bg-cover bg-center">
+      <div className="text-line-900">Kakao 로그인 처리 중...</div>
+    </div>
+  );
 }

@@ -71,37 +71,34 @@ const LoginPage = () => {
       setIsSubmitting(false);
     }
   };
-  // const handleSimpleStartClick = () => {
-  //   overlay.mount(
-  //     <PopUp
-  //       button="확인"
-  //       title="준비 중 입니다."
-  //       description="현재 기능은 준비 중입니다."
-  //       onConfirm={() => overlay.unmount()}
-  //       onCancel={() => overlay.unmount()}
-  //       unmount={overlay.unmount}
-  //     />,
-  //   );
-  // };
 
   const handleKakaoLogin = () => {
-    const redirectUri =
-      process.env.NODE_ENV === "production"
-        ? "https://www.reindeer-letter.site/auth/kakao/callback"
-        : "http://localhost:3000/auth/kakao/callback";
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI_KAKAO;
 
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?=client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code`;
+    const kakaoAuthUrl = new URL("https://kauth.kakao.com/oauth/authorize");
+    kakaoAuthUrl.searchParams.append(
+      "client_id",
+      process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID!,
+    );
+    kakaoAuthUrl.searchParams.append("redirect_uri", redirectUri!);
+    kakaoAuthUrl.searchParams.append("response_type", "code");
+
+    window.location.href = kakaoAuthUrl.toString();
   };
 
   const handleGoogleLogin = () => {
-    const redirectUri =
-      process.env.NODE_ENV === "production"
-        ? "https://www.reindeer-letter.site/auth/google/callback"
-        : "http://localhost:3000/auth/google/callback";
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
 
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=email profile openid`;
+    const googleAuthUrl = new URL("https://accounts.google.com/o/oauth2/auth");
+    googleAuthUrl.searchParams.append(
+      "client_id",
+      process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+    );
+    googleAuthUrl.searchParams.append("redirect_uri", redirectUri!);
+    googleAuthUrl.searchParams.append("response_type", "code");
+    googleAuthUrl.searchParams.append("scope", "email profile openid");
 
-    window.location.href = googleAuthUrl;
+    window.location.href = googleAuthUrl.toString();
   };
 
   return (
