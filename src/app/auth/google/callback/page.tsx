@@ -19,33 +19,36 @@ export default function GoogleCallbackPage() {
 
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}auth/google/callback?code=${code}`,
+          {
+            withCredentials: true,
+            headers: {
+              Accept: "application/json",
+            },
+          },
         );
 
         console.log("Response:", response.data);
 
-        // 새로운 사용자인 경우
-        if (response.data.isNewUser) {
-          localStorage.setItem(
-            "googleUserData",
-            JSON.stringify(response.data.userData),
-          );
+        const { isNewUser, userData, access_token, user } = response.data;
+
+        if (isNewUser) {
+          localStorage.setItem("googleUserData", JSON.stringify(userData));
           router.push("/profile");
           return;
         }
 
         // 기존 사용자인 경우
-        const { access_token, user } = response.data;
         localStorage.setItem("token", access_token);
         localStorage.setItem("userId", user.id);
         localStorage.setItem("nickName", user.nickName);
 
         router.push("/home");
       } catch (error) {
-        if (axios.isAxiosError(error))
-          console.error("Error details:", {
-            response: error.response?.data,
-            status: error.response?.status,
-          });
+        console.error("Error details:", error);
+        if (axios.isAxiosError(error)) {
+          console.error("Response data:", error.response?.data);
+          console.error("Status:", error.response?.status);
+        }
         alert("로그인에 실패했습니다. 다시 시도해주세요.");
         router.push("/login");
       }
