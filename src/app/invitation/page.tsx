@@ -4,12 +4,17 @@ import Button from "@/components/button";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import HighlightedText from "@/components/HighlightedText";
+import useGetFetch from "@/hooks/useGetFetch";
 import Image from "next/image";
 
 export default function Home() {
   const searchParams = useSearchParams();
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
+
+  const { data } = useGetFetch<{ profileImageUrl: string }>({
+    route: "/auth/profile",
+  });
 
   return (
     <div
@@ -21,7 +26,7 @@ export default function Home() {
       <section className="mt-8 flex flex-col items-center">
         <div className="relative flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full bg-grey-100 shadow-md">
           <Image
-            src="/images/reindeer-basic.png"
+            src={data?.profileImageUrl ?? "/images/reindeer-basic.png"}
             alt="순록 아이콘"
             priority
             sizes="240px"
@@ -30,7 +35,7 @@ export default function Home() {
         </div>
         <div className="mt-4 flex items-center">
           <span className="rounded-[62px] bg-White px-3 py-1 text-Title02-B text-grey-800">
-            케이크
+            {receiverNickName}
           </span>
           <p className="ml-2 text-Title01-R text-grey-800">의 편지함</p>
         </div>
