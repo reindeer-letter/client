@@ -58,7 +58,7 @@ export default function GoogleCallbackPage() {
   }, [router]);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-firstLanding bg-cover bg-center">
+    <div className="flex h-screen w-full items-center justify-center">
       <div className="text-line-900">Google 로그인 처리 중...</div>
     </div>
   );
