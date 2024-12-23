@@ -26,15 +26,20 @@ const Page = () => {
     searchParams.set("receiverId", receiverId ?? "");
     searchParams.set("receiverNickName", receiverNickName ?? "");
     searchParams.set("type", type ?? "");
-    searchParams.set("senderNickname", encodeURIComponent(nickname));
+    searchParams.set("senderNickname", nickname);
     router.push(`/${basePath}?${searchParams.toString()}`);
   };
 
   useEffect(() => {
     console.log(receiverNickName, myNickName);
-    if (myNickName === receiverNickName) setNickname(myNickName ?? "");
-  }, [receiverNickName, myNickName]);
-
+    if (
+      myNickName &&
+      receiverNickName &&
+      myNickName === receiverNickName &&
+      !nickname
+    )
+      setNickname(myNickName);
+  }, [receiverNickName, myNickName, nickname]);
   return (
     <div className="flex h-screen flex-col bg-White">
       <NavBar
