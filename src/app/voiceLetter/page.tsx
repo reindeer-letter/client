@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import "../globals.css";
 import Image from "next/image";
 import PopUp from "@/components/popUp";
+import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/button";
 import useOverlay from "@/hooks/useoverlay";
@@ -12,11 +13,15 @@ import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
+import ImageUploader from "@/components/writingLetter/ImageUploader";
+import VoiceRecorder from "@/components/voiceLetter/VoiceRecorder";
+import useVoiceUpload from "@/hooks/useVoiceUpload";
 
 const Page = () => {
   const overlay = useOverlay();
   const today = new Date();
   const todayFormatted = formatDate(today);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const router = useRouter();
@@ -25,9 +30,17 @@ const Page = () => {
   const receiverId = searchParams.get("receiverId");
   const senderNickname = searchParams.get("senderNickname");
 
-  const [uploadedImageUrl] = useState<string>("");
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
+  const [audioUrl, setAudioUrl] = useState<string>("");
 
+  const { uploadVoice } = useVoiceUpload(setAudioUrl);
 
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+  };
+  const handleUploadSuccess = (url: string) => {
+    setUploadedImageUrl(url);
+  };
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
   const finalDate = selectedDate
@@ -80,7 +93,6 @@ const Page = () => {
       if (axios.isAxiosError(error) && error.response?.status === 401)
         alert("인증 문제가 발생했습니다. 다시 로그인해주세요.");
       else alert("편지 전송 실패. 다시 시도해주세요.");
-
     }
   };
 
@@ -96,15 +108,13 @@ const Page = () => {
       />,
     );
   };
+
+  const handleCalendarClose = () => {
+    setIsCalendarOpen(false);
+  };
+
   const openCalendar = () => {
-    overlay.mount(
-      <CalendarModal
-        onSelect={(date: string) => {
-          setSelectedDate(date);
-        }}
-        unmount={overlay.unmount}
-      />,
-    );
+    setIsCalendarOpen(true);
   };
 
   return (
@@ -120,8 +130,12 @@ const Page = () => {
         guestClose="/invitation"
       />
 
-      <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
-
+      <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4">
+        <ImageUploader
+          index={0}
+          previewUrl={uploadedImageUrl || "/photo/photo_tape.png"}
+          onSelectImage={(_, __, url) => handleUploadSuccess(url)}
+        />
         <header className="flex w-full flex-col space-y-4 px-4">
           <div className="w-full">
             <input
@@ -171,6 +185,13 @@ const Page = () => {
           </div>
         </div>
       </footer>
+
+      {isCalendarOpen && (
+        <CalendarModal
+          onSelect={handleDateSelect}
+          unmount={handleCalendarClose}
+        />
+      )}
     </div>
   );
 };
