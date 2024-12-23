@@ -107,7 +107,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative flex h-screen flex-col bg-loginLanding bg-cover bg-center px-5">
+    <div className="flex min-h-screen flex-col bg-loginLanding bg-cover bg-center px-5">
       <header className="relative flex items-center justify-center pt-12">
         <button className="absolute left-0" onClick={() => router.push("/")}>
           <Image
@@ -119,7 +119,7 @@ const LoginPage = () => {
         </button>
       </header>
       <HighlightedText />
-      <div className="flex flex-grow items-center justify-center">
+      <div className="flex flex-grow">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col justify-center gap-10 text-center"
