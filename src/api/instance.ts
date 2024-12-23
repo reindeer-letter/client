@@ -1,4 +1,4 @@
-import { getCookie } from "@/lib/cookie";
+import { getCookie, removeCookie } from "@/lib/cookie";
 import axios from "axios";
 
 const instance = axios.create({
@@ -21,10 +21,7 @@ instance.interceptors.request.use(async (config) => {
 instance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error?.response?.status === 401) {
-      if (typeof window === "undefined") return error;
-      window.location.href = "/login";
-    }
+    if (error?.response?.status === 401) await removeCookie("token");
     return Promise.reject(error);
   },
 );
