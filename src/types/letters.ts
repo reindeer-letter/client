@@ -10,7 +10,7 @@ export type Letter = {
   scheduledAt: string;
   createdAt: string;
   updatedAt: string;
-  senderNickName: string;
+  senderNickname: string;
 };
 
 export interface GetLettersMyLettersResponse {

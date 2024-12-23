@@ -7,7 +7,6 @@ import {
 } from "react";
 import { CanceledError, isAxiosError } from "axios";
 import instance from "@/api/instance";
-import useLocalStorage from "./useLocalStorage";
 
 export default function useMutation<T, R = T>(
   route: string,
@@ -16,7 +15,6 @@ export default function useMutation<T, R = T>(
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<Error>();
-  const [token] = useLocalStorage("token");
 
   const isCancelled = useMemo(() => error instanceof CanceledError, [error]);
 
@@ -35,9 +33,7 @@ export default function useMutation<T, R = T>(
       setIsError(false);
       try {
         onMutate();
-        await instance[method]<R>(route, data, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await instance[method]<R>(route, data);
       } catch (error) {
         onDataHandler(data);
         setIsError(true);
@@ -50,7 +46,7 @@ export default function useMutation<T, R = T>(
         setIsLoading(false);
       }
     },
-    [route, token, method],
+    [route, method],
   );
 
   return { mutate, isLoading, isError, error, isCancelled };

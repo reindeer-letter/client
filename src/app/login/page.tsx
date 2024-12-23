@@ -1,6 +1,5 @@
 "use client";
 
-import useLocalStorage from "@/hooks/useLocalStorage";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +11,9 @@ import { loginSchema, LoginFormInputs } from "@/utils/loginSchema";
 import HighlightedText from "@/components/HighlightedText";
 import Button from "@/components/button";
 import InputField from "@/components/login/InputField";
+import { useUserStore } from "@/providers/userStoreProvider";
+import { PostAuthLoginResponse } from "@/types/auth";
+import { setCookie } from "@/lib/cookie";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -24,10 +26,7 @@ const LoginPage = () => {
   } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
   });
-
-  const [, setId] = useLocalStorage("userId");
-  const [, setNickName] = useLocalStorage("nickName");
-  const [, setToken] = useLocalStorage("token");
+  const login = useUserStore((store) => store.login);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -40,18 +39,24 @@ const LoginPage = () => {
     setErrorMessage("");
 
     try {
-      const response = await instance.post("/auth/login", data, {
-        headers: {
-          "Content-Type": "application/json",
+      const response = await instance.post<PostAuthLoginResponse>(
+        "/auth/login",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (response.status === 201) {
-        const result = response.data;
-        setId(result.user.id);
-        setNickName(result.user.nickName);
-        setToken(result.access_token);
-
+        const {
+          // eslint-disable-next-line camelcase
+          access_token,
+          user: { email, id, nickName, profileImageUrl },
+        } = response.data;
+        login(email, id, nickName, profileImageUrl);
+        await setCookie("token", access_token);
         if (receiverId && receiverNickName)
           router.push(
             `/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`,

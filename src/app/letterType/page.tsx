@@ -13,17 +13,17 @@ const Page = () => {
   const searchParams = useSearchParams();
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
-  const source = searchParams.get("source") || "other";
 
   const handleNext = () => {
     if (!selected) {
       alert("편지 유형을 선택해주세요!");
       return;
     }
-    const sourceParam = source === "self" ? `&source=${source}` : "";
-    router.push(
-      `/setNickName?type=${selected}&receiverId=${receiverId}&receiverNickName=${receiverNickName}${sourceParam}`,
-    );
+    const searchParams = new URLSearchParams();
+    searchParams.set("type", selected);
+    searchParams.set("receiverId", receiverId ?? "");
+    searchParams.set("receiverNickName", receiverNickName ?? "");
+    router.push(`/setNickName?${searchParams.toString()}`);
   };
 
   return (

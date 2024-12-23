@@ -1,38 +1,31 @@
 "use client";
 
 import instance from "@/api/instance";
-import useGetFetch from "@/hooks/useGetFetch";
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { GetAuthProfileResponse } from "@/types/profile";
+import { removeCookie } from "@/lib/cookie";
+import { useUserStore } from "@/providers/userStoreProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 export default function Page() {
-  const { data, isLoading, isError, isCancelled, error } =
-    useGetFetch<GetAuthProfileResponse>({
-      route: "/auth/profile",
-    });
-  const [, setUserId] = useLocalStorage("userId");
-  const [, setNickName] = useLocalStorage("nickName");
-  const [token, setToken] = useLocalStorage("token");
+  const profileUrl = useUserStore((store) => store.profileUrl);
+  const nickName = useUserStore((store) => store.nickName);
+  const isPending = useUserStore((store) => store.isPending);
+  const logout = useUserStore((store) => store.logout);
   const router = useRouter();
 
   const handleLogout = useCallback(async () => {
     try {
-      await instance.post("/auth/logout", null, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setUserId(null);
-      setNickName(null);
-      setToken(null);
+      await instance.post("/auth/logout");
+      logout();
+      await removeCookie("token");
       router.push("/");
     } catch (error) {
       alert("로그아웃에 실패했습니다.");
       throw error;
     }
-  }, [setUserId, setNickName, setToken, router, token]);
+  }, [router, logout]);
 
   const handleBack = useCallback(() => {
     router.back();
@@ -58,29 +51,21 @@ export default function Page() {
           />
         </button>
         <section className="mt-5 flex flex-col items-center justify-center gap-4">
-          {isLoading && (
+          {isPending && (
             <div className="h-[240px] w-[240px] animate-pulse rounded-full bg-[#d9d9d9]" />
           )}
-          {isError && !isCancelled && (
-            <div className="text-red-500">
-              에러가 발생했습니다: {error?.message}
-            </div>
-          )}
-          {data && (
+          {!isPending && profileUrl && (
             <Image
               priority
-              src={data.profileImageUrl}
+              src={profileUrl}
               alt="profile"
               width={240}
               height={240}
               className="rounded-full bg-[#d9d9d9]"
             />
           )}
-          {isLoading && <div className="h-5 w-36 animate-pulse bg-[#d9d9d9]" />}
-          {data && (
-            <div className="pb-9 text-Title01-R text-grey-800">
-              {data.nickName}
-            </div>
+          {!isPending && nickName && (
+            <div className="pb-9 text-Title01-R text-grey-800">{nickName}</div>
           )}
         </section>
       </header>
