@@ -1,7 +1,13 @@
 import React from "react";
 import Image from "next/image";
 
-const ImageUploader = ({ defaultImage }: { defaultImage: string }) => {
+const ImageUploader = ({
+  defaultImage,
+  key,
+}: {
+  defaultImage: string;
+  key?: string;
+}) => {
   return (
     <div
       className="relative mb-4 h-[280px] w-[280px] cursor-pointer rounded-lg border border-gray-300"
@@ -17,7 +23,7 @@ const ImageUploader = ({ defaultImage }: { defaultImage: string }) => {
     >
       <Image
         src={defaultImage}
-        alt="업로드된 사진"
+        alt={key || "사진"}
         fill
         className="aspect-square object-cover"
       />
