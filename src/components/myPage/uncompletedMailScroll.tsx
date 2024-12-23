@@ -65,7 +65,7 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
               id,
               title,
               scheduledAt,
-              senderNickName,
+              senderNickname,
               description,
               bgmUrl,
               category,
@@ -76,7 +76,7 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
                   <UncompletedMail
                     id={id}
                     title={title}
-                    nickName={senderNickName}
+                    nickName={senderNickname}
                     writtenDate={scheduledAt}
                     description={description}
                     bgmUrl={bgmUrl}

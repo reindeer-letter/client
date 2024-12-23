@@ -3,6 +3,7 @@
 import "../globals.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useUserStore } from "@/providers/userStoreProvider";
 import Button from "@/components/button";
 import NavBar from "../../components/NavBar";
 
@@ -12,7 +13,7 @@ const Page = () => {
   const type = searchParams.get("type");
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
-  const source = searchParams.get("source");
+  const myNickName = useUserStore((store) => store.nickName);
   const [nickname, setNickname] = useState("");
   const basePath = type === "VOICE" ? "voiceLetter" : "writingLetter";
 
@@ -21,23 +22,25 @@ const Page = () => {
       alert("별명을 입력해주세요!");
       return;
     }
-    router.push(
-      `/${basePath}?type=${type}&receiverId=${receiverId}&nickname=${encodeURIComponent(
-        nickname,
-      )}&receiverNickName=${receiverNickName}`,
-    );
+    const searchParams = new URLSearchParams();
+    searchParams.set("receiverId", receiverId ?? "");
+    searchParams.set("receiverNickName", receiverNickName ?? "");
+    searchParams.set("type", type ?? "");
+    searchParams.set("senderNickname", encodeURIComponent(nickname));
+    router.push(`/${basePath}?${searchParams.toString()}`);
   };
 
   useEffect(() => {
-    if (source === "self") setNickname(receiverNickName || "");
-  }, [source, receiverNickName]);
+    console.log(receiverNickName, myNickName);
+    if (myNickName === receiverNickName) setNickname(myNickName ?? "");
+  }, [receiverNickName, myNickName]);
 
   return (
     <div className="flex h-screen flex-col bg-White">
       <NavBar
         title=""
-        loggedBack="/letterType"
-        guestBack="/letterType"
+        loggedBack={`/letterType?${searchParams.toString()}`}
+        guestBack={`/letterType?${searchParams.toString()}`}
         loggedClose="/home"
         guestClose="/invitaion"
       />

@@ -1,8 +1,7 @@
 "use client";
 
 import instance from "@/api/instance";
-import { useState } from "react";
-import "../globals.css";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import PopUp from "@/components/popUp";
 import axios from "axios";
@@ -14,7 +13,6 @@ import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
 import ImageUploader from "@/components/writingLetter/ImageUploader";
-import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -24,13 +22,11 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [authToken] = useLocalStorage("token");
-  const [storedNickname] = useLocalStorage("nickName");
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const category = searchParams.get("type");
   const receiverId = searchParams.get("receiverId");
+  const senderNickname = searchParams.get("senderNickname");
 
   const defaultImage = "/photo/photo_tape.png";
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
@@ -46,6 +42,11 @@ const Page = () => {
   const finalDate = selectedDate
     ? formattedDate
     : formatDateStringToISO(todayFormatted);
+
+  useEffect(() => {
+    if (!receiverId || !senderNickname) router.push("/");
+  }, [receiverId, router, senderNickname]);
+
   // 편지 전송
   const handleSendLetter = async () => {
     if (!title.trim() || !description.trim()) {
@@ -58,15 +59,14 @@ const Page = () => {
         description,
         imageUrl: uploadedImageUrl,
         bgmUrl: "https://example.com/music.mp3",
-        category,
+        category: "TEXT",
         receiverId: Number(receiverId),
         isOpen: false,
         scheduledAt: finalDate,
-        senderNickName: storedNickname?.trim() || "익명의 친구",
+        senderNickName: senderNickname?.trim() || "익명의 친구",
       };
 
-      const headers = authToken ? { Authorization: `Bearer ${authToken}` } : {};
-      const response = await instance.post("/letters", payload, { headers });
+      const response = await instance.post("/letters", payload);
 
       if (response.status === 201) router.push("/writingComplete");
     } catch (error) {
@@ -98,8 +98,8 @@ const Page = () => {
     >
       <NavBar
         title="작성하기"
-        loggedBack="/setNickName"
-        guestBack="/setNickName"
+        loggedBack={`/setNickName?${searchParams.toString()}`}
+        guestBack={`/setNickName?${searchParams.toString()}`}
         loggedClose="/home"
         guestClose="/invitation"
       />

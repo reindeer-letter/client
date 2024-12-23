@@ -3,7 +3,6 @@
 import instance from "@/api/instance";
 import { CanceledError, isAxiosError } from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import useLocalStorage from "./useLocalStorage";
 
 interface UseInfiniteFetchType {
   route: string;
@@ -31,7 +30,6 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState<Error>();
   const [hasMore, setHasMore] = useState(false);
-  const [token] = useLocalStorage("token");
 
   const isCancelled = useMemo(() => error instanceof CanceledError, [error]);
 
@@ -61,7 +59,6 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
           newRoute.pathname + newRoute.search,
           {
             signal: abortController.signal,
-            headers: { Authorization: `Bearer ${token}` },
           },
         );
         setData((prev) =>
@@ -82,7 +79,7 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
     return () => {
       abortController.abort();
     };
-  }, [route, page, token]);
+  }, [route, page]);
 
   return {
     data,
