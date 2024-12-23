@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -10,12 +12,16 @@ import { isAxiosError } from "axios";
 import Button from "@/components/button";
 import ProfileCustomization from "@/components/profile/ProfileCustomization";
 import { ProfileFormData, profileSchema } from "@/utils/signUpSchema";
+import { setCookie } from "@/lib/cookie";
+import { useUserStore } from "@/providers/userStoreProvider";
 
 export default function ProfilePage() {
   const [userData, setUserData] = useState<{
+    kakaoId?: string;
     email: string;
     password?: string; // 일반 회원가입 사용자를 위한 비밀번호
     googleId?: string; // 소셜 로그인 사용자
+    isSocialLogin: boolean;
   } | null>(null);
 
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
@@ -25,7 +31,7 @@ export default function ProfilePage() {
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
 
   const router = useRouter();
-
+  const login = useUserStore((store) => store.login);
   const {
     register,
     handleSubmit,
@@ -41,14 +47,13 @@ export default function ProfilePage() {
   const nicknameValue = watch("nickname");
 
   useEffect(() => {
-    // 일반 회원가입 데이터 또는 소셜 로그인 데이터를 확인
+    // 카카오 사용자 또는 구글 사용자 데이터 확인
+    const kakaoData = localStorage.getItem("kakaoUserData");
     const googleData = localStorage.getItem("googleUserData");
-    const signUpData = localStorage.getItem("signUpData");
-
-    if (googleData)
-      setUserData(JSON.parse(googleData)); // 소셜 로그인 사용자 데이터
-    else if (signUpData)
-      setUserData(JSON.parse(signUpData)); // 일반 회원가입 사용자 데이터
+    if (kakaoData)
+      setUserData({ ...JSON.parse(kakaoData), isSocialLogin: true });
+    else if (googleData)
+      setUserData({ ...JSON.parse(googleData), isSocialLogin: true });
     else {
       alert("데이터가 없습니다. 다시 로그인해주세요.");
       router.push("/login");
@@ -122,10 +127,22 @@ export default function ProfilePage() {
     }
 
     try {
-      // 소셜 로그인 사용자와 일반 회원가입 사용자 구분
-      if (userData.googleId)
-        // 소셜 로그인 사용자 회원가입
-        await instance.post("/auth/google/register", {
+      let response;
+
+      // 소셜 로그인 사용자 회원가입 처리
+      if (userData.kakaoId)
+        response = await instance.post("/auth/kakao/register", {
+          kakaoId: userData.kakaoId,
+          email: userData.email,
+          additionalData: {
+            nickname: data.nickname,
+            skinColor: selectedSkin,
+            antlerType: selectedHorn,
+            mufflerColor: selectedScarf,
+          },
+        });
+      else if (userData.googleId)
+        response = await instance.post("/auth/google/register", {
           googleId: userData.googleId,
           email: userData.email,
           additionalData: {
@@ -135,9 +152,8 @@ export default function ProfilePage() {
             mufflerColor: selectedScarf,
           },
         });
-      else
-        // 일반 회원가입 사용자 회원가입
-        await instance.post("/auth/register", {
+      else {
+        response = await instance.post("/auth/register", {
           email: userData.email,
           password: userData.password,
           nickname: data.nickname,
@@ -147,10 +163,25 @@ export default function ProfilePage() {
           mufflerColor: selectedScarf,
         });
 
-      alert("회원가입이 완료되었습니다!");
-      localStorage.removeItem("googleUserData");
-      localStorage.removeItem("signUpData");
-      router.push("/login");
+        alert("회원가입이 완료되었습니다!");
+        localStorage.removeItem("kakaoUserData");
+        localStorage.removeItem("googleUserData");
+        router.push("/login");
+        return;
+      }
+
+      if (userData.isSocialLogin && response.data?.access_token) {
+        const { access_token, user } = response.data;
+
+        login(user.email, user.id, user.nickName, user.profileImageUrl);
+
+        await setCookie("token", access_token);
+
+        alert("회원가입이 완료되었습니다!");
+        localStorage.removeItem("kakaoUserData");
+        localStorage.removeItem("googleUserData");
+        router.push("/home");
+      }
     } catch (error) {
       console.error("회원가입 실패:", error);
       alert("회원가입 중 오류가 발생했습니다.");

@@ -6,9 +6,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import instance from "@/api/instance";
+import { setCookie } from "@/lib/cookie";
+import { useUserStore } from "@/providers/userStoreProvider";
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
+  const login = useUserStore((store) => store.login);
 
   useEffect(() => {
     const handleGoogleCallback = async () => {
@@ -38,10 +41,8 @@ export default function GoogleCallbackPage() {
           return;
         }
 
-        // 기존 사용자인 경우
-        localStorage.setItem("token", access_token);
-        localStorage.setItem("userId", user.id);
-        localStorage.setItem("nickName", user.nickName);
+        login(user.email, user.id, user.nickname, user.profileImageUrl);
+        await setCookie("token", access_token);
 
         router.push("/home");
       } catch (error) {

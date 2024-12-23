@@ -6,9 +6,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import instance from "@/api/instance";
+import { setCookie } from "@/lib/cookie";
+import { useUserStore } from "@/providers/userStoreProvider";
 
 export default function KakaoCallbackPage() {
   const router = useRouter();
+  const login = useUserStore((store) => store.login);
 
   useEffect(() => {
     const handleKakaoCallback = async () => {
@@ -18,33 +21,36 @@ export default function KakaoCallbackPage() {
 
         if (!code) throw new Error("Authorization code not found");
 
-        const response = await instance.get(`auth/kakao/callback?code=${code}`);
+        const response = await instance.get(
+          `auth/kakao/callback?code=${code}`,
+          {
+            withCredentials: true,
+            headers: {
+              Accept: "application/json",
+            },
+          },
+        );
 
         console.log("Response:", response.data);
 
-        // 새로운 사용자인 경우
-        if (response.data.isNewUser) {
-          localStorage.setItem(
-            "kakaoUserData",
-            JSON.stringify(response.data.userData),
-          );
+        const { isNewUser, userData, access_token, user } = response.data;
+
+        if (isNewUser) {
+          localStorage.setItem("kakaoUserData", JSON.stringify(userData));
           router.push("/profile");
           return;
         }
 
-        // 기존 사용자인 경우
-        const { access_token, user } = response.data;
-        localStorage.setItem("token", access_token);
-        localStorage.setItem("userId", user.id);
-        localStorage.setItem("nickName", user.nickName);
+        login(user.email, user.id, user.nickname, user.profileImageUrl);
+        await setCookie("token", access_token);
 
         router.push("/home");
       } catch (error) {
-        if (axios.isAxiosError(error))
-          console.error("Error details:", {
-            response: error.response?.data,
-            status: error.response?.status,
-          });
+        console.error("Error details:", error);
+        if (axios.isAxiosError(error)) {
+          console.error("Response data:", error.response?.data);
+          console.error("Status:", error.response?.status);
+        }
         alert("로그인에 실패했습니다. 다시 시도해주세요.");
         router.push("/login");
       }
