@@ -60,3 +60,15 @@
 ::-webkit-scrollbar-track {
   background-color: var(--line-50);
 }
+
+/* 모든 input, textarea, select 요소에 대해 포커스 배경 제거 */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+}
