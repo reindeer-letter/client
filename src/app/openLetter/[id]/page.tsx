@@ -3,13 +3,11 @@
 import instance from "@/api/instance";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSearchParams, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import NavBar from "@/components/NavBar";
 import OpenLetterImage from "@/components/openLetter/OpenLetterImage";
 
 const Page = () => {
-  const searchParams = useSearchParams();
-  const receiverId = searchParams.get("receiverId");
   const defaultImage = "/photo/photo1.png";
   const [letter, setLetter] = useState<Letter | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,6 +21,7 @@ const Page = () => {
     description: string;
     imageUrl: string[];
     bgmUrl: string;
+    audioUrl: string;
     senderNickName: string;
     category: string;
     isOpen: boolean;
@@ -45,6 +44,8 @@ const Page = () => {
 
   useEffect(() => {
     const fetchLetter = async () => {
+      if (!id) return;
+      setLoading(true);
       try {
         const response = await instance.get<Letter>(`/letters/${id}`);
         setLetter(response.data);
@@ -56,7 +57,7 @@ const Page = () => {
     };
 
     fetchLetter();
-  }, [id, receiverId]);
+  }, [id]);
 
   const handlePlayMusic = () => {
     if (!letter?.bgmUrl) return;
@@ -85,6 +86,33 @@ const Page = () => {
     };
   }, [audio]);
 
+  const renderContent = (letter: Letter | null) => {
+    if (!letter) return null;
+
+    switch (letter.category) {
+      case "TEXT":
+        return (
+          <div className="w-full">
+            <div className="mt-4 h-[200px] w-full resize-none rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-2xl text-black">
+              {letter.description}
+            </div>
+          </div>
+        );
+      case "VOICE":
+        return (
+          <div className="flex w-full justify-center">
+            <audio controls aria-label="음성 메시지">
+              <source src={letter.audioUrl} type="audio/mpeg" />
+              <track kind="captions" srcLang="ko" />
+              <p>음성을 재생할 수 없습니다.</p>
+            </audio>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div
       className="flex min-h-screen flex-col bg-White text-white"
@@ -103,7 +131,7 @@ const Page = () => {
               )) || <OpenLetterImage defaultImage={defaultImage} />}
             </div>
 
-            {letter?.bgmUrl ? (
+            {letter?.bgmUrl && letter.category === "TEXT" ? (
               <button
                 onClick={handlePlayMusic}
                 className="mr-3 flex w-[162px] items-center justify-start gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
@@ -132,14 +160,10 @@ const Page = () => {
               </div>
             </header>
 
-            <div className="w-full">
-              <div className="mt-4 h-[200px] w-full resize-none rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-2xl text-black">
-                {letter?.description}
-              </div>
-            </div>
+            {renderContent(letter)}
 
-            <div className="w-full">
-              <div className="w-full rounded-lg bg-transparent pl-4 pr-4 text-right font-handwriting text-xl text-[#999]">
+            <div className="w-full text-right">
+              <div className="w-full rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-xl text-[#999]">
                 {letter?.scheduleAt
                   ? new Date(letter.scheduleAt).toLocaleDateString("ko-KR", {
                       year: "numeric",
@@ -148,7 +172,6 @@ const Page = () => {
                       weekday: "long",
                     })
                   : ""}
-                에 {letter?.senderNickName}가
               </div>
             </div>
           </>
