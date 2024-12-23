@@ -159,7 +159,7 @@ const LoginPage = () => {
         </form>
       </div>
 
-      <div className="w-full px-6 pb-[63px]">
+      <div className="w-full px-6 pb-[56px]">
         <div className="mx-auto w-full max-w-md justify-center pb-[20px] text-center text-Body02-R text-line-800">
           간편하게 시작하기
         </div>

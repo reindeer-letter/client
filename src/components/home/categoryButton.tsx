@@ -16,7 +16,7 @@ export default function CategoryButton({
   return (
     <section
       className={cn(
-        "flex h-10 w-[76px] items-center justify-center rounded-[62px] border-line-100 px-4 py-2 text-Body01-R text-grey-600 hover:opacity-70",
+        "flex h-10 w-[78px] items-center justify-center rounded-[62px] border-line-100 px-4 py-2 text-Body01-R text-grey-600 hover:opacity-70",
         currentCategory === value ||
           (!CATEGORY.some(({ value }) => value === currentCategory) &&
             value === "")
