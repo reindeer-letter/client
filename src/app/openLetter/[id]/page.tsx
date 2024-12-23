@@ -132,15 +132,23 @@ const Page = () => {
               </div>
             </header>
 
-            <div className="w-full flex-1">
-              <div className="mt-4 h-[200px] w-full resize-none rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none">
+            <div className="w-full">
+              <div className="mt-4 h-[200px] w-full resize-none rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-2xl text-black">
                 {letter?.description}
               </div>
             </div>
 
-            <div className="flex w-full justify-end">
-              <div>
-                {letter?.scheduleAt} {letter?.senderNickName}
+            <div className="w-full">
+              <div className="w-full rounded-lg bg-transparent pl-4 pr-4 text-right font-handwriting text-xl text-[#999]">
+                {letter?.scheduleAt
+                  ? new Date(letter.scheduleAt).toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      weekday: "long",
+                    })
+                  : ""}
+                에 {letter?.senderNickName}가
               </div>
             </div>
           </>
