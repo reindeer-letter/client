@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <div
-      className="flex min-h-screen flex-col bg-cover bg-center"
+      className="flex min-h-screen flex-col bg-cover bg-center pt-12"
       style={{ backgroundImage: "url('/background/landing.png')" }}
     >
       <HighlightedText />
@@ -41,7 +41,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="mx-auto mt-40 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-5 pb-[56px]">
+      <footer className="mx-auto mt-28 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-5 pb-[56px]">
         <div className="flex w-full flex-col space-y-3">
           <Link
             href={`/letterType?receiverId=${receiverId}&receiverNickName=${receiverNickName}`}
