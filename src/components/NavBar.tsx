@@ -5,7 +5,7 @@ import Image from "next/image";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
 interface NavBarProps {
-  title: string;
+  title?: string;
   loggedBack?: string;
   guestBack?: string;
   loggedClose?: string;
@@ -55,13 +55,15 @@ const NavBar = ({
         <Image src="/Arrow-left_32.png" alt="뒤로가기" width={24} height={24} />
       </button>
       <h1 className="font-dongle text-Title01-SB text-line-700">{title}</h1>
-      <button
-        aria-label="닫기"
-        className="pr-1 text-white"
-        onClick={handleClose}
-      >
-        <Image src="/Close_32.png" alt="닫기" width={28} height={28} />
-      </button>
+      {guestClose || loggedClose ? (
+        <button
+          aria-label="닫기"
+          className="pr-1 text-white"
+          onClick={handleClose}
+        >
+          <Image src="/Close_32.png" alt="닫기" width={28} height={28} />
+        </button>
+      ) : null}
     </div>
   );
 };
