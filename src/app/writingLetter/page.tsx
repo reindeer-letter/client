@@ -1,63 +1,91 @@
 "use client";
 
+/* eslint-disable react/no-array-index-key */
 import instance from "@/api/instance";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import PopUp from "@/components/popUp";
-import axios from "axios";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import "../globals.css";
+import ImageUploader from "@/components/writingLetter/ImageUploader";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/button";
-import useOverlay from "@/hooks/useoverlay";
-import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
-import ImageUploader from "@/components/writingLetter/ImageUploader";
+import useOverlay from "@/hooks/useoverlay";
+import BottomSheetMusicSelect from "@/components/writingLetter/BottomSheetMusicSelect";
+import PopUp from "@/components/popUp";
+import Image from "next/image";
+import CalendarModal from "@/components/writingLetter/CalendarModal";
+import useImagePreview from "@/hooks/useImagePreview";
 
 const Page = () => {
   const overlay = useOverlay();
   const today = new Date();
   const todayFormatted = formatDate(today);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const receiverId = searchParams.get("receiverId");
   const senderNickname = searchParams.get("senderNickname");
+  const { images, handleSelectImage } = useImagePreview(3);
 
-  const defaultImage = "/photo/photo_tape.png";
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
+  const [selectedMusic, setSelectedMusic] = useState<string>("노래 제목");
 
-  const handleDateSelect = (date: string) => {
-    setSelectedDate(date);
-  };
-  const handleUploadSuccess = (url: string) => {
-    setUploadedImageUrl(url);
-  };
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
   const finalDate = selectedDate
     ? formattedDate
     : formatDateStringToISO(todayFormatted);
 
-  useEffect(() => {
-    if (!receiverId || !senderNickname) router.push("/");
-  }, [receiverId, router, senderNickname]);
+  const openMusicSelector = () => {
+    overlay.mount(
+      <BottomSheetMusicSelect
+        onSelect={(title: string) => {
+          setSelectedMusic(title);
+        }}
+        unmount={overlay.unmount}
+      />,
+    );
+  };
 
-  // 편지 전송
+  const openCalendar = () => {
+    overlay.mount(
+      <CalendarModal
+        onSelect={(date: string) => {
+          setSelectedDate(date);
+        }}
+        unmount={overlay.unmount}
+      />,
+    );
+  };
+
   const handleSendLetter = async () => {
     if (!title.trim() || !description.trim()) {
       alert("모든 필드를 채워주세요.");
       return;
     }
+
     try {
+      const uploadPromises = images
+        .filter((item) => item.file)
+        .map(async (item) => {
+          const formData = new FormData();
+          formData.append("file", item.file as File);
+
+          const res = await instance.post("/letters/upload/image", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          const { imageUrl } = res.data;
+          return imageUrl;
+        });
+      const imageUrls = await Promise.all(uploadPromises);
       const payload = {
         title,
         description,
-        imageUrl: uploadedImageUrl,
+        imageUrls,
         bgmUrl: "https://example.com/music.mp3",
         category: "TEXT",
         receiverId: Number(receiverId),
@@ -67,17 +95,12 @@ const Page = () => {
       };
 
       const response = await instance.post("/letters", payload);
-
       if (response.status === 201) router.push("/writingComplete");
     } catch (error) {
       console.error("편지 전송 실패:", error);
-
-      if (axios.isAxiosError(error) && error.response?.status === 401)
-        alert("인증 문제가 발생했습니다. 다시 로그인해주세요.");
-      else alert("편지 전송 실패. 다시 시도해주세요.");
+      alert("편지 전송에 실패했습니다. 다시 시도해주세요.");
     }
   };
-
   const handleOpenPopUp = () => {
     overlay.mount(
       <PopUp
@@ -103,12 +126,20 @@ const Page = () => {
         loggedClose="/home"
         guestClose="/invitation"
       />
-
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
-        <ImageUploader
-          defaultImage={defaultImage}
-          onUploadSuccess={handleUploadSuccess}
-        />
+        <div className="no-scrollbar flex w-full flex-row-reverse space-x-4 space-x-reverse overflow-x-auto px-4">
+          <div style={{ display: "flex", gap: 16 }}>
+            {images.map((item, index) => (
+              <ImageUploader
+                key={index}
+                index={index}
+                previewUrl={item.previewUrl}
+                onSelectImage={handleSelectImage}
+              />
+            ))}
+          </div>
+        </div>
+
         <header className="flex w-full flex-col space-y-4 px-4 pt-6">
           <div className="w-full">
             <input
@@ -130,13 +161,12 @@ const Page = () => {
           />
         </div>
       </main>
-
       <footer className="mx-auto w-full bg-primary-200 px-5 pb-[30px] pt-6">
         <div className="flex w-full flex-col">
           <div className="flex justify-between gap-3">
             <button
               className="ml-3 flex w-full items-center justify-center gap-1 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
-              onClick={() => setIsCalendarOpen(true)}
+              onClick={openCalendar}
             >
               <Image
                 src="/icons/Reservation_28.png"
@@ -147,15 +177,18 @@ const Page = () => {
               <span>{selectedDate || todayFormatted}</span>
             </button>
 
-            <button className="mr-3 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M">
+            <button
+              onClick={openMusicSelector}
+              className="mr-3 flex w-full items-center justify-center gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
+            >
               <Image
                 src="/icons/Music_28.png"
                 alt="노래 아이콘"
                 width={24}
                 height={24}
               />
-              <span className="w-[100px] truncate text-left">
-                노래제목노래제목노래제목노래제목노래제목
+              <span className="max-w-[120px] overflow-hidden truncate whitespace-nowrap">
+                {selectedMusic}
               </span>
             </button>
           </div>
@@ -175,12 +208,6 @@ const Page = () => {
           </div>
         </div>
       </footer>
-      <CalendarModal
-        isOpen={isCalendarOpen}
-        onClose={() => setIsCalendarOpen(false)}
-        onDateSelect={handleDateSelect}
-        selectedDate={selectedDate}
-      />
     </div>
   );
 };

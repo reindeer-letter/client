@@ -35,6 +35,19 @@
   --grey-900: #292929;
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-out;
+}
+
 ::-webkit-scrollbar-thumb {
   background-color: var(--line-500);
   border-radius: 10px;

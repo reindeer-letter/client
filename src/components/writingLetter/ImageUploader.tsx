@@ -1,81 +1,101 @@
-import React from "react";
+"use client";
+
+import React, { ChangeEvent } from "react";
 import Image from "next/image";
-import useImageUpload from "@/hooks/useImageUpload";
+
+interface ImageUploaderProps {
+  index: number;
+  previewUrl: string;
+  onSelectImage: (index: number, file: File | null, preview: string) => void;
+}
 
 const ImageUploader = ({
-  defaultImage,
-  onUploadSuccess,
-}: {
-  defaultImage: string;
-  onUploadSuccess: (url: string) => void;
-}) => {
-  const { uploadedImage, handleImageUpload, handleImageDelete, isUploading } =
-    useImageUpload(defaultImage, onUploadSuccess);
+  index,
+  previewUrl,
+  onSelectImage,
+}: ImageUploaderProps) => {
+  const inputId = `file-input-${index}`;
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) handleImageUpload(file);
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (loadEvent) => {
+      if (typeof loadEvent.target?.result === "string") {
+        const base64Url = loadEvent.target.result;
+        onSelectImage(index, file, base64Url);
+      }
+    };
+    reader.readAsDataURL(file);
   };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onSelectImage(index, null, "");
+  };
+
+  const displayImage = previewUrl || "/photo/photo.png";
 
   return (
     <div
-      className="relative mb-4 h-[280px] w-[280px] cursor-pointer rounded-lg border border-gray-300"
-      onClick={() => document.getElementById("file-input")?.click()}
+      className="relative mb-8 mt-6 h-[280px] w-[280px] cursor-pointer rounded-lg border border-gray-300"
+      onClick={() => document.getElementById(inputId)?.click()}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          document.getElementById("file-input")?.click();
+          document.getElementById(inputId)?.click();
         }
       }}
       role="button"
       tabIndex={0}
     >
-      <Image
-        src={uploadedImage}
-        alt="업로드된 사진"
-        fill
-        className="aspect-square object-cover"
-      />
+      <div className="relative z-10 h-full w-full overflow-hidden rounded-lg">
+        <Image
+          src={displayImage}
+          alt="미리보기 이미지"
+          fill
+          unoptimized
+          className="aspect-square object-cover"
+        />
+      </div>
 
-      <div className="absolute left-[50%] top-[-22px] z-10 -translate-x-1/2">
+      <div className="pointer-events-none absolute left-1/2 top-[-22px] z-20 -translate-x-1/2">
         <Image
           src="/photo/tape_blue.png"
           alt="테이프 위"
           width={81}
           height={40}
+          className="drop-shadow-lg"
         />
       </div>
-      <div className="absolute bottom-[-26px] left-[50%] z-10 -translate-x-1/2">
+      <div className="pointer-events-none absolute bottom-[-26px] left-1/2 z-20 -translate-x-1/2">
         <Image
           src="/photo/tape_yellow.png"
           alt="테이프 아래"
           width={102}
           height={40}
+          className="drop-shadow-lg"
         />
       </div>
 
-      {uploadedImage !== defaultImage && (
-        <button
-          className="absolute right-0 top-0 z-20 rounded-full bg-black p-1"
-          onClick={handleImageDelete}
-        >
+      {previewUrl && (
+        <button className="absolute right-0 top-0 z-30" onClick={handleDelete}>
           <Image
-            src="/icons/close.png"
+            src="/icons/photo_delete.png"
             alt="이미지 삭제"
-            width={26}
-            height={26}
+            width={45}
+            height={45}
           />
         </button>
       )}
 
-      {isUploading && <p>업로드 중...</p>}
-
       <input
-        id="file-input"
+        id={inputId}
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={onFileChange}
+        onChange={handleFileChange}
       />
     </div>
   );

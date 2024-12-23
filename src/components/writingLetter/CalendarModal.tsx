@@ -5,24 +5,15 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import Button from "../button";
 
 interface CalendarModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onDateSelect: (date: string) => void;
-  selectedDate?: string;
+  onSelect: (date: string) => void;
+  unmount: () => void;
 }
 
-const CalendarModal = ({
-  isOpen,
-  onClose,
-  onDateSelect,
-  selectedDate: initialSelectedDate,
-}: CalendarModalProps) => {
+const CalendarModal = ({ onSelect, unmount }: CalendarModalProps) => {
   const today = useMemo(() => new Date(), []);
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
-  const [selectedDate, setSelectedDate] = useState<string | undefined>(
-    initialSelectedDate,
-  );
+  const [selectedDate, setSelectedDate] = useState<string>("");
 
   const daysOfWeek = useMemo(
     () => ["일", "월", "화", "수", "목", "금", "토"],
@@ -31,22 +22,16 @@ const CalendarModal = ({
 
   const getFormattedDate = useCallback(
     (year: number, month: number, date: number) => {
-      // const dayOfWeek = daysOfWeek[new Date(year, month, date).getDay()];
-      return `${year}년 ${month + 1}월 ${date}일 `;
+      return `${year}년 ${month + 1}월 ${date}일`;
     },
-    [daysOfWeek],
+    [],
   );
 
   useEffect(() => {
-    if (isOpen && !selectedDate)
-      setSelectedDate(
-        getFormattedDate(
-          today.getFullYear(),
-          today.getMonth(),
-          today.getDate(),
-        ),
-      );
-  }, [isOpen, selectedDate, getFormattedDate, today]);
+    setSelectedDate(
+      getFormattedDate(today.getFullYear(), today.getMonth(), today.getDate()),
+    );
+  }, [getFormattedDate, today]);
 
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
@@ -77,20 +62,24 @@ const CalendarModal = ({
   };
 
   const handleComplete = () => {
-    if (selectedDate) onDateSelect(selectedDate);
-
-    onClose();
+    if (selectedDate) onSelect(selectedDate);
+    unmount();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md rounded-lg bg-White p-6 text-grey-800">
-        <div className="mb-9 flex items-center justify-between text-Head text-line-700">
-          <span>언제 보낼까요?</span>
-          <button onClick={onClose} aria-label="닫기">
-            <Image src="/Close_32.png" width={24} height={24} alt="close" />
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
+      <div className="absolute inset-0 bg-black opacity-50" onClick={unmount} />
+
+      <div className="animate-slideUp relative z-[1001] w-full max-w-[600px] rounded-t-3xl bg-white px-6 pb-8 pt-6 shadow-lg">
+        <div className="mb-4 flex items-center justify-between p-2">
+          <h2 className="text-Head text-line-700">언제 보낼까요?</h2>
+          <button onClick={unmount}>
+            <Image
+              src="/Close_32.png"
+              alt="닫기 아이콘"
+              width={24}
+              height={24}
+            />
           </button>
         </div>
 
@@ -102,14 +91,10 @@ const CalendarModal = ({
           >
             <Image src="/Angle-left.png" width={24} height={24} alt="이전 달" />
           </button>
-          <h2 className="flex-shrink-0 text-lg font-semibold">
+          <h2 className="text-lg font-semibold">
             {currentYear}.{currentMonth + 1}
           </h2>
-          <button
-            className="text-xl text-grey-800"
-            onClick={handleNextMonth}
-            aria-label="다음 달"
-          >
+          <button onClick={handleNextMonth} aria-label="다음 달">
             <Image
               src="/Angle-right.png"
               width={24}
@@ -162,15 +147,22 @@ const CalendarModal = ({
             })}
           </div>
           <hr className="mb-0 mt-2 border-line-100" />
-        </div>
-        <div className="mb-8 mt-3 text-center">
-          <p className="mb-4 text-left text-Body01-SB text-grey-900">
+          <p className="my-4 ml-1 text-left text-Body01-SB text-grey-900">
             {selectedDate}
           </p>
-          <Button buttonType="Primary" onClick={handleComplete}>
-            완료
-          </Button>
         </div>
+
+        <footer className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-1 pb-[56px]">
+          <div className="flex w-full flex-col space-y-3">
+            <Button
+              buttonType="Primary"
+              className="w-full"
+              onClick={handleComplete}
+            >
+              완료
+            </Button>
+          </div>
+        </footer>
       </div>
     </div>
   );
