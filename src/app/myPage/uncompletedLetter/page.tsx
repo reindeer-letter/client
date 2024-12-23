@@ -25,18 +25,16 @@ export default async function Page({ searchParams }: PageProps) {
         <div className="text-center">작성 중인 편지</div>
       </header>
       <section className="flex gap-2 px-5 py-3">
-        {CATEGORIES.map((categoryItem) => (
-          <Link
-            href={`/myPage/uncompletedLetter?category=${categoryItem.value}`}
-            key={categoryItem.key}
-          >
-            <CategoryButton
-              key={categoryItem.key}
-              category={categoryItem}
-              currentCategory={category}
-            />
-          </Link>
-        ))}
+        <Link
+          href={`/myPage/uncompletedLetter?category=${CATEGORIES[0].value}`}
+          key={CATEGORIES[0].key}
+        >
+          <CategoryButton
+            key={CATEGORIES[0].key}
+            category={CATEGORIES[0]}
+            currentCategory={category}
+          />
+        </Link>
       </section>
       <UncompletedMailScroll
         route={`/letters/drafts/paginated?category=${category || ""}`}
