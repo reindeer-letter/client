@@ -135,7 +135,7 @@ const Page = () => {
         guestClose="/invitation"
       />
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
-        <div className="no-scrollbar flex w-full flex-row-reverse space-x-4 space-x-reverse overflow-x-auto px-4">
+        <div className="no-scrollbar space-x flex w-full flex-row space-x-4 overflow-x-auto px-4">
           <div style={{ display: "flex", gap: 16 }}>
             {images.map((item, index) => (
               <ImageUploader
