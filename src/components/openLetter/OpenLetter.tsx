@@ -44,9 +44,11 @@ export default function OpenLetter() {
         </div>
 
         <div className="relative flex w-full justify-center">
-          {letter?.imageUrl && (
-            <Image src={letter.imageUrl} alt="Letter Image" fill priority />
-          )}
+          {letter?.imageUrls &&
+            letter.imageUrls.map((url) => (
+              // FIXME: 백엔드 데이터가 바뀌어서 임시로 map을 사용
+              <Image key={url} src={url} alt="Letter Image" fill priority />
+            ))}
         </div>
       </main>
     </div>

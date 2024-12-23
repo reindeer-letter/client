@@ -2,7 +2,7 @@
 
 /* eslint-disable react/no-array-index-key */
 import instance from "@/api/instance";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "../globals.css";
 import ImageUploader from "@/components/writingLetter/ImageUploader";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,6 +16,7 @@ import PopUp from "@/components/popUp";
 import Image from "next/image";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
 import useImagePreview from "@/hooks/useImagePreview";
+import useSaveDraft from "@/hooks/useSaveDraft";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -26,22 +27,69 @@ const Page = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [draftId, setDraftId] = useState<number | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const receiverId = searchParams.get("receiverId");
   const senderNickname = searchParams.get("senderNickname");
+  const draftMode = searchParams.get("draftMode");
   const { images, handleSelectImage } = useImagePreview(3);
 
   const [selectedMusicTitle, setSelectedMusicTitle] =
     useState<string>("노래 제목");
   const [selectedMusicUrl, setSelectedMusicUrl] = useState<string>("");
 
+  const handleInitialData = useCallback(
+    ({
+      title,
+      description,
+      scheduledAt,
+      bgmUrl,
+    }: {
+      title: string;
+      description: string;
+      scheduledAt: string;
+      bgmUrl: string;
+    }) => {
+      setTitle(title);
+      setDescription(description);
+      setSelectedDate(
+        scheduledAt
+          .split("-")
+          .map((item) => item.padStart(2, "0"))
+          .map((item, index) => item + ["년", "월", "일"][index])
+          .join(" "),
+      );
+      setSelectedMusicUrl(bgmUrl);
+      setSelectedMusicTitle(bgmUrl.split("/").pop() || "노래 제목");
+    },
+    [],
+  );
+
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
   const finalDate = selectedDate
     ? formattedDate
     : formatDateStringToISO(todayFormatted);
+
+  useEffect(() => {
+    if (!receiverId || !senderNickname) router.push("/home");
+  }, [receiverId, senderNickname, router]);
+
+  useSaveDraft({
+    delay: 10000,
+    bgmUrl: selectedMusicUrl,
+    description,
+    draftMode,
+    draftId,
+    setDraftId,
+    handleInitialData,
+    receiverId: receiverId ? Number(receiverId) : 0,
+    scheduledAt: finalDate,
+    senderNickname: senderNickname?.trim() || "익명의 친구",
+    title,
+  });
 
   const openMusicSelector = async () => {
     overlay.mount(
@@ -100,7 +148,10 @@ const Page = () => {
         senderNickName: senderNickname?.trim() || "익명의 친구",
       };
 
-      const response = await instance.post("/letters", payload);
+      const response = await instance.post(
+        draftId ? `/letters/draft/${draftId}/send` : "/letters",
+        payload,
+      );
       if (response.status === 201) router.push("/writingComplete");
     } catch (error) {
       console.error("편지 전송 실패:", error);

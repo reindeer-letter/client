@@ -3,7 +3,7 @@
 import Image from "next/image";
 import useOverlay from "@/hooks/useoverlay";
 import { useRouter } from "next/navigation";
-import { GetLettersMyLettersResponse, Letter } from "@/types/letters";
+import { GetLettersDraftsPaginatedResponse } from "@/types/letters";
 import useInfiniteFetch from "@/hooks/useInfiniteFetch";
 import MailScrollSkeleton from "@/app/home/skeletons/mailScrollSkeleton";
 import useMutation from "@/hooks/useMutation";
@@ -27,16 +27,17 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
     hasMore,
     isCancelled,
     setData,
-  } = useInfiniteFetch<GetLettersMyLettersResponse["items"][0]>({
+  } = useInfiniteFetch<GetLettersDraftsPaginatedResponse["items"][0]>({
     route,
   });
-  const { mutate } = useMutation<Letter>("/letters/draft", "delete");
+  const { mutate } =
+    useMutation<GetLettersDraftsPaginatedResponse["items"][0]>("delete");
   const router = useRouter();
   const overlay = useOverlay();
 
   if (isError && !isCancelled)
     return (
-      <div className="mt-[120px] pb-[313px] text-center text-Body01-B text-grey-400">
+      <div className="mt-[120px] px-5 pb-[313px] text-center text-Body01-B text-grey-400">
         <div>편지를 불러오는 중에 오류가 발생했습니다.</div>
         <div className="text-grey-600">{error?.message}</div>
         <Image
@@ -63,25 +64,31 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
         ? data.map(
             ({
               id,
-              title,
-              scheduledAt,
-              senderNickname,
-              description,
-              bgmUrl,
-              category,
-              imageUrl,
+              draftData: {
+                receiverId,
+                title,
+                scheduledAt,
+                senderNickname,
+                description,
+                bgmUrl,
+                category,
+                imageUrls,
+              },
             }) => {
               return (
                 <section key={id} className="flex flex-col items-center gap-3">
                   <UncompletedMail
-                    id={id}
+                    draftId={id}
+                    receiverId={receiverId}
+                    // FIXME: receiverNickName 데이터 오면 수정
+                    receiverNickName={senderNickname}
                     title={title}
-                    nickName={senderNickname}
-                    writtenDate={scheduledAt}
+                    senderNickname={senderNickname}
+                    scheduledAt={scheduledAt}
                     description={description}
                     bgmUrl={bgmUrl}
                     category={category}
-                    imageUrl={imageUrl}
+                    imageUrl={imageUrls}
                   />
                   <section className="flex w-[350px] justify-end">
                     <button
@@ -104,7 +111,7 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
                           );
                         });
                         if (isAgree)
-                          await mutate(data, {
+                          await mutate(data, `/letters/draft/${id}`, {
                             onMutate: () => {
                               setData((prev) =>
                                 prev

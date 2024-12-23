@@ -2,7 +2,7 @@ import formateISODateToYYYYMMDD from "@/utils/formatDate";
 import Image from "next/image";
 
 interface FutureMailProps {
-  scheduledAt: string;
+  scheduledAt: string | null;
 }
 
 export default function FutureMail({ scheduledAt }: FutureMailProps) {
@@ -19,7 +19,9 @@ export default function FutureMail({ scheduledAt }: FutureMailProps) {
           sizes="48"
           priority
         />
-        <div className="text-center text-Body01-M text-grey-100">{`${formateISODateToYYYYMMDD(scheduledAt)}`}</div>
+        <div className="text-center text-Body01-M text-grey-100">
+          {scheduledAt && formateISODateToYYYYMMDD(scheduledAt)}
+        </div>
       </header>
     </section>
   );
