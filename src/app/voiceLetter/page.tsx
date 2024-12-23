@@ -19,7 +19,6 @@ const Page = () => {
   const todayFormatted = formatDate(today);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
-  const [description] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,6 +26,7 @@ const Page = () => {
   const senderNickname = searchParams.get("senderNickname");
 
   const [uploadedImageUrl] = useState<string>("");
+
 
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
@@ -38,32 +38,49 @@ const Page = () => {
     if (!receiverId || !senderNickname) router.push("/");
   }, [receiverId, router, senderNickname]);
 
-  // 편지 전송
+  const handleRecordingComplete = async (audioBlob: Blob) => {
+    try {
+      const url = await uploadVoice(audioBlob);
+      setAudioUrl(url);
+    } catch (error) {
+      console.error("음성 파일 업로드 실패:", error);
+      alert("음성 파일 업로드에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   const handleSendLetter = async () => {
-    if (!title.trim() || !description.trim()) {
-      alert("모든 필드를 채워주세요.");
+    if (!title.trim()) {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+
+    if (!audioUrl) {
+      alert("음성 녹음이 필요합니다.");
       return;
     }
 
     try {
       const payload = {
         title,
-        description,
-        imageUrl: uploadedImageUrl,
-        bgmUrl: "https://example.com/music.mp3",
-        category: "VOICE",
+        description: "",
+        imageUrls: uploadedImageUrl ? [uploadedImageUrl] : [],
+        bgmUrl: null,
+        category: "VOICE" as const,
         receiverId: Number(receiverId),
         isOpen: false,
         scheduledAt: finalDate,
         senderNickName: senderNickname?.trim() || "익명의 친구",
+        audioUrl,
       };
 
       const response = await instance.post("/letters", payload);
-
       if (response.status === 201) router.push("/writingComplete");
     } catch (error) {
       console.error("편지 전송 실패:", error);
-      alert("편지 전송에 실패했습니다. 다시 시도해주세요.");
+      if (axios.isAxiosError(error) && error.response?.status === 401)
+        alert("인증 문제가 발생했습니다. 다시 로그인해주세요.");
+      else alert("편지 전송 실패. 다시 시도해주세요.");
+
     }
   };
 
@@ -104,6 +121,7 @@ const Page = () => {
       />
 
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
+
         <header className="flex w-full flex-col space-y-4 px-4">
           <div className="w-full">
             <input
@@ -115,6 +133,10 @@ const Page = () => {
             />
           </div>
         </header>
+        <div className="flex-1" />
+        <div className="mb-5">
+          <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+        </div>
       </main>
 
       <footer className="mx-auto w-full bg-primary-200 px-5 pb-[40px] pt-6">
@@ -143,7 +165,7 @@ const Page = () => {
               {daysDifference !== null
                 ? daysDifference === 0
                   ? "오늘 편지 보내기"
-                  : `${daysDifference}일 뒤 편지 보내기`
+                  : `${daysDifference} 뒤 편지 보내기`
                 : "오늘 편지 보내기"}
             </Button>
           </div>
