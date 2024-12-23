@@ -54,9 +54,7 @@ const Page = () => {
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
     try {
-      console.log("녹음 완료, 업로드 시작"); // 디버깅용
       const url = await uploadVoice(audioBlob);
-      console.log("업로드된 URL:", url); // 디버깅용
       setAudioUrl(url);
     } catch (error) {
       console.error("음성 파일 업로드 실패:", error);
@@ -65,8 +63,6 @@ const Page = () => {
   };
 
   const handleSendLetter = async () => {
-    console.log("현재 상태:", { title, audioUrl }); // 디버깅용
-
     if (!title.trim()) {
       alert("제목을 입력해주세요.");
       return;
@@ -81,7 +77,7 @@ const Page = () => {
       const payload = {
         title,
         description: "",
-        imageUrl: uploadedImageUrl || null,
+        imageUrls: uploadedImageUrl ? [uploadedImageUrl] : [],
         bgmUrl: null,
         category: "VOICE" as const,
         receiverId: Number(receiverId),
@@ -90,8 +86,6 @@ const Page = () => {
         senderNickName: senderNickname?.trim() || "익명의 친구",
         audioUrl,
       };
-
-      console.log("전송할 데이터:", payload); // 디버깅용
 
       const response = await instance.post("/letters", payload);
       if (response.status === 201) router.push("/writingComplete");
