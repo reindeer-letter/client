@@ -12,9 +12,6 @@ import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
-import ImageUploader from "@/components/writingLetter/ImageUploader";
-import VoiceRecorder from "@/components/voiceLetter/VoiceRecorder";
-import useVoiceUpload from "@/hooks/useVoiceUpload";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -28,15 +25,9 @@ const Page = () => {
   const receiverId = searchParams.get("receiverId");
   const senderNickname = searchParams.get("senderNickname");
 
-  const defaultImage = "/photo/photo_tape.png";
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
-  const [audioUrl, setAudioUrl] = useState<string>("");
+  const [uploadedImageUrl] = useState<string>("");
 
-  const { uploadVoice } = useVoiceUpload(setAudioUrl);
 
-  const handleUploadSuccess = (url: string) => {
-    setUploadedImageUrl(url);
-  };
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
   const finalDate = selectedDate
@@ -129,11 +120,8 @@ const Page = () => {
         guestClose="/invitation"
       />
 
-      <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4">
-        <ImageUploader
-          defaultImage={defaultImage}
-          onUploadSuccess={handleUploadSuccess}
-        />
+      <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
+
         <header className="flex w-full flex-col space-y-4 px-4">
           <div className="w-full">
             <input
