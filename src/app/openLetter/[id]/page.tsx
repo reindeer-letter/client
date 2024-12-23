@@ -1,14 +1,14 @@
 "use client";
 
+/* eslint-disable react/no-array-index-key */
 import instance from "@/api/instance";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import NavBar from "@/components/NavBar";
-import OpenLetterImage from "@/components/openLetter/OpenLetterImage";
 
 const Page = () => {
-  const defaultImage = "/photo/photo1.png";
+  const defaultImage = "/photo/photo.png";
   const [letter, setLetter] = useState<Letter | null>(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
@@ -16,10 +16,11 @@ const Page = () => {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
   interface Letter {
+    senderNickname: string;
     id: number;
     title: string;
     description: string;
-    imageUrl: string[];
+    imageUrls: string[];
     bgmUrl: string;
     audioUrl: string;
     senderNickName: string;
@@ -48,6 +49,8 @@ const Page = () => {
       setLoading(true);
       try {
         const response = await instance.get<Letter>(`/letters/${id}`);
+        console.log("✅ API 응답 확인:", response.data);
+        console.log("✅ 이미지 URLs 확인:", response.data.imageUrls);
         setLetter(response.data);
       } catch (error) {
         console.error("Error fetching letter:", error);
@@ -58,6 +61,28 @@ const Page = () => {
 
     fetchLetter();
   }, [id]);
+
+  const imageUrls = letter?.imageUrls || [];
+  const isSingleImage = imageUrls.length === 1;
+
+  const encodeUrl = (url: string) => {
+    try {
+      return encodeURI(url);
+    } catch (error) {
+      console.error("URL 인코딩 실패:", error);
+      return "";
+    }
+  };
+
+  const getFileName = (url: string) => {
+    if (!url) return "음악 없음";
+    return (
+      url
+        .split("/")
+        .pop()
+        ?.replace(/\.[^/.]+$/, "") || "음악 없음"
+    );
+  };
 
   const handlePlayMusic = () => {
     if (!letter?.bgmUrl) return;
@@ -125,31 +150,77 @@ const Page = () => {
           <div className="text-center text-xl">로딩 중...</div>
         ) : (
           <>
-            <div className="flex space-x-2">
-              {letter?.imageUrl?.map((url) => (
-                <OpenLetterImage key={url} defaultImage={url} />
-              )) || <OpenLetterImage defaultImage={defaultImage} />}
-            </div>
+            {isSingleImage ? (
+              <div className="flex w-full items-center justify-center">
+                <div className="relative h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300">
+                  <Image
+                    src={encodeUrl(imageUrls[0])}
+                    alt="단일 이미지"
+                    layout="fill"
+                    objectFit="cover"
+                    unoptimized
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="no-scrollbar flex w-full flex-row space-x-4 overflow-x-auto px-4">
+                <div style={{ display: "flex", gap: 16 }}>
+                  {imageUrls.length > 0
+                    ? imageUrls.map((url, index) => (
+                        <div
+                          key={index}
+                          className="relative h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300"
+                        >
+                          <Image
+                            src={encodeUrl(url)}
+                            alt={`이미지 ${index + 1}`}
+                            layout="fill"
+                            objectFit="cover"
+                            unoptimized
+                            onError={(e) => {
+                              console.error(`❌ 이미지  오류: ${url}:`, e);
+                            }}
+                          />
+                        </div>
+                      ))
+                    : Array.from({ length: 3 }).map((_, index) => (
+                        <div
+                          key={index}
+                          className="relative h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300"
+                        >
+                          <Image
+                            src={defaultImage}
+                            alt={`기본 이미지 ${index + 1}`}
+                            layout="fill"
+                            objectFit="cover"
+                          />
+                        </div>
+                      ))}
+                </div>
+              </div>
+            )}
 
             {letter?.bgmUrl && letter.category === "TEXT" ? (
-              <button
-                onClick={handlePlayMusic}
-                className="mr-3 flex w-[162px] items-center justify-start gap-2 rounded-full bg-primary-100 px-2 py-2 text-Body02-M"
-              >
-                <Image
-                  src={
-                    isPlaying
-                      ? "/icons/Muisc_Pause_28.png"
-                      : "/icons/Music_Play_28.png"
-                  }
-                  alt="노래 아이콘"
-                  width={24}
-                  height={24}
-                />
-                <span className="w-[100px] truncate text-left">
-                  {letter?.bgmUrl ? "음악 재생 중..." : "음악 없음"}
-                </span>
-              </button>
+              <div className="mt-6 flex w-full justify-start">
+                <button
+                  onClick={handlePlayMusic}
+                  className="ml-3 flex w-auto items-center gap-2 rounded-full bg-primary-100 px-4 py-3 text-Body02-M"
+                >
+                  <Image
+                    src={
+                      isPlaying
+                        ? "/icons/Muisc_Pause_28.png"
+                        : "/icons/Music_Play_28.png"
+                    }
+                    alt="노래 아이콘"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="w-[60px] truncate text-left">
+                    {getFileName(letter.bgmUrl)}
+                  </span>
+                </button>
+              </div>
             ) : null}
 
             <header className="flex w-full flex-col space-y-4 px-4 pt-6">
@@ -161,6 +232,23 @@ const Page = () => {
             </header>
 
             {renderContent(letter)}
+
+            <div className="mt-4 w-full text-right">
+              <div className="w-full rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-xl text-[#999]">
+                {letter?.createdAt && letter?.senderNickname ? (
+                  <>
+                    {new Date(letter.createdAt).toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                    에 {letter.senderNickname}가
+                  </>
+                ) : (
+                  "작성자 정보 없음"
+                )}
+              </div>
+            </div>
 
             <div className="w-full text-right">
               <div className="w-full rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-xl text-[#999]">
