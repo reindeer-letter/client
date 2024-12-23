@@ -13,7 +13,7 @@ export default function Error({ error }: { error: Error }) {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-8 bg-linkLanding bg-cover bg-center">
       <div className="flex items-center justify-center gap-2">
-        <h1 className="text-3xl font-bold text-line-800">{error.message}</h1>
+        <h1 className="text-xl font-bold text-line-800">{error.message}</h1>
       </div>
       <Link
         href="/"
