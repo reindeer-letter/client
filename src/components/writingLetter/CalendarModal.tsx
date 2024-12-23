@@ -152,16 +152,14 @@ const CalendarModal = ({ onSelect, unmount }: CalendarModalProps) => {
           </p>
         </div>
 
-        <footer className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-1 pb-[56px]">
-          <div className="flex w-full flex-col space-y-3">
-            <Button
-              buttonType="Primary"
-              className="w-full"
-              onClick={handleComplete}
-            >
-              완료
-            </Button>
-          </div>
+        <footer className="mt-8 flex w-full flex-col items-center gap-4">
+          <Button
+            buttonType="Primary"
+            className="w-full"
+            onClick={handleComplete}
+          >
+            완료
+          </Button>
         </footer>
       </div>
     </div>

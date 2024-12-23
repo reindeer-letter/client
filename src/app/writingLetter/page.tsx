@@ -16,6 +16,7 @@ import PopUp from "@/components/popUp";
 import Image from "next/image";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
 import useImagePreview from "@/hooks/useImagePreview";
+import Loading from "../loading";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -25,6 +26,7 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,7 +34,9 @@ const Page = () => {
   const senderNickname = searchParams.get("senderNickname");
   const { images, handleSelectImage } = useImagePreview(3);
 
-  const [selectedMusic, setSelectedMusic] = useState<string>("노래 제목");
+  const [selectedMusicTitle, setSelectedMusicTitle] =
+    useState<string>("노래 제목");
+  const [selectedMusicUrl, setSelectedMusicUrl] = useState<string>("");
 
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
@@ -40,11 +44,12 @@ const Page = () => {
     ? formattedDate
     : formatDateStringToISO(todayFormatted);
 
-  const openMusicSelector = () => {
+  const openMusicSelector = async () => {
     overlay.mount(
       <BottomSheetMusicSelect
-        onSelect={(title: string) => {
-          setSelectedMusic(title);
+        onSelect={(title: string, url: string) => {
+          setSelectedMusicTitle(title);
+          setSelectedMusicUrl(url);
         }}
         unmount={overlay.unmount}
       />,
@@ -67,6 +72,7 @@ const Page = () => {
       alert("모든 필드를 채워주세요.");
       return;
     }
+    setIsLoading(true);
 
     try {
       const uploadPromises = images
@@ -82,11 +88,12 @@ const Page = () => {
           return imageUrl;
         });
       const imageUrls = await Promise.all(uploadPromises);
+
       const payload = {
         title,
         description,
         imageUrls,
-        bgmUrl: "https://example.com/music.mp3",
+        bgmUrl: selectedMusicUrl,
         category: "TEXT",
         receiverId: Number(receiverId),
         isOpen: false,
@@ -99,6 +106,8 @@ const Page = () => {
     } catch (error) {
       console.error("편지 전송 실패:", error);
       alert("편지 전송에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleOpenPopUp = () => {
@@ -113,6 +122,7 @@ const Page = () => {
       />,
     );
   };
+  if (isLoading) return <Loading />;
 
   return (
     <div
@@ -188,7 +198,7 @@ const Page = () => {
                 height={24}
               />
               <span className="max-w-[120px] overflow-hidden truncate whitespace-nowrap">
-                {selectedMusic}
+                {selectedMusicTitle}
               </span>
             </button>
           </div>
