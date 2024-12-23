@@ -46,7 +46,13 @@ const Page = () => {
           }`}
           aria-label="글"
         >
-          <span className="text-grey-900">글</span>
+          <span
+            className={`${
+              selected === "TEXT" ? "text-Title01-SB" : "text-Title01-R"
+            } text-grey-900`}
+          >
+            글
+          </span>
           <Image
             src="/character/Type_letter.png"
             alt="글로 남기기 아이콘"
@@ -61,7 +67,13 @@ const Page = () => {
           }`}
           aria-label="글"
         >
-          <span className="text-grey-900">목소리</span>
+          <span
+            className={`${
+              selected === "VOICE" ? "text-Title01-SB" : "text-Title01-R"
+            } text-grey-900`}
+          >
+            목소리
+          </span>
           <Image
             src="/character/Type_voice.png"
             alt="목소리"

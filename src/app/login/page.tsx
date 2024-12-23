@@ -6,8 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import instance from "@/api/instance";
-import useOverlay from "@/hooks/useoverlay";
-import PopUp from "@/components/popUp";
+
 import { loginSchema, LoginFormInputs } from "@/utils/loginSchema";
 import HighlightedText from "@/components/HighlightedText";
 import Button from "@/components/button";
@@ -19,7 +18,7 @@ import { setCookie } from "@/lib/cookie";
 const LoginPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const overlay = useOverlay();
+
   const {
     register,
     handleSubmit,
@@ -77,17 +76,34 @@ const LoginPage = () => {
       setIsSubmitting(false);
     }
   };
-  const handleSimpleStartClick = () => {
-    overlay.mount(
-      <PopUp
-        button="확인"
-        title="준비 중 입니다."
-        description="현재 기능은 준비 중입니다."
-        onConfirm={() => overlay.unmount()}
-        onCancel={() => overlay.unmount()}
-        unmount={overlay.unmount}
-      />,
+
+  const handleKakaoLogin = () => {
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI_KAKAO;
+
+    const kakaoAuthUrl = new URL("https://kauth.kakao.com/oauth/authorize");
+    kakaoAuthUrl.searchParams.append(
+      "client_id",
+      process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID!,
     );
+    kakaoAuthUrl.searchParams.append("redirect_uri", redirectUri!);
+    kakaoAuthUrl.searchParams.append("response_type", "code");
+
+    window.location.href = kakaoAuthUrl.toString();
+  };
+
+  const handleGoogleLogin = () => {
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
+
+    const googleAuthUrl = new URL("https://accounts.google.com/o/oauth2/auth");
+    googleAuthUrl.searchParams.append(
+      "client_id",
+      process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+    );
+    googleAuthUrl.searchParams.append("redirect_uri", redirectUri!);
+    googleAuthUrl.searchParams.append("response_type", "code");
+    googleAuthUrl.searchParams.append("scope", "email profile openid");
+
+    window.location.href = googleAuthUrl.toString();
   };
 
   return (
@@ -149,10 +165,10 @@ const LoginPage = () => {
         </div>
 
         <div className="flex items-center justify-center space-x-6">
-          <button onClick={handleSimpleStartClick}>
+          <button onClick={handleKakaoLogin}>
             <Image src="/login/kakao.png" width={50} height={50} alt="카카오" />
           </button>
-          <button onClick={handleSimpleStartClick}>
+          <button onClick={handleGoogleLogin}>
             <Image src="/login/google.png" width={50} height={50} alt="구글" />
           </button>
         </div>

@@ -1,8 +1,15 @@
 "use client";
 
+import { isAxiosError } from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Error({ error }: { error: Error }) {
+  const router = useRouter();
+  if (isAxiosError(error) && error.response?.status === 401) {
+    router.push("/login");
+    return null;
+  }
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-8 bg-linkLanding bg-cover bg-center">
       <div className="flex items-center justify-center gap-2">

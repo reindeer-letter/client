@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import "../globals.css";
 import Image from "next/image";
 import PopUp from "@/components/popUp";
-import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/button";
 import useOverlay from "@/hooks/useoverlay";
@@ -21,7 +20,6 @@ const Page = () => {
   const overlay = useOverlay();
   const today = new Date();
   const todayFormatted = formatDate(today);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const router = useRouter();
@@ -36,9 +34,6 @@ const Page = () => {
 
   const { uploadVoice } = useVoiceUpload(setAudioUrl);
 
-  const handleDateSelect = (date: string) => {
-    setSelectedDate(date);
-  };
   const handleUploadSuccess = (url: string) => {
     setUploadedImageUrl(url);
   };
@@ -94,6 +89,7 @@ const Page = () => {
       if (axios.isAxiosError(error) && error.response?.status === 401)
         alert("인증 문제가 발생했습니다. 다시 로그인해주세요.");
       else alert("편지 전송 실패. 다시 시도해주세요.");
+
     }
   };
 
@@ -105,6 +101,16 @@ const Page = () => {
         title="기억을 전달할까요?"
         onConfirm={handleSendLetter}
         onCancel={() => overlay.unmount()}
+        unmount={overlay.unmount}
+      />,
+    );
+  };
+  const openCalendar = () => {
+    overlay.mount(
+      <CalendarModal
+        onSelect={(date: string) => {
+          setSelectedDate(date);
+        }}
         unmount={overlay.unmount}
       />,
     );
@@ -150,7 +156,7 @@ const Page = () => {
           <div className="ml-4 flex">
             <button
               className="flex items-center gap-1 rounded-full bg-primary-100 px-6 py-2 text-Body02-M"
-              onClick={() => setIsCalendarOpen(true)}
+              onClick={openCalendar}
             >
               <Image
                 src="/icons/Reservation_28.png"
@@ -177,13 +183,6 @@ const Page = () => {
           </div>
         </div>
       </footer>
-
-      <CalendarModal
-        isOpen={isCalendarOpen}
-        onClose={() => setIsCalendarOpen(false)}
-        onDateSelect={handleDateSelect}
-        selectedDate={selectedDate}
-      />
     </div>
   );
 };

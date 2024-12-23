@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -10,11 +12,16 @@ import { isAxiosError } from "axios";
 import Button from "@/components/button";
 import ProfileCustomization from "@/components/profile/ProfileCustomization";
 import { ProfileFormData, profileSchema } from "@/utils/signUpSchema";
+import { setCookie } from "@/lib/cookie";
+import { useUserStore } from "@/providers/userStoreProvider";
 
 export default function ProfilePage() {
-  const [signUpData, setSignUpData] = useState<{
+  const [userData, setUserData] = useState<{
+    kakaoId?: string;
     email: string;
-    password: string;
+    password?: string;
+    googleId?: string;
+    isSocialLogin: boolean;
   } | null>(null);
 
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
@@ -22,7 +29,9 @@ export default function ProfilePage() {
   const [selectedScarf, setSelectedScarf] = useState<string>("RED");
   const [selectedSkin, setSelectedSkin] = useState<string>("BROWN");
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
+
   const router = useRouter();
+  const login = useUserStore((store) => store.login);
 
   const {
     register,
@@ -39,12 +48,18 @@ export default function ProfilePage() {
   const nicknameValue = watch("nickname");
 
   useEffect(() => {
-    const data = localStorage.getItem("signUpData");
-    if (data) setSignUpData(JSON.parse(data));
+    // 카카오 사용자 또는 구글 사용자 데이터 확인
+    const kakaoData = localStorage.getItem("kakaoUserData");
+    const googleData = localStorage.getItem("googleUserData");
+    if (kakaoData)
+      setUserData({ ...JSON.parse(kakaoData), isSocialLogin: true });
+    else if (googleData)
+      setUserData({ ...JSON.parse(googleData), isSocialLogin: true });
     else {
-      alert("데이터가 없습니다. 처음부터 다시 진행해주세요.");
-      router.push("/signUp");
+      alert("데이터가 없습니다. 다시 로그인해주세요.");
+      router.push("/login");
     }
+
     fetchProfilePreview("OPTION-01", "RED", "BROWN");
   }, [router]);
 
@@ -102,29 +117,70 @@ export default function ProfilePage() {
       } else alert("중복 확인 중 문제가 발생했습니다.");
     }
   };
+
   useEffect(() => {
     setIsNicknameChecked(false);
   }, [nicknameValue]);
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
-    if (!signUpData || !isNicknameChecked) {
+    if (!userData || !isNicknameChecked) {
       setError("nickname", { message: "별명 중복 확인을 완료해주세요." });
       return;
     }
 
     try {
-      await instance.post("/auth/register", {
-        email: signUpData.email,
-        password: signUpData.password,
-        nickname: data.nickname,
-        profileImageUrl,
-        skinColor: selectedSkin,
-        antlerType: selectedHorn,
-        mufflerColor: selectedScarf,
-      });
-      alert("회원가입이 완료되었습니다!");
-      localStorage.removeItem("signUpData");
-      router.push("/login");
+      let response;
+
+      // 소셜 로그인 사용자 회원가입 처리
+      if (userData.kakaoId)
+        response = await instance.post("/auth/kakao/register", {
+          kakaoId: userData.kakaoId,
+          email: userData.email,
+          additionalData: {
+            nickname: data.nickname,
+            skinColor: selectedSkin,
+            antlerType: selectedHorn,
+            mufflerColor: selectedScarf,
+          },
+        });
+      else if (userData.googleId)
+        response = await instance.post("/auth/google/register", {
+          googleId: userData.googleId,
+          email: userData.email,
+          additionalData: {
+            nickname: data.nickname,
+            skinColor: selectedSkin,
+            antlerType: selectedHorn,
+            mufflerColor: selectedScarf,
+          },
+        });
+      else {
+        response = await instance.post("/auth/register", {
+          email: userData.email,
+          password: userData.password,
+          nickname: data.nickname,
+          profileImageUrl,
+          skinColor: selectedSkin,
+          antlerType: selectedHorn,
+          mufflerColor: selectedScarf,
+        });
+
+        alert("회원가입이 완료되었습니다!");
+        router.push("/login");
+        return;
+      }
+
+      if (userData.isSocialLogin && response.data?.access_token) {
+        const { access_token, user } = response.data;
+
+        login(user.email, user.id, user.nickName, user.profileImageUrl);
+        await setCookie("token", access_token);
+
+        alert("로그인이 완료되었습니다!");
+        localStorage.removeItem("kakaoUserData");
+        localStorage.removeItem("googleUserData");
+        router.push("/home");
+      }
     } catch (error) {
       console.error("회원가입 실패:", error);
       alert("회원가입 중 오류가 발생했습니다.");
