@@ -1,11 +1,13 @@
 "use client";
 
+/* eslint-disable react/no-array-index-key */
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import React, { useState } from "react";
+import { fetchBgmList } from "@/hooks/useFetchBgmList";
 import Button from "../button";
 
 interface BottomSheetMusicSelectProps {
-  onSelect: (musicTitle: string) => void;
+  onSelect: (musicTitle: string, musicUrl: string) => void;
   unmount: () => void;
 }
 
@@ -13,18 +15,29 @@ const BottomSheetMusicSelect = ({
   onSelect,
   unmount,
 }: BottomSheetMusicSelectProps) => {
-  const musicList = [
-    { id: "1", title: "1노래제목이들어가는공간어디까지들어갈까1" },
-    { id: "2", title: "2노래제목이들어가는공간어디까지들어갈까2" },
-    { id: "3", title: "3노래제목이들어가는공간어디까지들어갈까3" },
-    { id: "4", title: "4노래제목이들어가는공간어디까지들어갈까4" },
-  ];
+  const [musicList, setMusicList] = useState<{ name: string; url: string }[]>(
+    [],
+  );
+  const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const [selectedIndex, setSelectedIndex] = useState<string | null>("1");
+  useEffect(() => {
+    const loadMusicList = async () => {
+      try {
+        const bgms = await fetchBgmList();
+        setMusicList(bgms);
+      } catch (error) {
+        console.error("BGM 목록 불러오기 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadMusicList();
+  }, []);
 
-  const handleSelect = (id: string, title: string) => {
-    setSelectedIndex(id);
-    onSelect(title);
+  const handleSelect = (index: string, title: string, url: string) => {
+    setSelectedIndex(index);
+    onSelect(title, url);
   };
 
   return (
@@ -39,7 +52,6 @@ const BottomSheetMusicSelect = ({
           if (e.key === "Escape") unmount();
         }}
       />
-
       <div
         className="animate-slideUp relative z-50 mx-auto w-full max-w-[600px] overflow-y-auto rounded-t-3xl bg-white px-6 pb-8 pt-6 shadow-lg"
         role="dialog"
@@ -59,52 +71,68 @@ const BottomSheetMusicSelect = ({
           </button>
         </div>
 
-        <ul className="flex-1 space-y-2 overflow-y-auto p-2">
-          {musicList.map((item) => (
-            <li
-              key={item.id}
-              className={`rounded-lg ${
-                selectedIndex === item.id
-                  ? "bg-primary-50 text-Title02-M text-line-900"
-                  : "bg-gray-100 text-Title02-M text-line-900"
-              }`}
-            >
-              <button
-                onClick={() => handleSelect(item.id, item.title)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ")
-                    handleSelect(item.id, item.title);
-                }}
-                className="flex w-full cursor-pointer items-center justify-between p-5 text-left"
-                aria-pressed={selectedIndex === item.id}
-                aria-label={`음악 선택: ${item.title}`}
+        {loading ? (
+          <ul className="flex-1 space-y-2 overflow-y-auto p-2">
+            {[1, 2, 3, 4].map((skeletonIndex) => (
+              <li
+                key={skeletonIndex}
+                className="animate-pulse rounded-lg bg-gray-100 p-5"
               >
-                <span className="truncate">{item.title}</span>
-                <Image
-                  src={
-                    selectedIndex === item.id
-                      ? "/icons/checked.png"
-                      : "/icons/uncheck.png"
+                <div className="flex items-center justify-between">
+                  <div className="h-4 w-3/5 rounded bg-gray-300" />
+                  <Image
+                    src="/icons/uncheck.png"
+                    alt="미체크 아이콘"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <ul className="flex-1 space-y-2 overflow-y-auto p-2">
+            {musicList.map((item, index) => (
+              <li
+                key={index}
+                className={`rounded-lg ${
+                  selectedIndex === index.toString()
+                    ? "bg-primary-50 text-Title02-M text-line-900"
+                    : "bg-gray-100 text-Title02-M text-line-900"
+                }`}
+              >
+                <button
+                  onClick={() =>
+                    handleSelect(index.toString(), item.name, item.url)
                   }
-                  alt={
-                    selectedIndex === item.id
-                      ? "체크된 아이콘"
-                      : "미체크 아이콘"
-                  }
-                  width={24}
-                  height={24}
-                />
-              </button>
-            </li>
-          ))}
-        </ul>
+                  className="flex w-full items-center justify-between p-5 text-left"
+                  aria-pressed={selectedIndex === index.toString()}
+                >
+                  <span className="truncate">{item.name}</span>
+                  <Image
+                    src={
+                      selectedIndex === index.toString()
+                        ? "/icons/checked.png"
+                        : "/icons/uncheck.png"
+                    }
+                    alt={
+                      selectedIndex === index.toString()
+                        ? "체크된 아이콘"
+                        : "미체크 아이콘"
+                    }
+                    width={24}
+                    height={24}
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
 
-        <footer className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-center gap-[12px] px-1 pb-[56px]">
-          <div className="flex w-full flex-col space-y-3">
-            <Button buttonType="Primary" className="w-full" onClick={unmount}>
-              완료
-            </Button>
-          </div>
+        <footer className="mt-8 flex w-full flex-col items-center gap-4">
+          <Button buttonType="Primary" className="w-full" onClick={unmount}>
+            완료
+          </Button>
         </footer>
       </div>
     </div>
