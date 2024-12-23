@@ -31,8 +31,6 @@ export default function KakaoCallbackPage() {
           },
         );
 
-        console.log("Response:", response.data);
-
         const { isNewUser, userData, access_token, user } = response.data;
 
         if (isNewUser) {

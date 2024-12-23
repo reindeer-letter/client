@@ -19,8 +19,8 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState<{
     kakaoId?: string;
     email: string;
-    password?: string; // 일반 회원가입 사용자를 위한 비밀번호
-    googleId?: string; // 소셜 로그인 사용자
+    password?: string;
+    googleId?: string;
     isSocialLogin: boolean;
   } | null>(null);
 
@@ -32,6 +32,7 @@ export default function ProfilePage() {
 
   const router = useRouter();
   const login = useUserStore((store) => store.login);
+
   const {
     register,
     handleSubmit,
@@ -116,6 +117,7 @@ export default function ProfilePage() {
       } else alert("중복 확인 중 문제가 발생했습니다.");
     }
   };
+
   useEffect(() => {
     setIsNicknameChecked(false);
   }, [nicknameValue]);
@@ -164,8 +166,6 @@ export default function ProfilePage() {
         });
 
         alert("회원가입이 완료되었습니다!");
-        localStorage.removeItem("kakaoUserData");
-        localStorage.removeItem("googleUserData");
         router.push("/login");
         return;
       }
@@ -174,10 +174,9 @@ export default function ProfilePage() {
         const { access_token, user } = response.data;
 
         login(user.email, user.id, user.nickName, user.profileImageUrl);
-
         await setCookie("token", access_token);
 
-        alert("회원가입이 완료되었습니다!");
+        alert("로그인이 완료되었습니다!");
         localStorage.removeItem("kakaoUserData");
         localStorage.removeItem("googleUserData");
         router.push("/home");
