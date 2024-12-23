@@ -12,7 +12,6 @@ import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
-import ImageUploader from "@/components/writingLetter/ImageUploader";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -27,12 +26,8 @@ const Page = () => {
   const receiverId = searchParams.get("receiverId");
   const senderNickname = searchParams.get("senderNickname");
 
-  const defaultImage = "/photo/photo_tape.png";
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
+  const [uploadedImageUrl] = useState<string>("");
 
-  const handleUploadSuccess = (url: string) => {
-    setUploadedImageUrl(url);
-  };
   const daysDifference = calculateDaysDifference(selectedDate);
   const formattedDate = formatDateStringToISO(selectedDate);
   const finalDate = selectedDate
@@ -109,11 +104,6 @@ const Page = () => {
       />
 
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
-        <ImageUploader
-          defaultImage={defaultImage}
-          onUploadSuccess={handleUploadSuccess}
-        />
-
         <header className="flex w-full flex-col space-y-4 px-4">
           <div className="w-full">
             <input

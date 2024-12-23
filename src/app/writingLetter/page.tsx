@@ -16,7 +16,6 @@ import PopUp from "@/components/popUp";
 import Image from "next/image";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
 import useImagePreview from "@/hooks/useImagePreview";
-import Loading from "../loading";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -122,7 +121,6 @@ const Page = () => {
       />,
     );
   };
-  if (isLoading) return <Loading />;
 
   return (
     <div
@@ -209,11 +207,13 @@ const Page = () => {
               onClick={handleOpenPopUp}
               className="w-full text-primary-200"
             >
-              {daysDifference !== null
-                ? daysDifference === 0
-                  ? "오늘 편지 보내기"
-                  : `${daysDifference}일 뒤 편지 보내기`
-                : "오늘 편지 보내기"}
+              {isLoading
+                ? "편지 보내는 중 ..."
+                : daysDifference !== null
+                  ? daysDifference === 0
+                    ? "오늘 편지 보내기"
+                    : `${daysDifference}일 뒤 편지 보내기`
+                  : "오늘 편지 보내기"}
             </Button>
           </div>
         </div>
