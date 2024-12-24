@@ -107,17 +107,24 @@ const LoginPage = () => {
   };
 
   return (
-    <div
-      className="flex h-screen flex-col bg-cover bg-center px-5"
-      style={{ backgroundImage: "url('/background/login.png')" }}
-    >
+    <div className="flex min-h-screen flex-col bg-loginLanding bg-cover bg-center px-5">
+      <header className="relative flex items-center justify-center pt-12">
+        <button className="absolute left-0" onClick={() => router.push("/")}>
+          <Image
+            src="/signUp/backArrow.svg"
+            alt="뒤로가기"
+            width={32}
+            height={32}
+          />
+        </button>
+      </header>
       <HighlightedText />
-      <div className="mt-14 flex h-screen items-center justify-center">
+      <div className="flex flex-grow">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-sm space-y-7 text-center"
+          className="flex w-full flex-col justify-center gap-10 text-center"
         >
-          <div className="flex flex-col space-y-10">
+          <div className="flex flex-col gap-8">
             <InputField
               type="email"
               placeholder="example1234@naver.com"
@@ -136,31 +143,32 @@ const LoginPage = () => {
             {errorMessage && (
               <p className="text-sm text-red-500">{errorMessage}</p>
             )}
-            <Button buttonType="Primary">로그인</Button>
-          </div>
-
-          <div className="mt-4 space-x-4 text-Body02-R text-line-800">
-            <a href="#" className="hover:text-primary-200">
-              아이디 찾기
-            </a>
-            <span>|</span>
-            <a href="#" className="hover:text-primary-200">
-              비밀번호 찾기
-            </a>
-            <span>|</span>
-            <a
-              href="#"
-              className="hover:text-primary-200"
-              onClick={() => router.push("/signUp")}
-            >
-              회원가입
-            </a>
+            <div className="flex flex-col gap-4">
+              <Button buttonType="Primary">로그인</Button>
+              <div className="space-x-4 text-Body02-R text-line-800">
+                <a href="#" className="hover:text-primary-200">
+                  아이디 찾기
+                </a>
+                <span>|</span>
+                <a href="#" className="hover:text-primary-200">
+                  비밀번호 찾기
+                </a>
+                <span>|</span>
+                <a
+                  href="#"
+                  className="hover:text-primary-200"
+                  onClick={() => router.push("/signUp")}
+                >
+                  회원가입
+                </a>
+              </div>
+            </div>
           </div>
         </form>
       </div>
 
-      <div className="w-full px-6 pb-[63px]">
-        <div className="mx-auto w-full max-w-md justify-center pb-[20px] text-center text-Body02-R text-line-800">
+      <div className="flex w-full flex-col gap-5 px-6 pb-[56px]">
+        <div className="mx-auto w-full max-w-md justify-center text-center text-Body02-R text-line-800">
           간편하게 시작하기
         </div>
 

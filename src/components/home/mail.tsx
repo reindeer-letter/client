@@ -7,7 +7,7 @@ interface SealedMailProps {
   nickName: string;
   isOpen: boolean;
   id: number;
-  writtenDate: string;
+  scheduledAt: string | null;
 }
 
 export default function Mail({
@@ -15,7 +15,7 @@ export default function Mail({
   title,
   isOpen,
   id,
-  writtenDate,
+  scheduledAt,
 }: SealedMailProps) {
   return (
     <Link
@@ -35,7 +35,9 @@ export default function Mail({
           </div>
         </section>
         <footer className="absolute bottom-5 right-5 text-end font-handwriting text-Title01-R text-line-700">
-          <section>{formateISODateToYYYYMMDD(writtenDate)}</section>
+          <section>
+            {scheduledAt && formateISODateToYYYYMMDD(scheduledAt)}
+          </section>
           <section>{nickName} 보냄</section>
         </footer>
       </section>

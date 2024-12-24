@@ -11,3 +11,8 @@ export function formateISODateToYYYYMMDDHHMM(date: string) {
   const [year, month, day] = YYYY_MM_DD.split("-");
   return `${year}. ${month}. ${day}. ${HH}:${MM}`;
 }
+
+export function formatDateStringToYYYYMMDD(date: string) {
+  const [year, month, day] = date.split("-");
+  return `${year}. ${month}. ${day}`;
+}

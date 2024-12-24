@@ -2,14 +2,16 @@ import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
 
 export type LetterState = {
+  draftId: number | null;
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl: string[];
   bgmUrl: string;
   receiverId: number;
   category: "TEXT" | "VOICE";
   scheduledAt: string;
-  senderNickName: string;
+  senderNickname: string;
+  receiverNickName: string;
 };
 
 export type LetterActions = {
@@ -20,14 +22,16 @@ export type LetterActions = {
 export type LetterStore = LetterState & LetterActions;
 
 export const defaultInitState: LetterState = {
+  draftId: null,
   title: "",
   description: "",
-  imageUrl: "",
+  imageUrl: [],
   bgmUrl: "",
   receiverId: 0,
   category: "TEXT",
   scheduledAt: "",
-  senderNickName: "",
+  senderNickname: "",
+  receiverNickName: "",
 };
 
 export const createLetterStore = (

@@ -1,5 +1,5 @@
-import { makePaginatedLetters } from "@/mocks/letter";
-import { GetLettersMyLettersResponse } from "@/types/letters";
+import { makePaginatedDrafts } from "@/mocks/letter";
+import { GetLettersDraftsPaginatedResponse } from "@/types/letters";
 import { http, HttpResponse } from "msw";
 
 const uncompletedLetterHandler = [
@@ -9,12 +9,10 @@ const uncompletedLetterHandler = [
       const url = new URL(req.request.url);
       const page = url.searchParams.get("page");
       const limit = url.searchParams.get("limit");
-      const category = url.searchParams.get("category");
-      return HttpResponse.json<GetLettersMyLettersResponse>(
-        makePaginatedLetters(
+      return HttpResponse.json<GetLettersDraftsPaginatedResponse>(
+        makePaginatedDrafts(
           parseInt(page || "1", 10),
           parseInt(limit || "1", 10),
-          category as "TEXT" | "VOICE",
         ),
       );
     },

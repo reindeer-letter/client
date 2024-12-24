@@ -21,18 +21,17 @@ export const metadata: Metadata = {
   description: "순록의 편지 - 오늘의 기억을 선물하는 편지",
   icons: {
     icon: [
-      { url: "/icons/favicon_16_16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icons/favicon_96_96_2x.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon/favicon_96.png", sizes: "96x96", type: "image/png" },
     ],
   },
   openGraph: {
     title: "순록의 편지 - 오늘의 기억을 선물하는 편지",
-    description: "미래의 나에게, 오늘의 기억을 선물하는 편지",
+    description: "미래의 나에게, 오늘의 기억을 선물해보세요.",
     url: "https://www.reindeer-letter.site",
     type: "website",
     images: [
       {
-        url: "/images/Thumbnail for kakaotalk.png",
+        url: "/images/thumbnail.png",
         alt: "순록의 편지",
       },
     ],

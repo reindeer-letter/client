@@ -26,18 +26,16 @@ export default async function Page({ searchParams }: PageProps) {
         <div className="text-center">내게 쓴 편지</div>
       </header>
       <section className="flex gap-2 px-5 py-3">
-        {CATEGORIES.map((categoryItem) => (
-          <Link
-            href={`/myPage/letterToMe?category=${categoryItem.value}`}
-            key={categoryItem.key}
-          >
-            <CategoryButton
-              key={categoryItem.key}
-              category={categoryItem}
-              currentCategory={category}
-            />
-          </Link>
-        ))}
+        <Link
+          href={`/myPage/letterToMe?category=${CATEGORIES[0].value}`}
+          key={CATEGORIES[0].key}
+        >
+          <CategoryButton
+            key={CATEGORIES[0].key}
+            category={CATEGORIES[0]}
+            currentCategory={category}
+          />
+        </Link>
       </section>
       <MailScroll route={`/letters/my/self?category=${category || ""}`} />
       <Footer />

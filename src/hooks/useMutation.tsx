@@ -9,7 +9,6 @@ import { CanceledError, isAxiosError } from "axios";
 import instance from "@/api/instance";
 
 export default function useMutation<T, R = T>(
-  route: string,
   method: "post" | "put" | "delete",
 ) {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +20,7 @@ export default function useMutation<T, R = T>(
   const mutate = useCallback(
     async (
       data: T[],
+      route: string,
       {
         onDataHandler,
         onMutate,
@@ -46,7 +46,7 @@ export default function useMutation<T, R = T>(
         setIsLoading(false);
       }
     },
-    [route, method],
+    [method],
   );
 
   return { mutate, isLoading, isError, error, isCancelled };
