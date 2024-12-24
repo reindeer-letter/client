@@ -10,8 +10,17 @@ interface ImageSectionProps {
 
 const ImageSection = ({ imageUrls, encodeUrl }: ImageSectionProps) => {
   return imageUrls.length > 0 ? (
-    <div className="relative flex w-full flex-row space-x-4 overflow-x-auto overflow-y-hidden px-4 pb-6 pt-4">
-      <div style={{ display: "flex", gap: 16 }}>
+    <div
+      className={`relative flex w-full ${
+        imageUrls.length === 1 ? "justify-center" : "flex-row space-x-4"
+      } overflow-x-auto overflow-y-hidden px-4 pb-6 pt-4`}
+    >
+      <div
+        style={{
+          display: "flex",
+          gap: imageUrls.length === 1 ? 0 : 16,
+        }}
+      >
         {imageUrls.map((url, index) => (
           <div key={index} className="relative">
             <div className="pointer-events-none absolute left-1/2 top-[-20px] z-30 -translate-x-1/2">
@@ -23,7 +32,12 @@ const ImageSection = ({ imageUrls, encodeUrl }: ImageSectionProps) => {
                 className="drop-shadow-lg"
               />
             </div>
-            <div className="relative z-10 h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300">
+
+            <div
+              className={`relative z-10 h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300 ${
+                imageUrls.length === 1 ? "mx-auto" : ""
+              }`}
+            >
               <Image
                 src={encodeUrl(url)}
                 alt={`이미지 ${index + 1}`}
