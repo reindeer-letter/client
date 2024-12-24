@@ -1,4 +1,5 @@
 import instance from "@/api/instance";
+import { getCookie } from "@/lib/cookie";
 import { useLetterStore } from "@/providers/letterStoreProvider";
 import { PostLettersDraftResponse } from "@/types/letters";
 import { CanceledError } from "axios";
@@ -64,52 +65,55 @@ export default function useSaveDraft({
 
   // throttling으로 post, put 요청 보내는 훅
   useEffect(() => {
-    if (Date.now() - currentExecuted.current > delay) {
-      currentExecuted.current = Date.now();
-      if (!draftId)
-        instance
-          .post<PostLettersDraftResponse>(
-            "/letters/draft",
-            {
-              title,
-              description,
-              imageUrls: [],
-              bgmUrl,
-              category: "TEXT",
-              scheduledAt,
-              receiverId,
-              senderNickname,
-            },
-            { signal: abortControllerRef.current.signal },
-          )
-          .then((res) => {
-            if (res.status === 201) setDraftId(res.data.id);
-          })
-          .catch((err) => {
+    async function temporarySave() {
+      if (Date.now() - currentExecuted.current > delay) {
+        currentExecuted.current = Date.now();
+        const token = await getCookie("token");
+        if (!token) return;
+        if (!draftId)
+          try {
+            const response = await instance.post<PostLettersDraftResponse>(
+              "/letters/draft",
+              {
+                title,
+                description,
+                imageUrls: [],
+                bgmUrl,
+                category: "TEXT",
+                scheduledAt,
+                receiverId,
+                senderNickname,
+              },
+              { signal: abortControllerRef.current.signal },
+            );
+            if (response.status === 201) setDraftId(response.data.id);
+          } catch (err) {
             if (err instanceof CanceledError) return;
             console.error(err);
-          });
-      else
-        instance
-          .put(
-            `/letters/draft/${draftId}`,
-            {
-              title,
-              description,
-              imageUrls: [],
-              bgmUrl,
-              category: "TEXT",
-              scheduledAt,
-              receiverId,
-              senderNickname,
-            },
-            { signal: abortControllerRef.current.signal },
-          )
-          .catch((err) => {
+          }
+        else
+          try {
+            await instance.put(
+              `/letters/draft/${draftId}`,
+              {
+                title,
+                description,
+                imageUrls: [],
+                bgmUrl,
+                category: "TEXT",
+                scheduledAt,
+                receiverId,
+                senderNickname,
+              },
+              { signal: abortControllerRef.current.signal },
+            );
+          } catch (err) {
             if (err instanceof CanceledError) return;
             console.error(err);
-          });
+          }
+      }
     }
+    temporarySave();
   }, [
     setDraftId,
     delay,
