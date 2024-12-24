@@ -48,17 +48,13 @@ export default function ProfilePage() {
   const nicknameValue = watch("nickname");
 
   useEffect(() => {
-    // 카카오 사용자 또는 구글 사용자 데이터 확인
     const kakaoData = localStorage.getItem("kakaoUserData");
     const googleData = localStorage.getItem("googleUserData");
+
     if (kakaoData)
       setUserData({ ...JSON.parse(kakaoData), isSocialLogin: true });
     else if (googleData)
       setUserData({ ...JSON.parse(googleData), isSocialLogin: true });
-    else {
-      alert("데이터가 없습니다. 다시 로그인해주세요.");
-      router.push("/login");
-    }
 
     fetchProfilePreview("OPTION-01", "RED", "BROWN");
   }, [router]);
