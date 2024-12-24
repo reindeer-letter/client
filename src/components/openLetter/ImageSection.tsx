@@ -2,6 +2,7 @@
 
 /* eslint-disable react/no-array-index-key */
 import Image from "next/image";
+import ImageSlider from "../imageSlider";
 
 interface ImageSectionProps {
   imageUrls: string[];
@@ -9,21 +10,14 @@ interface ImageSectionProps {
 }
 
 const ImageSection = ({ imageUrls, encodeUrl }: ImageSectionProps) => {
-  return imageUrls.length > 0 ? (
-    <div
-      className={`relative flex w-full ${
-        imageUrls.length === 1 ? "justify-center" : "flex-row space-x-4"
-      } overflow-x-auto overflow-y-hidden px-4 pb-6 pt-4`}
-    >
-      <div
-        style={{
-          display: "flex",
-          gap: imageUrls.length === 1 ? 0 : 16,
-        }}
-      >
+  if (imageUrls.length === 0) return null;
+
+  return (
+    <div className="relative w-full overflow-visible px-4 pb-6 pt-4">
+      <ImageSlider>
         {imageUrls.map((url, index) => (
-          <div key={index} className="relative">
-            <div className="pointer-events-none absolute left-1/2 top-[-20px] z-30 -translate-x-1/2">
+          <div key={index} className="relative h-[280px] w-[280px]">
+            <div className="pointer-events-none absolute left-1/2 top-[-60px] z-50 -translate-x-1/2 overflow-visible">
               <Image
                 src="/photo/tape_blue.png"
                 alt="테이프 위"
@@ -33,11 +27,7 @@ const ImageSection = ({ imageUrls, encodeUrl }: ImageSectionProps) => {
               />
             </div>
 
-            <div
-              className={`relative z-10 h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300 ${
-                imageUrls.length === 1 ? "mx-auto" : ""
-              }`}
-            >
+            <div className="relative z-40 h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300">
               <Image
                 src={encodeUrl(url)}
                 alt={`이미지 ${index + 1}`}
@@ -47,7 +37,7 @@ const ImageSection = ({ imageUrls, encodeUrl }: ImageSectionProps) => {
               />
             </div>
 
-            <div className="pointer-events-none absolute bottom-[-26px] left-1/2 z-30 -translate-x-1/2">
+            <div className="pointer-events-none absolute bottom-[-50px] left-1/2 z-50 -translate-x-1/2 overflow-visible">
               <Image
                 src="/photo/tape_yellow.png"
                 alt="테이프 아래"
@@ -58,9 +48,9 @@ const ImageSection = ({ imageUrls, encodeUrl }: ImageSectionProps) => {
             </div>
           </div>
         ))}
-      </div>
+      </ImageSlider>
     </div>
-  ) : null;
+  );
 };
 
 export default ImageSection;

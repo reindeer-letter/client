@@ -17,6 +17,7 @@ import ImageUploader from "@/components/writingLetter/ImageUploader";
 import VoiceRecorder from "@/components/voiceLetter/VoiceRecorder";
 import useVoiceUpload from "@/hooks/useVoiceUpload";
 import useImagePreview from "@/hooks/useImagePreview";
+import ImageSlider from "@/components/imageSlider";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -151,18 +152,17 @@ const Page = () => {
       />
 
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4">
-        <div className="no-scrollbar space-x flex w-full flex-row space-x-4 overflow-x-auto px-4">
-          <div style={{ display: "flex", gap: 16 }}>
-            {images.map((item, index) => (
-              <ImageUploader
-                key={index}
-                index={index}
-                previewUrl={item.previewUrl}
-                onSelectImage={handleSelectImage}
-              />
-            ))}
-          </div>
-        </div>
+        <ImageSlider>
+          {images.map((item, index) => (
+            <ImageUploader
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              index={index}
+              previewUrl={item.previewUrl}
+              onSelectImage={handleSelectImage}
+            />
+          ))}
+        </ImageSlider>
 
         <header className="mt-6 flex w-full flex-col space-y-4 px-4">
           <div className="w-full">
