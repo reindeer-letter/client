@@ -2,12 +2,10 @@ import instance from "@/api/instance";
 import { useLetterStore } from "@/providers/letterStoreProvider";
 import { PostLettersDraftResponse } from "@/types/letters";
 import { CanceledError } from "axios";
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 interface useSaveDraftProps {
   draftMode: string | null;
-  draftId: number | null;
-  setDraftId: (id: number) => void;
   title: string;
   description: string;
   bgmUrl: string;
@@ -28,20 +26,20 @@ export default function useSaveDraft({
   description,
   draftMode,
   handleInitialData,
-  draftId,
-  setDraftId,
   receiverId,
   scheduledAt,
   senderNickname,
   title,
   delay,
-}: useSaveDraftProps) {
+}: useSaveDraftProps): [number | null, RefObject<AbortController>] {
   const savedDraftId = useLetterStore((state) => state.draftId);
   const savedTitle = useLetterStore((state) => state.title);
   const savedDescription = useLetterStore((state) => state.description);
   const savedBgmUrl = useLetterStore((state) => state.bgmUrl);
   const savedScheduledAt = useLetterStore((state) => state.scheduledAt);
   const currentExecuted = useRef<number>(Date.now());
+  const abortControllerRef = useRef(new AbortController());
+  const [draftId, setDraftId] = useState<number | null>(null);
 
   useEffect(() => {
     if (draftMode === "true" && savedDraftId) {
@@ -66,7 +64,6 @@ export default function useSaveDraft({
 
   // throttling으로 post, put 요청 보내는 훅
   useEffect(() => {
-    const abortController = new AbortController();
     if (Date.now() - currentExecuted.current > delay) {
       currentExecuted.current = Date.now();
       if (!draftId)
@@ -83,10 +80,9 @@ export default function useSaveDraft({
               receiverId,
               senderNickname,
             },
-            { signal: abortController.signal },
+            { signal: abortControllerRef.current.signal },
           )
           .then((res) => {
-            console.log(res.data.id);
             if (res.status === 201) setDraftId(res.data.id);
           })
           .catch((err) => {
@@ -107,16 +103,13 @@ export default function useSaveDraft({
               receiverId,
               senderNickname,
             },
-            { signal: abortController.signal },
+            { signal: abortControllerRef.current.signal },
           )
           .catch((err) => {
             if (err instanceof CanceledError) return;
             console.error(err);
           });
     }
-    return () => {
-      abortController.abort();
-    };
   }, [
     setDraftId,
     delay,
@@ -128,4 +121,6 @@ export default function useSaveDraft({
     senderNickname,
     title,
   ]);
+
+  return [draftId, abortControllerRef];
 }

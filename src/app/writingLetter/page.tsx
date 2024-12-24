@@ -26,7 +26,6 @@ const Page = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [draftId, setDraftId] = useState<number | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -76,13 +75,11 @@ const Page = () => {
     if (!receiverId || !senderNickname) router.push("/home");
   }, [receiverId, senderNickname, router]);
 
-  useSaveDraft({
+  const [draftId, abortController] = useSaveDraft({
     delay: 10000,
     bgmUrl: selectedMusicUrl,
     description,
     draftMode,
-    draftId,
-    setDraftId,
     handleInitialData,
     receiverId: receiverId ? Number(receiverId) : 0,
     scheduledAt: finalDate,
@@ -147,6 +144,7 @@ const Page = () => {
         senderNickName: senderNickname?.trim() || "익명의 친구",
       };
 
+      abortController.current.abort();
       const response = await instance.post(
         draftId ? `/letters/draft/${draftId}/send` : "/letters",
         payload,
