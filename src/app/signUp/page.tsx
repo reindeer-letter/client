@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -24,6 +24,7 @@ export default function SignUpPage() {
     mode: "onChange",
   });
 
+  const searchParams = useSearchParams();
   const router = useRouter();
   const passwordValue = watch("password");
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -48,7 +49,9 @@ export default function SignUpPage() {
         <button
           className="absolute left-0"
           onClick={() =>
-            verifiedEmail ? setVerifiedEmail(null) : router.push("/")
+            verifiedEmail
+              ? setVerifiedEmail(null)
+              : router.push(`/login?${searchParams.toString()}`)
           }
         >
           <Image

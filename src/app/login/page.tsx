@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import instance from "@/api/instance";
 
@@ -14,6 +14,9 @@ import InputField from "@/components/login/InputField";
 import { useUserStore } from "@/providers/userStoreProvider";
 import { PostAuthLoginResponse } from "@/types/auth";
 import { setCookie } from "@/lib/cookie";
+import Link from "next/link";
+import useOverlay from "@/hooks/useoverlay";
+import PopUp from "@/components/popUp";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -29,6 +32,7 @@ const LoginPage = () => {
   const login = useUserStore((store) => store.login);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const overlay = useOverlay();
 
   const receiverId = searchParams.get("receiverId");
   const receiverNickName = searchParams.get("receiverNickName");
@@ -106,10 +110,23 @@ const LoginPage = () => {
     window.location.href = googleAuthUrl.toString();
   };
 
+  const handleOverlay = useCallback(() => {
+    overlay.mount(
+      <PopUp
+        button="확인"
+        description="준비중입니다."
+        onCancel={() => {}}
+        onConfirm={() => {}}
+        title="알림"
+        unmount={overlay.unmount}
+      />,
+    );
+  }, [overlay]);
+
   return (
     <div className="flex min-h-screen flex-col bg-loginLanding bg-cover bg-center px-5">
       <header className="relative flex items-center justify-center pt-12">
-        <button className="absolute left-0" onClick={() => router.push("/")}>
+        <button className="absolute left-0" onClick={() => router.back()}>
           <Image
             src="/signUp/backArrow.svg"
             alt="뒤로가기"
@@ -146,21 +163,28 @@ const LoginPage = () => {
             <div className="flex flex-col gap-4">
               <Button buttonType="Primary">로그인</Button>
               <div className="space-x-4 text-Body02-R text-line-800">
-                <a href="#" className="hover:text-primary-200">
-                  아이디 찾기
-                </a>
-                <span>|</span>
-                <a href="#" className="hover:text-primary-200">
-                  비밀번호 찾기
-                </a>
-                <span>|</span>
-                <a
-                  href="#"
+                <button
+                  type="button"
                   className="hover:text-primary-200"
-                  onClick={() => router.push("/signUp")}
+                  onClick={handleOverlay}
+                >
+                  아이디 찾기
+                </button>
+                <span>|</span>
+                <button
+                  type="button"
+                  onClick={handleOverlay}
+                  className="hover:text-primary-200"
+                >
+                  비밀번호 찾기
+                </button>
+                <span>|</span>
+                <Link
+                  href={`/signUp?${searchParams.toString()}`}
+                  className="hover:text-primary-200"
                 >
                   회원가입
-                </a>
+                </Link>
               </div>
             </div>
           </div>

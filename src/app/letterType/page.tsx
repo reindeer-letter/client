@@ -31,9 +31,9 @@ const Page = () => {
       <NavBar
         title="편지 유형 선택"
         loggedBack="/home"
-        guestBack="/invitation"
+        guestBack={`/invitation?${searchParams.toString()}`}
         loggedClose="/"
-        guestClose="/invitation"
+        guestClose={`/invitation?${searchParams.toString()}`}
       />
       <div className="pl-4 text-left text-Head text-line-700">
         어떤 방법으로 전달하시나요?

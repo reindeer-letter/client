@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useUserStore } from "@/providers/userStoreProvider";
+import { useCallback } from "react";
+import { getCookie } from "@/lib/cookie";
 
 interface NavBarProps {
   title?: string;
@@ -29,21 +30,22 @@ const NavBar = ({
   guestClose,
 }: NavBarProps) => {
   const router = useRouter();
-  const id = useUserStore((store) => store.id);
 
-  const isLoggedIn = !!id;
-
-  const handleBack = () => {
+  const handleBack = useCallback(async () => {
+    const token = await getCookie("token");
+    const isLoggedIn = !!token;
     if (isLoggedIn && loggedBack) router.push(loggedBack);
     else if (!isLoggedIn && guestBack) router.push(guestBack);
     else router.back();
-  };
+  }, [loggedBack, guestBack, router]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(async () => {
+    const token = await getCookie("token");
+    const isLoggedIn = !!token;
     if (isLoggedIn && loggedClose) router.push(loggedClose);
     else if (!isLoggedIn && guestClose) router.push(guestClose);
     else router.push("/");
-  };
+  }, [loggedClose, guestClose, router]);
 
   return (
     <div className="flex items-center justify-between px-4 py-10">

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HighlightedText() {
   return (
@@ -16,13 +17,14 @@ export default function HighlightedText() {
           </div>
           <span>에게 선물하는 오늘의 기억</span>
         </div>
-
-        <Image
-          src="/landing/title.png"
-          alt="순록의 편지"
-          width={212}
-          height={60}
-        />
+        <Link href="/">
+          <Image
+            src="/landing/title.png"
+            alt="순록의 편지"
+            width={212}
+            height={60}
+          />
+        </Link>
       </div>
     </>
   );
