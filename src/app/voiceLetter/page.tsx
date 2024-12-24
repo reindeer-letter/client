@@ -33,9 +33,9 @@ const Page = () => {
   const senderNickname = searchParams.get("senderNickname");
   const { images, handleSelectImage } = useImagePreview(3);
 
-  const [audioUrl, setAudioUrl] = useState<string>("");
+  const [voiceUrl, setvoiceUrl] = useState<string>("");
 
-  const { uploadVoice } = useVoiceUpload(setAudioUrl);
+  const { uploadVoice } = useVoiceUpload(setvoiceUrl);
 
   const openCalendar = () => {
     overlay.mount(
@@ -60,7 +60,7 @@ const Page = () => {
   const handleRecordingComplete = async (audioBlob: Blob) => {
     try {
       const url = await uploadVoice(audioBlob);
-      setAudioUrl(url);
+      setvoiceUrl(url);
     } catch (error) {
       console.error("음성 파일 업로드 실패:", error);
       alert("음성 파일 업로드에 실패했습니다. 다시 시도해주세요.");
@@ -73,7 +73,7 @@ const Page = () => {
       return;
     }
 
-    if (!audioUrl) {
+    if (!voiceUrl) {
       alert("음성 녹음이 필요합니다.");
       return;
     }
@@ -111,7 +111,7 @@ const Page = () => {
         isOpen: false,
         scheduledAt: finalDate,
         senderNickName: senderNickname?.trim() || "익명의 친구",
-        audioUrl,
+        audioUrl: voiceUrl,
       };
 
       const response = await instance.post("/letters", payload);

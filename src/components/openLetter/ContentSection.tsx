@@ -1,6 +1,7 @@
 "use client";
 
 import { openLetters } from "@/types/openLetters";
+import CustomAudioPlayer from "./CustomAudioPlayer";
 
 interface ContentSectionProps {
   letter: openLetters;
@@ -23,11 +24,7 @@ const ContentSection = ({ letter, imageUrls }: ContentSectionProps) => {
     case "VOICE":
       return (
         <div className="mt-4 flex w-full justify-center">
-          <audio controls aria-label="음성 메시지">
-            <source src={letter.audioUrl} type="audio/mpeg" />
-            <track kind="captions" srcLang="ko" />
-            <p>음성을 재생할 수 없습니다.</p>
-          </audio>
+          <CustomAudioPlayer audioUrl={letter.audioUrl} />
         </div>
       );
     default:
