@@ -7,7 +7,7 @@ interface CustomAudioPlayerProps {
   audioUrl: string;
 }
 
-const CustomAudioPlayer: React.FC<CustomAudioPlayerProps> = ({ audioUrl }) => {
+const CustomAudioPlayer = ({ audioUrl }: CustomAudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
