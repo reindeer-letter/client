@@ -127,8 +127,8 @@ const Page = () => {
                 </div>
               </div>
             </header>
-            <ContentSection letter={letter} imageUrls={imageUrls} />
-            <FromSection letter={letter} />
+            {letter && <ContentSection letter={letter} imageUrls={imageUrls} />}
+            {letter && <FromSection letter={letter} />}
           </>
         )}
       </main>
