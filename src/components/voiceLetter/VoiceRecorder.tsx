@@ -42,7 +42,20 @@ const VoiceRecorder = ({ onRecordingComplete }: VoiceRecorderProps) => {
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+
+      // 브라우저 지원 형식
+      const mimeTypes = [
+        "audio/mp4", // iOS/Safari
+        "audio/webm", // Chrome/Firefox
+        "audio/ogg",
+      ];
+
+      const supportedType =
+        mimeTypes.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: supportedType,
+      });
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
 
@@ -51,7 +64,9 @@ const VoiceRecorder = ({ onRecordingComplete }: VoiceRecorderProps) => {
       };
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(chunksRef.current, { type: "audio/wav" });
+        const audioBlob = new Blob(chunksRef.current, {
+          type: "audio/mp4",
+        });
         const audioUrl = URL.createObjectURL(audioBlob);
         audioRef.current = new Audio(audioUrl);
         await onRecordingComplete(audioBlob);
@@ -109,6 +124,10 @@ const VoiceRecorder = ({ onRecordingComplete }: VoiceRecorderProps) => {
       audioRef.current.currentTime = 0;
     }
     if (timerRef.current) clearInterval(timerRef.current);
+
+    setRecordingTime(0);
+    setPlaybackTime(0);
+    setRecordingState("IDLE");
     startRecording();
   };
 
