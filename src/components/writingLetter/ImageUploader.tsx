@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useRef } from "react";
 import Image from "next/image";
 
 interface ImageUploaderProps {
@@ -14,7 +14,7 @@ const ImageUploader = ({
   previewUrl,
   onSelectImage,
 }: ImageUploaderProps) => {
-  const inputId = `file-input-${index}`;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,11 +40,11 @@ const ImageUploader = ({
   return (
     <div
       className="relative mb-8 mt-6 h-[280px] w-[280px] cursor-pointer rounded-lg border border-gray-300"
-      onClick={() => document.getElementById(inputId)?.click()}
+      onClick={() => inputRef.current?.click()}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          document.getElementById(inputId)?.click();
+          inputRef.current?.click();
         }
       }}
       role="button"
@@ -91,7 +91,7 @@ const ImageUploader = ({
       )}
 
       <input
-        id={inputId}
+        ref={inputRef}
         type="file"
         accept="image/*"
         className="hidden"
