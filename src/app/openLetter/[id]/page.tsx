@@ -35,6 +35,21 @@ const Page = () => {
     fetchLetter();
   }, [id]);
 
+  useEffect(() => {
+    if (letter?.bgmUrl && !audio) {
+      const newAudio = new Audio(letter.bgmUrl);
+      newAudio.addEventListener("ended", () => setIsPlaying(false));
+      setAudio(newAudio);
+      newAudio
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => {
+          console.error("자동 재생 실패:", err);
+          setIsPlaying(false);
+        });
+    }
+  }, [letter?.bgmUrl]);
+
   const imageUrls = letter?.imageUrls || [];
 
   const encodeUrl = (url: string) => {
