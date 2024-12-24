@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable react/no-array-index-key */
 import instance from "@/api/instance";
 import { useCallback, useEffect, useState } from "react";
 import "../globals.css";
@@ -190,6 +189,7 @@ const Page = () => {
           <div style={{ display: "flex", gap: 16 }}>
             {images.map((item, index) => (
               <ImageUploader
+                // eslint-disable-next-line react/no-array-index-key
                 key={index}
                 index={index}
                 previewUrl={item.previewUrl}
@@ -211,10 +211,10 @@ const Page = () => {
           </div>
         </header>
 
-        <div className="w-full flex-1">
+        <div className="flex w-full flex-1 flex-col">
           <textarea
             placeholder="내용을 입력하세요"
-            className="mt-4 h-[200px] w-full resize-none rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
+            className="mt-4 h-full w-full flex-1 resize-none rounded-lg bg-transparent px-4 font-handwriting text-2xl text-black placeholder-grey-600 focus:outline-none"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
