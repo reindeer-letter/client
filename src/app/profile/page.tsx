@@ -50,12 +50,17 @@ export default function ProfilePage() {
   useEffect(() => {
     const kakaoData = localStorage.getItem("kakaoUserData");
     const googleData = localStorage.getItem("googleUserData");
-
+    const signUpData = localStorage.getItem("signUpData");
     if (kakaoData)
       setUserData({ ...JSON.parse(kakaoData), isSocialLogin: true });
     else if (googleData)
       setUserData({ ...JSON.parse(googleData), isSocialLogin: true });
-
+    else if (signUpData)
+      setUserData({ ...JSON.parse(signUpData), isSocialLogin: false });
+    else {
+      alert("로그인 정보를 찾을 수 없습니다. 다시 시도해주세요.");
+      router.push("/login");
+    }
     fetchProfilePreview("OPTION-01", "RED", "BROWN");
   }, [router]);
 
@@ -119,7 +124,7 @@ export default function ProfilePage() {
   }, [nicknameValue]);
 
   const onSubmit: SubmitHandler<ProfileFormData> = async (data) => {
-    if (!userData || !isNicknameChecked) {
+    if (!isNicknameChecked) {
       setError("nickname", { message: "별명 중복 확인을 완료해주세요." });
       return;
     }
@@ -127,7 +132,24 @@ export default function ProfilePage() {
     try {
       let response;
 
-      // 소셜 로그인 사용자 회원가입 처리
+      // 일반 회원가입 처리
+      if (!userData?.isSocialLogin) {
+        response = await instance.post("/auth/register", {
+          email: userData?.email,
+          password: userData?.password,
+          nickname: data.nickname,
+          profileImageUrl,
+          skinColor: selectedSkin,
+          antlerType: selectedHorn,
+          mufflerColor: selectedScarf,
+        });
+
+        alert("회원가입이 완료되었습니다!");
+        router.push("/login");
+        return;
+      }
+
+      // 소셜 로그인 처리
       if (userData.kakaoId)
         response = await instance.post("/auth/kakao/register", {
           kakaoId: userData.kakaoId,
@@ -150,23 +172,8 @@ export default function ProfilePage() {
             mufflerColor: selectedScarf,
           },
         });
-      else {
-        response = await instance.post("/auth/register", {
-          email: userData.email,
-          password: userData.password,
-          nickname: data.nickname,
-          profileImageUrl,
-          skinColor: selectedSkin,
-          antlerType: selectedHorn,
-          mufflerColor: selectedScarf,
-        });
 
-        alert("회원가입이 완료되었습니다!");
-        router.push("/login");
-        return;
-      }
-
-      if (userData.isSocialLogin && response.data?.access_token) {
+      if (userData.isSocialLogin && response?.data?.access_token) {
         const { access_token, user } = response.data;
 
         login(user.email, user.id, user.nickName, user.profileImageUrl);
