@@ -102,7 +102,7 @@ export default function ProfilePage() {
         },
       });
       if (response.status === 200) {
-        alert("���용 가능한 별명입니다.");
+        alert("사용 가능한 별명입니다.");
         clearErrors("nickname");
         setIsNicknameChecked(true);
       }
