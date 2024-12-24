@@ -6,51 +6,24 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import NavBar from "@/components/NavBar";
+import { openLetters } from "@/types/openLetters";
+import ImageSection from "@/components/openLetter/ImageSection";
+import ContentSection from "@/components/openLetter/ContentSection";
+import FromSection from "@/components/openLetter/FromSection";
 
 const Page = () => {
-  const defaultImage = "/photo/photo.png";
-  const [letter, setLetter] = useState<Letter | null>(null);
+  const [letter, setLetter] = useState<openLetters | null>(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const [isPlaying, setIsPlaying] = useState(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-
-  interface Letter {
-    senderNickname: string;
-    id: number;
-    title: string;
-    description: string;
-    imageUrls: string[];
-    bgmUrl: string;
-    audioUrl: string;
-    senderNickName: string;
-    category: string;
-    isOpen: boolean;
-    isDeliverd: boolean;
-    scheduleAt: string;
-    createdAt: string;
-    updatedAt: string;
-    userId: string;
-    receiverId: string;
-    receiver: {
-      id: string;
-      nickName: string;
-      password: string;
-      email: string;
-      profileImageUrl: string;
-      createdAt: string;
-      updatedAt: string;
-    };
-  }
 
   useEffect(() => {
     const fetchLetter = async () => {
       if (!id) return;
       setLoading(true);
       try {
-        const response = await instance.get<Letter>(`/letters/${id}`);
-        console.log("✅ API 응답 확인:", response.data);
-        console.log("✅ 이미지 URLs 확인:", response.data.imageUrls);
+        const response = await instance.get<openLetters>(`/letters/${id}`);
         setLetter(response.data);
       } catch (error) {
         console.error("Error fetching letter:", error);
@@ -63,7 +36,6 @@ const Page = () => {
   }, [id]);
 
   const imageUrls = letter?.imageUrls || [];
-  const isSingleImage = imageUrls.length === 1;
 
   const encodeUrl = (url: string) => {
     try {
@@ -73,7 +45,6 @@ const Page = () => {
       return "";
     }
   };
-
   const getFileName = (url: string) => {
     if (!url) return "음악 없음";
     return (
@@ -111,100 +82,26 @@ const Page = () => {
     };
   }, [audio]);
 
-  const renderContent = (letter: Letter | null) => {
-    if (!letter) return null;
-
-    switch (letter.category) {
-      case "TEXT":
-        return (
-          <div className="w-full">
-            <div className="mt-4 h-[200px] w-full resize-none rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-2xl text-black">
-              {letter.description}
-            </div>
-          </div>
-        );
-      case "VOICE":
-        return (
-          <div className="flex w-full justify-center">
-            <audio controls aria-label="음성 메시지">
-              <source src={letter.audioUrl} type="audio/mpeg" />
-              <track kind="captions" srcLang="ko" />
-              <p>음성을 재생할 수 없습니다.</p>
-            </audio>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div
-      className="flex min-h-screen flex-col bg-White text-white"
+      className="flex min-h-screen flex-col overflow-x-hidden bg-White text-white"
       style={{ backgroundImage: "url('/background/Letter-Texture.png')" }}
     >
       <NavBar loggedBack="/home" guestBack="/signUp" />
 
-      <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
+      <main className="bg-custom-background flex w-full flex-1 flex-col items-center overflow-x-hidden px-6 pb-4">
         {loading ? (
           <div className="text-center text-xl">로딩 중...</div>
         ) : (
           <>
-            {isSingleImage ? (
-              <div className="flex w-full items-center justify-center">
-                <div className="relative h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300">
-                  <Image
-                    src={encodeUrl(imageUrls[0])}
-                    alt="단일 이미지"
-                    layout="fill"
-                    objectFit="cover"
-                    unoptimized
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="no-scrollbar flex w-full flex-row space-x-4 overflow-x-auto px-4">
-                <div style={{ display: "flex", gap: 16 }}>
-                  {imageUrls.length > 0
-                    ? imageUrls.map((url, index) => (
-                        <div
-                          key={index}
-                          className="relative h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300"
-                        >
-                          <Image
-                            src={encodeUrl(url)}
-                            alt={`이미지 ${index + 1}`}
-                            layout="fill"
-                            objectFit="cover"
-                            unoptimized
-                            onError={(e) => {
-                              console.error(`❌ 이미지  오류: ${url}:`, e);
-                            }}
-                          />
-                        </div>
-                      ))
-                    : Array.from({ length: 3 }).map((_, index) => (
-                        <div
-                          key={index}
-                          className="relative h-[280px] w-[280px] overflow-hidden rounded-lg border border-gray-300"
-                        >
-                          <Image
-                            src={defaultImage}
-                            alt={`기본 이미지 ${index + 1}`}
-                            layout="fill"
-                            objectFit="cover"
-                          />
-                        </div>
-                      ))}
-                </div>
-              </div>
-            )}
+            <ImageSection imageUrls={imageUrls} encodeUrl={encodeUrl} />
 
             {letter?.bgmUrl && letter.category === "TEXT" ? (
-              <div className="mt-6 flex w-full justify-start">
+              <div className="mt-3 flex w-full justify-start">
                 <button
                   onClick={handlePlayMusic}
-                  className="ml-3 flex w-auto items-center gap-2 rounded-full bg-primary-100 px-4 py-3 text-Body02-M"
+                  className="ml-3 flex w-auto items-center gap-2 rounded-full bg-primary-100 px-4 py-2 text-Body02-M"
+                  style={{ maxWidth: "100%" }}
                 >
                   <Image
                     src={
@@ -216,52 +113,22 @@ const Page = () => {
                     width={24}
                     height={24}
                   />
-                  <span className="w-[60px] truncate text-left">
+                  <span className="text-left">
                     {getFileName(letter.bgmUrl)}
                   </span>
                 </button>
               </div>
             ) : null}
 
-            <header className="flex w-full flex-col space-y-4 px-4 pt-6">
+            <header className="flex w-full flex-col space-y-4 px-4 pt-3">
               <div className="w-full">
-                <div className="w-full max-w-md border-none bg-transparent font-handwriting text-3xl text-black placeholder-grey-600 focus:outline-none">
+                <div className="w-full max-w-md border-none bg-transparent font-handwriting text-[28px] text-grey-800 placeholder-grey-600 focus:outline-none">
                   {letter?.title}
                 </div>
               </div>
             </header>
-
-            {renderContent(letter)}
-
-            <div className="mt-4 w-full text-right">
-              <div className="w-full rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-xl text-[#999]">
-                {letter?.createdAt && letter?.senderNickname ? (
-                  <>
-                    {new Date(letter.createdAt).toLocaleDateString("ko-KR", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                    에 {letter.senderNickname}가
-                  </>
-                ) : (
-                  "작성자 정보 없음"
-                )}
-              </div>
-            </div>
-
-            <div className="w-full text-right">
-              <div className="w-full rounded-lg bg-transparent pl-4 pr-4 font-handwriting text-xl text-[#999]">
-                {letter?.scheduleAt
-                  ? new Date(letter.scheduleAt).toLocaleDateString("ko-KR", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      weekday: "long",
-                    })
-                  : ""}
-              </div>
-            </div>
+            <ContentSection letter={letter} imageUrls={imageUrls} />
+            <FromSection letter={letter} />
           </>
         )}
       </main>

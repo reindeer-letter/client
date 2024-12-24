@@ -83,7 +83,15 @@ const Page = () => {
         .filter((item) => item.file)
         .map(async (item) => {
           const formData = new FormData();
-          formData.append("file", item.file as File);
+
+          const file = item.file as File;
+          const encodedFileName = encodeURIComponent(file.name);
+
+          const renamedFile = new File([file], encodedFileName, {
+            type: file.type,
+          });
+
+          formData.append("file", renamedFile);
 
           const res = await instance.post("/letters/upload/image", formData, {
             headers: { "Content-Type": "multipart/form-data" },
