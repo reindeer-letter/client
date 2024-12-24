@@ -31,7 +31,6 @@ const Page = () => {
   };
 
   useEffect(() => {
-    console.log(receiverNickName, myNickName);
     if (
       myNickName &&
       receiverNickName &&

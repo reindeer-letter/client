@@ -50,7 +50,6 @@ export default function UncompletedMail({
     searchParams.append("draftMode", "true");
     searchParams.append("receiverId", receiverId.toString());
     searchParams.append("senderNickname", senderNickname);
-    console.log(`/writingLetter?${searchParams.toString()}`);
     router.push(`/writingLetter?${searchParams.toString()}`);
   };
   return (
