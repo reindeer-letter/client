@@ -16,6 +16,7 @@ import Image from "next/image";
 import CalendarModal from "@/components/writingLetter/CalendarModal";
 import useImagePreview from "@/hooks/useImagePreview";
 import useSaveDraft from "@/hooks/useSaveDraft";
+import ImageSlider from "@/components/imageSlider";
 
 const Page = () => {
   const overlay = useOverlay();
@@ -191,20 +192,17 @@ const Page = () => {
         guestClose="/invitation"
       />
       <main className="bg-custom-background flex w-full flex-1 flex-col items-center px-4 pb-4">
-        <div className="no-scrollbar space-x flex w-full flex-row space-x-4 overflow-x-auto px-4">
-          <div style={{ display: "flex", gap: 16 }}>
-            {images.map((item, index) => (
-              <ImageUploader
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                index={index}
-                previewUrl={item.previewUrl}
-                onSelectImage={handleSelectImage}
-              />
-            ))}
-          </div>
-        </div>
-
+        <ImageSlider>
+          {images.map((item, index) => (
+            <ImageUploader
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              index={index}
+              previewUrl={item.previewUrl}
+              onSelectImage={handleSelectImage}
+            />
+          ))}
+        </ImageSlider>
         <header className="flex w-full flex-col space-y-4 px-4 pt-6">
           <div className="w-full">
             <input
@@ -216,7 +214,6 @@ const Page = () => {
             />
           </div>
         </header>
-
         <div className="flex w-full flex-1 flex-col">
           <textarea
             placeholder="내용을 입력하세요"

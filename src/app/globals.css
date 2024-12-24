@@ -72,3 +72,11 @@ select:focus {
 * {
   -webkit-tap-highlight-color: transparent;
 }
+
+.imageSlider .swiper-slide {
+  width: max-content;
+}
+
+.imageSlider .swiper-pagination-bullet {
+  background-color: var(--primary-100);
+}
