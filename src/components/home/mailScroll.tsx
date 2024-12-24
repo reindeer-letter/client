@@ -13,9 +13,10 @@ import Mail from "./mail";
 
 interface MailScrollProps {
   route: string;
+  type: "myLetters" | "receivedLetters";
 }
 
-export default function MailScroll({ route }: MailScrollProps) {
+export default function MailScroll({ route, type }: MailScrollProps) {
   const { data, error, isLoading, fetchMore, isError, hasMore, isCancelled } =
     useInfiniteFetch<GetLettersMyLettersResponse["items"][0]>({
       route,
@@ -43,7 +44,16 @@ export default function MailScroll({ route }: MailScrollProps) {
         </Button>
       </div>
     );
-  if (data && data.length === 0 && !isLoading) return <EmptyMail />;
+  if (data && data.length === 0 && !isLoading)
+    return (
+      <EmptyMail
+        description={
+          type === "myLetters"
+            ? "내게 쓴 편지가 없습니다."
+            : "받은 편지가 없습니다"
+        }
+      />
+    );
   return (
     <section className="mt-4 flex flex-col gap-7 pb-[208px]">
       {data

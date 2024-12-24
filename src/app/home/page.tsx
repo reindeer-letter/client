@@ -31,7 +31,10 @@ export default async function Page({ searchParams }: PageProps) {
           </Link>
         ))}
       </section>
-      <MailScroll route={`/letters/my?category=${category || ""}`} />
+      <MailScroll
+        route={`/letters/my?category=${category || ""}`}
+        type="receivedLetters"
+      />
       <Footer />
     </>
   );

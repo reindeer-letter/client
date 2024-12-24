@@ -57,7 +57,8 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
         </Button>
       </div>
     );
-  if (data && data.length === 0 && !isLoading) return <EmptyMail />;
+  if (data && data.length === 0 && !isLoading)
+    return <EmptyMail description="작성 중인 편지가 없습니다." />;
   return (
     <section className="flex flex-col gap-5 pb-7">
       {data
