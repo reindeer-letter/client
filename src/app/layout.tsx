@@ -4,6 +4,7 @@ import "./globals.css";
 import OverlayProvider from "@/providers/overlayProvider";
 import { UserStoreProvider } from "@/providers/userStoreProvider";
 import { LetterStoreProvider } from "@/providers/letterStoreProvider";
+import { GoogleTagManager } from "@next/third-parties/google";
 import ProgressBarProvider from "@/providers/progressBarProvider";
 
 const pretendard = localFont({
@@ -49,6 +50,9 @@ export default function RootLayout({
       lang="en"
       className={`${pretendard.className} ${handWriting.variable}`}
     >
+      <GoogleTagManager
+        gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID || ""}
+      />
       <body className="h-svh bg-black antialiased">
         <ProgressBarProvider>
           <UserStoreProvider>

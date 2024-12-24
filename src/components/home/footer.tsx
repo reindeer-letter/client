@@ -6,6 +6,7 @@ import Button from "@/components/button";
 import useOverlay from "@/hooks/useoverlay";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import { sendGTMEvent } from "@next/third-parties/google";
 import PopUp from "../popUp";
 
 export default function Footer() {
@@ -15,6 +16,7 @@ export default function Footer() {
   const overlay = useOverlay();
 
   const handleShare = useCallback(async () => {
+    sendGTMEvent({ event: "share", category: "footer", label: "share" });
     const currentUrl = new URL("invitation", window.location.origin);
     currentUrl.searchParams.set("receiverId", String(id));
     currentUrl.searchParams.set("receiverNickName", String(nickName));
@@ -32,6 +34,7 @@ export default function Footer() {
   }, [id, overlay, nickName]);
 
   const handleGift = useCallback(() => {
+    sendGTMEvent({ event: "click", category: "footer", label: "gift" });
     const currentUrl = new URL("letterType", window.location.origin);
     currentUrl.searchParams.set("receiverId", String(id));
     currentUrl.searchParams.set("receiverNickName", String(nickName));
