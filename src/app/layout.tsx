@@ -4,6 +4,7 @@ import "./globals.css";
 import OverlayProvider from "@/providers/overlayProvider";
 import { UserStoreProvider } from "@/providers/userStoreProvider";
 import { LetterStoreProvider } from "@/providers/letterStoreProvider";
+import ProgressBarProvider from "@/providers/progressBarProvider";
 
 const pretendard = localFont({
   src: "/fonts/Pretendard-Regular.otf",
@@ -49,15 +50,17 @@ export default function RootLayout({
       className={`${pretendard.className} ${handWriting.variable}`}
     >
       <body className="h-svh bg-black antialiased">
-        <UserStoreProvider>
-          <LetterStoreProvider>
-            <OverlayProvider>
-              <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
-                {children}
-              </div>
-            </OverlayProvider>
-          </LetterStoreProvider>
-        </UserStoreProvider>
+        <ProgressBarProvider>
+          <UserStoreProvider>
+            <LetterStoreProvider>
+              <OverlayProvider>
+                <div className="mx-auto w-full min-w-[375px] max-w-[600px]">
+                  {children}
+                </div>
+              </OverlayProvider>
+            </LetterStoreProvider>
+          </UserStoreProvider>
+        </ProgressBarProvider>
       </body>
     </html>
   );
