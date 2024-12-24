@@ -17,6 +17,7 @@
     "lottie-react": "^2.4.0",
     "motion": "^11.13.1",
     "next": "15.0.4",
+    "next-nprogress-bar": "^2.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.0",
