@@ -6,7 +6,7 @@ const useVoiceUpload = (onUploadSuccess: (url: string) => void) => {
 
   const uploadVoice = async (audioBlob: Blob) => {
     const formData = new FormData();
-    formData.append("file", audioBlob, "recording.wav");
+    formData.append("file", audioBlob, "recording.mp4");
 
     setIsUploading(true);
     try {
