@@ -1,4 +1,4 @@
-import { makePaginatedLetters } from "@/mocks/letter";
+import { makePaginatedLettersWithDifferentCategory } from "@/mocks/letter";
 import { GetLettersMyLettersResponse } from "@/types/letters";
 import { http, HttpResponse } from "msw";
 
@@ -7,12 +7,10 @@ const letterToMeHandler = [
     const url = new URL(req.request.url);
     const page = url.searchParams.get("page");
     const limit = url.searchParams.get("limit");
-    const category = url.searchParams.get("category");
     return HttpResponse.json<GetLettersMyLettersResponse>(
-      makePaginatedLetters(
+      makePaginatedLettersWithDifferentCategory(
         parseInt(page || "1", 10),
         parseInt(limit || "1", 10),
-        category as "TEXT" | "VOICE",
       ),
     );
   }),

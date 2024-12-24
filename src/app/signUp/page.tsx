@@ -39,7 +39,6 @@ export default function SignUpPage() {
     // 데이터를 localStorage에 저장
     localStorage.setItem("signUpData", JSON.stringify(signUpData));
 
-    console.log("데이터 저장됨:", localStorage.getItem("signUpData")); // 확인용 로그
     router.push("/profile");
   };
 

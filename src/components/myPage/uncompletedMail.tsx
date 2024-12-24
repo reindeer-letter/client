@@ -1,48 +1,74 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
-import { formateISODateToYYYYMMDDHHMM } from "../../utils/formatDate";
+import { useRouter } from "next/navigation";
+import { useLetterStore } from "@/providers/letterStoreProvider";
+import { formatDateStringToYYYYMMDD } from "@/utils/formatDate";
 
 interface UncompletedMailProps {
-  id: number;
+  draftId: number;
+  receiverId: number;
+  receiverNickName: string;
   title: string;
-  nickName: string;
-  writtenDate: string;
+  senderNickname: string;
+  scheduledAt: string;
   description: string;
   bgmUrl: string;
   category: "TEXT" | "VOICE";
-  imageUrl: string;
+  imageUrl: string[];
 }
 
-// TODO: 임시저장 로직 구현, 관련 정보를 전역 상태에 담고 이동
-/* eslint-disable */
 export default function UncompletedMail({
-  id,
-  nickName,
+  draftId,
+  receiverId,
+  receiverNickName,
+  senderNickname,
   title,
-  writtenDate,
+  scheduledAt,
   description,
   bgmUrl,
   category,
   imageUrl,
 }: UncompletedMailProps) {
+  const router = useRouter();
+  const setLetter = useLetterStore((store) => store.setLetter);
+
+  const handleClick = () => {
+    setLetter({
+      draftId,
+      title,
+      description,
+      imageUrl,
+      bgmUrl,
+      receiverId,
+      category,
+      scheduledAt,
+      senderNickname,
+      receiverNickName,
+    });
+    const searchParams = new URLSearchParams();
+    searchParams.append("draftMode", "true");
+    searchParams.append("receiverId", receiverId.toString());
+    searchParams.append("senderNickname", senderNickname);
+    router.push(`/writingLetter?${searchParams.toString()}`);
+  };
   return (
-    <Link
-      href={`/writingLetter/${id}`}
+    <button
+      onClick={handleClick}
       className="relative mx-auto block h-[221px] w-[350px] selection:bg-none hover:opacity-70"
     >
       <Image src="/images/letter.png" alt="Mail" priority fill />
-      <section className="absolute h-full w-full" />
-      <section className="absolute h-full w-full">
+      <section className="relative h-full w-full">
         <section className="absolute left-0 right-0 top-9 flex items-center justify-center">
           <div className="w-[210px] truncate text-center text-Body01-M text-grey-900">
             {title}
           </div>
         </section>
         <footer className="absolute bottom-3 left-0 right-0 text-center text-Body02-M text-line-700">
-          <section>TO. {nickName}</section>
-          <section>{formateISODateToYYYYMMDDHHMM(writtenDate)}</section>
+          <section>TO. {receiverNickName}</section>
+          <section>{formatDateStringToYYYYMMDD(scheduledAt)}</section>
         </footer>
       </section>
-    </Link>
+    </button>
   );
 }

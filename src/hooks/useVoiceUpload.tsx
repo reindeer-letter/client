@@ -13,7 +13,6 @@ const useVoiceUpload = (onUploadSuccess: (url: string) => void) => {
       const response = await instance.post("/letters/upload/voice", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("업로드 응답:", response.data);
       const { voiceUrl } = response.data;
       onUploadSuccess(voiceUrl);
       return voiceUrl;

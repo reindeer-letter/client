@@ -27,21 +27,13 @@ export default function Page() {
     }
   }, [router, logout]);
 
-  const handleBack = useCallback(() => {
-    router.back();
-  }, [router]);
-
   return (
     <>
       <header className="relative w-full pb-4 pt-[52px] text-center">
         <span className="block pb-4 text-Title01-SB text-line-700">
           마이페이지
         </span>
-        <button
-          type="button"
-          onClick={handleBack}
-          className="absolute right-4 top-[52px]"
-        >
+        <Link href="/home" className="absolute right-4 top-[52px]">
           <Image
             priority
             src="/icons/close.png"
@@ -49,7 +41,7 @@ export default function Page() {
             width={32}
             height={32}
           />
-        </button>
+        </Link>
         <section className="mt-5 flex flex-col items-center justify-center gap-4">
           {isPending && (
             <div className="h-[240px] w-[240px] animate-pulse rounded-full bg-[#d9d9d9]" />
