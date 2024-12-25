@@ -6,6 +6,7 @@ import { UserStoreProvider } from "@/providers/userStoreProvider";
 import { LetterStoreProvider } from "@/providers/letterStoreProvider";
 import { GoogleTagManager } from "@next/third-parties/google";
 import ProgressBarProvider from "@/providers/progressBarProvider";
+import Script from "next/script";
 
 const pretendard = localFont({
   src: "/fonts/Pretendard-Regular.otf",
@@ -50,6 +51,7 @@ export default function RootLayout({
       lang="en"
       className={`${pretendard.className} ${handWriting.variable}`}
     >
+      <Script src="/scripts/handleInApp.js" />
       <GoogleTagManager
         gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID || ""}
       />

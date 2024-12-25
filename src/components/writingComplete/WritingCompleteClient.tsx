@@ -76,7 +76,7 @@ export default function WritingCompleteClient() {
                   className="w-full"
                   onClick={() => {
                     if (isLoggedIn) router.push("/home");
-                    else router.push("/signUp");
+                    else router.push("/");
                   }}
                 >
                   {isLoggedIn ? "다른 편지 작성하기" : "내 편지함 만들기"}
