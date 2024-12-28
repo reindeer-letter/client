@@ -57,7 +57,7 @@ export default function UncompletedMail({
       onClick={handleClick}
       className="relative mx-auto block h-[221px] w-[350px] selection:bg-none hover:opacity-70"
     >
-      <Image src="/images/letter.png" alt="Mail" priority fill />
+      <Image src="/images/letter.png" alt="Mail" priority fill sizes="350px" />
       <section className="relative h-full w-full">
         <section className="absolute left-0 right-0 top-9 flex items-center justify-center">
           <div className="w-[210px] truncate text-center text-Body01-M text-grey-900">

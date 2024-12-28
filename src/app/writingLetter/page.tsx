@@ -158,7 +158,8 @@ const Page = () => {
         draftId ? `/letters/draft/${draftId}/send` : "/letters",
         payload,
       );
-      if (response.status === 201) router.push("/writingComplete");
+      if (response.status === 201)
+        router.push("/writingComplete", { scroll: false });
     } catch (error) {
       console.error("편지 전송 실패:", error);
       alert("편지 전송에 실패했습니다. 다시 시도해주세요.");
