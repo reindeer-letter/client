@@ -75,14 +75,14 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
                 category,
                 imageUrls,
               },
+              receiverNickName,
             }) => {
               return (
                 <section key={id} className="flex flex-col items-center gap-3">
                   <UncompletedMail
                     draftId={id}
                     receiverId={receiverId}
-                    // FIXME: receiverNickName 데이터 오면 수정
-                    receiverNickName={senderNickname}
+                    receiverNickName={receiverNickName}
                     title={title}
                     senderNickname={senderNickname}
                     scheduledAt={scheduledAt}

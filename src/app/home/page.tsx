@@ -35,6 +35,7 @@ export default async function Page({ searchParams }: PageProps) {
         route={`/letters/my?category=${category || ""}`}
         type="receivedLetters"
       />
+      <div className="mt-[208px]" />
       <Footer />
     </>
   );

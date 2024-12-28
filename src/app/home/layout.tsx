@@ -6,7 +6,7 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="min-h-screen bg-white">
+    <section className="flex min-h-screen flex-col bg-white">
       <UserDataProvider>{children}</UserDataProvider>
     </section>
   );
