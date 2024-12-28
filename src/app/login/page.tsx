@@ -161,7 +161,9 @@ const LoginPage = () => {
               <p className="text-sm text-red-500">{errorMessage}</p>
             )}
             <div className="flex flex-col gap-4">
-              <Button buttonType="Primary">로그인</Button>
+              <Button buttonType="Primary" disabled={isSubmitting}>
+                {isSubmitting ? "로그인 중" : "로그인"}
+              </Button>
               <div className="space-x-4 text-Body02-R text-line-800">
                 <button
                   type="button"
