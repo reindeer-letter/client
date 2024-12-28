@@ -7,7 +7,9 @@ import useOverlay from "@/hooks/useoverlay";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { sendGTMEvent } from "@next/third-parties/google";
-import PopUp from "../popUp";
+import dynamic from "next/dynamic";
+
+const PopUp = dynamic(() => import("@/components/popUp"));
 
 export default function Footer() {
   const router = useRouter();

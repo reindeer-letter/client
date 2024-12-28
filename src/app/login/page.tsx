@@ -16,7 +16,9 @@ import { PostAuthLoginResponse } from "@/types/auth";
 import { setCookie } from "@/lib/cookie";
 import Link from "next/link";
 import useOverlay from "@/hooks/useoverlay";
-import PopUp from "@/components/popUp";
+import dynamic from "next/dynamic";
+
+const PopUpWithDynamic = dynamic(() => import("@/components/popUp"));
 
 const LoginPage = () => {
   const router = useRouter();
@@ -112,7 +114,7 @@ const LoginPage = () => {
 
   const handleOverlay = useCallback(() => {
     overlay.mount(
-      <PopUp
+      <PopUpWithDynamic
         button="확인"
         description="준비중입니다."
         onCancel={() => {}}

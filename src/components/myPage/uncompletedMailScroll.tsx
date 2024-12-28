@@ -7,11 +7,13 @@ import { GetLettersDraftsPaginatedResponse } from "@/types/letters";
 import useInfiniteFetch from "@/hooks/useInfiniteFetch";
 import MailScrollSkeleton from "@/app/home/skeletons/mailScrollSkeleton";
 import useMutation from "@/hooks/useMutation";
+import dynamic from "next/dynamic";
 import IntersectionArea from "../intersectionArea";
 import Button from "../button";
 import EmptyMail from "../home/emtpyMail";
 import UncompletedMail from "./uncompletedMail";
-import PopUp from "../popUp";
+
+const PopUp = dynamic(() => import("@/components/popUp"));
 
 interface MailScrollProps {
   route: string;
