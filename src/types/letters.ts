@@ -112,6 +112,7 @@ export interface GetLettersDraftsPaginatedResponse {
     updatedAt: string;
     senderNickname: string;
     receiverId: number;
+    receiverNickName: string;
   }[];
   meta: {
     total: number;

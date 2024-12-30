@@ -26,6 +26,7 @@ export default function Mail({
         src={isOpen ? "/images/letter.png" : "/images/sealed-letter.png"}
         alt="Mail"
         priority
+        sizes="350px"
         fill
       />
       <section className="absolute h-full w-full">

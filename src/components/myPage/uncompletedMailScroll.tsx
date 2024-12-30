@@ -7,11 +7,13 @@ import { GetLettersDraftsPaginatedResponse } from "@/types/letters";
 import useInfiniteFetch from "@/hooks/useInfiniteFetch";
 import MailScrollSkeleton from "@/app/home/skeletons/mailScrollSkeleton";
 import useMutation from "@/hooks/useMutation";
+import dynamic from "next/dynamic";
 import IntersectionArea from "../intersectionArea";
 import Button from "../button";
 import EmptyMail from "../home/emtpyMail";
 import UncompletedMail from "./uncompletedMail";
-import PopUp from "../popUp";
+
+const PopUp = dynamic(() => import("@/components/popUp"));
 
 interface MailScrollProps {
   route: string;
@@ -75,14 +77,14 @@ export default function UncompletedMailScroll({ route }: MailScrollProps) {
                 category,
                 imageUrls,
               },
+              receiverNickName,
             }) => {
               return (
                 <section key={id} className="flex flex-col items-center gap-3">
                   <UncompletedMail
                     draftId={id}
                     receiverId={receiverId}
-                    // FIXME: receiverNickName 데이터 오면 수정
-                    receiverNickName={senderNickname}
+                    receiverNickName={receiverNickName}
                     title={title}
                     senderNickname={senderNickname}
                     scheduledAt={scheduledAt}

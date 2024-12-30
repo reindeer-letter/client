@@ -10,13 +10,19 @@ import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
 import useOverlay from "@/hooks/useoverlay";
-import BottomSheetMusicSelect from "@/components/writingLetter/BottomSheetMusicSelect";
-import PopUp from "@/components/popUp";
 import Image from "next/image";
-import CalendarModal from "@/components/writingLetter/CalendarModal";
 import useImagePreview from "@/hooks/useImagePreview";
 import useSaveDraft from "@/hooks/useSaveDraft";
 import ImageSlider from "@/components/imageSlider";
+import dynamic from "next/dynamic";
+
+const CalendarModal = dynamic(
+  () => import("@/components/writingLetter/CalendarModal"),
+);
+const PopUp = dynamic(() => import("@/components/popUp"));
+const BottomSheetMusicSelect = dynamic(
+  () => import("@/components/writingLetter/BottomSheetMusicSelect"),
+);
 
 const Page = () => {
   const overlay = useOverlay();
@@ -158,7 +164,8 @@ const Page = () => {
         draftId ? `/letters/draft/${draftId}/send` : "/letters",
         payload,
       );
-      if (response.status === 201) router.push("/writingComplete");
+      if (response.status === 201)
+        router.push("/writingComplete", { scroll: false });
     } catch (error) {
       console.error("편지 전송 실패:", error);
       alert("편지 전송에 실패했습니다. 다시 시도해주세요.");

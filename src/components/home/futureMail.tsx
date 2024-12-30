@@ -8,7 +8,13 @@ interface FutureMailProps {
 export default function FutureMail({ scheduledAt }: FutureMailProps) {
   return (
     <section className="relative mx-auto block h-[221px] w-[350px] selection:bg-none">
-      <Image src="/images/sealed-letter.png" alt="Mail" priority fill />
+      <Image
+        src="/images/sealed-letter.png"
+        alt="Mail"
+        priority
+        fill
+        sizes="350px"
+      />
       <section className="absolute h-full w-full rounded-lg bg-black bg-opacity-80" />
       <header className="absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center">
         <Image

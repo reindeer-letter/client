@@ -58,6 +58,7 @@ const Page = () => {
             alt="글로 남기기 아이콘"
             width={168}
             height={155}
+            className="h-[155px] w-[168px]"
           />
         </button>
         <button
@@ -79,6 +80,7 @@ const Page = () => {
             alt="목소리"
             width={168}
             height={155}
+            className="h-[155px] w-[168px]"
           />
         </button>
       </main>

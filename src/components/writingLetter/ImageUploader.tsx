@@ -66,7 +66,8 @@ const ImageUploader = ({
           alt="테이프 위"
           width={81}
           height={40}
-          className="drop-shadow-lg"
+          sizes="81px"
+          className="h-[40px] w-[81px] drop-shadow-lg"
         />
       </div>
       <div className="pointer-events-none absolute bottom-[-26px] left-1/2 z-20 -translate-x-1/2">
@@ -75,7 +76,7 @@ const ImageUploader = ({
           alt="테이프 아래"
           width={102}
           height={40}
-          className="drop-shadow-lg"
+          className="h-[40px] w-[102px] drop-shadow-lg"
         />
       </div>
 

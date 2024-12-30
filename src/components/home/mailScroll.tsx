@@ -4,12 +4,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { GetLettersMyLettersResponse } from "@/types/letters";
 import useInfiniteFetch from "@/hooks/useInfiniteFetch";
-import MailScrollSkeleton from "@/app/home/skeletons/mailScrollSkeleton";
-import FutureMail from "./futureMail";
-import IntersectionArea from "../intersectionArea";
 import Button from "../button";
 import EmptyMail from "./emtpyMail";
-import Mail from "./mail";
+import InfiniteWrapper from "../infiniteWrapper";
+import MailVirtualized from "./mailVirtualized";
 
 interface MailScrollProps {
   route: string;
@@ -21,6 +19,7 @@ export default function MailScroll({ route, type }: MailScrollProps) {
     useInfiniteFetch<GetLettersMyLettersResponse["items"][0]>({
       route,
     });
+
   const router = useRouter();
   if (isError && !isCancelled)
     return (
@@ -55,34 +54,16 @@ export default function MailScroll({ route, type }: MailScrollProps) {
       />
     );
   return (
-    <section className="mt-4 flex flex-col gap-7 pb-[208px]">
-      {data
-        ? data.map(
-            ({
-              id,
-              title,
-              isDelivered,
-              scheduledAt,
-              senderNickname,
-              isOpen,
-            }) => {
-              if (!isDelivered && scheduledAt)
-                return <FutureMail key={id} scheduledAt={scheduledAt} />;
-              return (
-                <Mail
-                  key={id}
-                  id={id}
-                  nickName={senderNickname}
-                  title={title}
-                  scheduledAt={scheduledAt}
-                  isOpen={isOpen}
-                />
-              );
-            },
-          )
-        : null}
-      {(!data || isLoading) && <MailScrollSkeleton />}
-      {hasMore && !isLoading && <IntersectionArea func={fetchMore} />}
-    </section>
+    <>
+      <section className="flex-1">
+        <InfiniteWrapper
+          data={data || []}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        >
+          {MailVirtualized}
+        </InfiniteWrapper>
+      </section>
+    </>
   );
 }

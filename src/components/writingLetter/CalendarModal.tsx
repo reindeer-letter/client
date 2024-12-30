@@ -19,6 +19,13 @@ const CalendarModal = ({ onSelect, unmount }: CalendarModalProps) => {
     () => ["일", "월", "화", "수", "목", "금", "토"],
     [],
   );
+  const isPastMonth = useMemo(
+    () =>
+      (currentYear === today.getFullYear() &&
+        currentMonth <= today.getMonth()) ||
+      currentYear < today.getFullYear(),
+    [currentYear, currentMonth, today],
+  );
 
   const getFormattedDate = useCallback(
     (year: number, month: number, date: number) => {
@@ -43,6 +50,7 @@ const CalendarModal = ({ onSelect, unmount }: CalendarModalProps) => {
   );
 
   const handlePrevMonth = () => {
+    if (isPastMonth) return;
     if (currentMonth === 0) {
       setCurrentYear((prev) => prev - 1);
       setCurrentMonth(11);
@@ -56,7 +64,8 @@ const CalendarModal = ({ onSelect, unmount }: CalendarModalProps) => {
     } else setCurrentMonth((prev) => prev + 1);
   };
 
-  const handleDateSelect = (date: number) => {
+  const handleDateSelect = (date: number, isPastDate: boolean) => {
+    if (isPastDate) return;
     const formattedDate = getFormattedDate(currentYear, currentMonth, date);
     setSelectedDate(formattedDate);
   };
@@ -89,7 +98,21 @@ const CalendarModal = ({ onSelect, unmount }: CalendarModalProps) => {
             onClick={handlePrevMonth}
             aria-label="이전 달"
           >
-            <Image src="/Angle-left.png" width={24} height={24} alt="이전 달" />
+            {isPastMonth ? (
+              <Image
+                src="/Angle-left-disabled.png"
+                width={24}
+                height={24}
+                alt="이전 달"
+              />
+            ) : (
+              <Image
+                src="/Angle-left.png"
+                width={24}
+                height={24}
+                alt="이전 달"
+              />
+            )}
           </button>
           <h2 className="text-lg font-semibold">
             {currentYear}.{currentMonth + 1}
@@ -132,12 +155,12 @@ const CalendarModal = ({ onSelect, unmount }: CalendarModalProps) => {
               return (
                 <button
                   key={date}
-                  onClick={() => handleDateSelect(date)}
+                  onClick={() => handleDateSelect(date, isPastDate)}
                   className={`h-12 w-12 rounded-full ${
-                    isSelected
-                      ? "bg-primary-200 text-White"
-                      : isPastDate
-                        ? "text-gray-200"
+                    isPastDate
+                      ? "text-gray-200"
+                      : isSelected
+                        ? "bg-primary-200 text-White"
                         : "hover:bg-primary-700 text-gray-800"
                   }`}
                 >

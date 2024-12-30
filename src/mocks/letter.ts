@@ -101,6 +101,7 @@ export const makeDraft: (
     isOpen: false,
     scheduledAt: scheduledAt.toISOString().split("T")[0],
     senderNickname: "test",
+    receiverNickName: "receiver",
   };
 };
 

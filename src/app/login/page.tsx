@@ -16,7 +16,9 @@ import { PostAuthLoginResponse } from "@/types/auth";
 import { setCookie } from "@/lib/cookie";
 import Link from "next/link";
 import useOverlay from "@/hooks/useoverlay";
-import PopUp from "@/components/popUp";
+import dynamic from "next/dynamic";
+
+const PopUpWithDynamic = dynamic(() => import("@/components/popUp"));
 
 const LoginPage = () => {
   const router = useRouter();
@@ -112,7 +114,7 @@ const LoginPage = () => {
 
   const handleOverlay = useCallback(() => {
     overlay.mount(
-      <PopUp
+      <PopUpWithDynamic
         button="확인"
         description="준비중입니다."
         onCancel={() => {}}
@@ -161,7 +163,9 @@ const LoginPage = () => {
               <p className="text-sm text-red-500">{errorMessage}</p>
             )}
             <div className="flex flex-col gap-4">
-              <Button buttonType="Primary">로그인</Button>
+              <Button buttonType="Primary" disabled={isSubmitting}>
+                {isSubmitting ? "로그인 중" : "로그인"}
+              </Button>
               <div className="space-x-4 text-Body02-R text-line-800">
                 <button
                   type="button"

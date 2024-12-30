@@ -145,7 +145,7 @@ function HeaderWithClose({ className }: HeaderWithCloseProps) {
         aria-label="닫기"
         className="relative h-8 w-8"
       >
-        <Image src="/icons/close.png" alt="닫기" fill sizes="32" />
+        <Image src="/icons/close.png" alt="닫기" fill sizes="32px" />
       </button>
     </header>
   );

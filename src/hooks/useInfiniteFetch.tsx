@@ -34,8 +34,9 @@ export default function useInfiniteFetch<T>({ route }: UseInfiniteFetchType) {
   const isCancelled = useMemo(() => error instanceof CanceledError, [error]);
 
   const fetchMore = useCallback(() => {
+    if (isLoading || !hasMore) return;
     setPage((prev) => prev + 1);
-  }, []);
+  }, [isLoading, hasMore]);
 
   useEffect(() => {
     setData(undefined);

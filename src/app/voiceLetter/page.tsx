@@ -5,11 +5,9 @@ import instance from "@/api/instance";
 import { useEffect, useState } from "react";
 import "../globals.css";
 import Image from "next/image";
-import PopUp from "@/components/popUp";
 import { useSearchParams, useRouter } from "next/navigation";
 import Button from "@/components/button";
 import useOverlay from "@/hooks/useoverlay";
-import CalendarModal from "@/components/writingLetter/CalendarModal";
 import NavBar from "@/components/NavBar";
 import { calculateDaysDifference, formatDate } from "@/utils/dateUtils";
 import { formatDateStringToISO } from "@/utils/formatDateStringToISO";
@@ -18,6 +16,12 @@ import VoiceRecorder from "@/components/voiceLetter/VoiceRecorder";
 import useVoiceUpload from "@/hooks/useVoiceUpload";
 import useImagePreview from "@/hooks/useImagePreview";
 import ImageSlider from "@/components/imageSlider";
+import dynamic from "next/dynamic";
+
+const CalendarModal = dynamic(
+  () => import("@/components/writingLetter/CalendarModal"),
+);
+const PopUp = dynamic(() => import("@/components/popUp"));
 
 const Page = () => {
   const overlay = useOverlay();

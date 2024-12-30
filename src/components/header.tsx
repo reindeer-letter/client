@@ -28,7 +28,7 @@ export default function Header({ className, showProfile = true }: HeaderProps) {
           alt="logo"
           fill
           priority
-          sizes="100"
+          sizes="100px"
           className="hover:opacity-80"
         />
       </Link>
@@ -39,7 +39,7 @@ export default function Header({ className, showProfile = true }: HeaderProps) {
             alt="profile"
             fill
             priority
-            sizes="32"
+            sizes="32px"
             className="hover:opacity-80"
           />
         </Link>

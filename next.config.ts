@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ["letter-bucket.s3.ap-northeast-2.amazonaws.com"],
     remotePatterns: [
       {
         protocol: "https",
@@ -15,4 +14,9 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// eslint-disable-next-line
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.NEXT_PUBLIC_ANALYZE === "true",
+});
+
+export default withBundleAnalyzer(nextConfig);
