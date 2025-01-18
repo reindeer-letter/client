@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "letter-bucket.s3.ap-northeast-2.amazonaws.com",
+        hostname: "reindeer-letter-bucket.s3.ap-northeast-2.amazonaws.com",
         port: "",
         pathname: "/images/**",
       },
